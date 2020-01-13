@@ -13,11 +13,11 @@ Hammurabi
     :target: https://hammurabi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://api.codeclimate.com/v1/badges/8492cfd846f63e79dc56/maintainability
-    :target: https://codeclimate.com/github/gabor-boros/hammurabi/maintainability
-    :alt: Maintainability
+.. image:: https://api.codeclimate.com/v1/badges/bcebab7105dfd82f358b/maintainability
+   :target: https://codeclimate.com/github/gabor-boros/hammurabi/maintainability
+   :alt: Maintainability
 
-.. image:: https://api.codeclimate.com/v1/badges/8492cfd846f63e79dc56/test_coverage
+.. image:: https://api.codeclimate.com/v1/badges/bcebab7105dfd82f358b/test_coverage
     :target: https://codeclimate.com/github/gabor-boros/hammurabi/test_coverage
     :alt: Test Coverage
 
