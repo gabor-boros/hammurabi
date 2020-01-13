@@ -14,7 +14,7 @@ install:
     - make download-test-reporter
 
 before_script:
-    - test-reporter-before
+    - make test-reporter-before
 
 script:
     - poetry run make lint
