@@ -866,14 +866,8 @@ more-itertools = "*"
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
-[extras]
-ini = ["configupdater"]
-pyhocon = ["pyhocon"]
-ujson = ["ujson"]
-yaml = ["ruamel.yaml"]
-
 [metadata]
-content-hash = "f3cd2a44c6bcbe9af7d21a2845aeeda43baada378b124649005a46780dc7c7cc"
+content-hash = "00660034b3775dd641850bc7a7cd0b552c70ed3687a4099bc0fc49f2516fcdba"
 python-versions = "^3.7"
 
 [metadata.files]

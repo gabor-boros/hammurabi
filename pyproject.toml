@@ -64,11 +64,11 @@ pytest = "^5.0"
 sphinx_rtd_theme = "^0.4.3"
 coverage = "^5.0.3"
 
-[tool.poetry.extras]
-ini = ["configupdater"]
-pyhocon = ["pyhocon"]
-ujson = ["ujson"]
-yaml = ["ruamel.yaml"]
+# [tool.poetry.extras]
+# ini = ["configupdater"]
+# pyhocon = ["pyhocon"]
+# ujson = ["ujson"]
+# yaml = ["ruamel.yaml"]
 
 [tool.isort]
 atomic = true
