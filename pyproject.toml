@@ -1,0 +1,86 @@
+[tool.poetry]
+name = "hammurabi"
+version = "0.1.0"
+license = "Apache-2.0"
+description = "Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules on a git repository."
+documentation = "https://readthedocs.org/projects/hammurabi/badge/"
+repository = "https://github.com/gabor-boros/hammurabi/"
+readme = "README.rst"
+keywords = ["automation", "project", "manipulate", "rules", "config"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Text Processing",
+    "Topic :: Text Processing :: General",
+
+]
+authors = [
+    "Gábor Boros <gabor.brs@gmail.com>"
+]
+maintainers = [
+    "Gábor Boros <gabor.brs@gmail.com>"
+]
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/gabor-boros/hammurabi/issues/"
+
+[tool.poetry.scripts]
+hammurabi = 'hammurabi.main:cli'
+
+[tool.poetry.dependencies]
+"github3.py" = "^1.3.0"
+"ruamel.yaml" = "^0.16.5"
+click = "^7.0"
+configupdater = "^1.0.1"
+gitpython = "^3.0.5"
+pyhocon = "^0.3.54"
+python = "^3.7"
+toml = "^0.10.0"
+ujson = "^1.35"
+
+[tool.poetry.dev-dependencies]
+bandit = "^1.6"
+black = {version = "^18.3-alpha.0", allow-prereleases = true}
+flake8 = "^3.7"
+hypothesis = "^5.1.1"
+mock = "^3.0.5"
+mypy = "^0.761"
+pygments = "^2.4"
+pylint = "^2.4"
+pytest = "^5.0"
+sphinx_rtd_theme = "^0.4.3"
+coverage = "^5.0.3"
+
+[tool.poetry.extras]
+ini = ["configupdater"]
+pyhocon = ["pyhocon"]
+ujson = ["ujson"]
+yaml = ["ruamel.yaml"]
+
+[tool.isort]
+atomic = true
+case_sensitive = true
+combine_star = true
+force_sort_within_sections = true
+include_trailing_comma = true
+order_by_type = true
+jobs = 4
+line_length = 88  # Same as Black's line length
+multi_line_output = 3
+
+[build-system]
+requires = ["poetry>=1.0"]
+build-backend = "poetry.masonry.api"

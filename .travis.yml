@@ -1,0 +1,34 @@
+cache: pip
+os: linux
+dist: xenial
+language: python
+
+python:
+    - "3.7"
+    - "3.8"
+    - "3.9"
+
+install:
+    - pip install poetry
+    - poetry install
+    - make download-test-reporter
+
+before_script:
+    - test-reporter-before
+
+script:
+    - poetry run make lint
+    - poetry run make test
+
+after_success:
+    - make upload-coverage
+
+deploy:
+    provider: script
+    script: poetry publish --build
+    on:
+      python: 3.8
+      tags: true
+
+notifications:
+    email: false
