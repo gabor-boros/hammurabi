@@ -88,7 +88,7 @@ Configuration
 
 For configuration instructions, please visit the documentation_ site.
 
-.. _documentation: https://hammurabi.readthedocs.io/en/latest/configuration.html
+.. _documentation: https://hammurabi.readthedocs.io/en/latest/config.html
 
 Command line options
 ====================
