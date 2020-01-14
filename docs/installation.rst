@@ -20,18 +20,6 @@ the most recent stable release.
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
 
-To work with parsed files, you need to install the required
-extras.
-
-+-----------------+----------------------------------------+----------------------------------+
-| Name            | Description                            | Install example                  |
-+=================+========================================+==================================+
-| ini             | Parse ini/cfg files                    | `pip install hammurabi[ini]`     |
-+-----------------+----------------------------------------+----------------------------------+
-
-To install multiple extras at once, you can run
-``pip install hammurabi[extra1,extra2,...]``.
-
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
