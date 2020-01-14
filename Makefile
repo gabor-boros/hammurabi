@@ -84,4 +84,5 @@ test-reporter-before:
 	./cc-test-reporter before-build
   
 upload-coverage:
+	coverage xml
 	./cc-test-reporter after-build --exit-code $(TRAVIS_TEST_RESULT) -t "coverage.py"
