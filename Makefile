@@ -84,4 +84,4 @@ test-reporter-before:
 	./cc-test-reporter before-build
   
 upload-coverage:
-	./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+	./cc-test-reporter after-build --exit-code $(TRAVIS_TEST_RESULT)
