@@ -17,6 +17,14 @@ from hammurabi.rules.files import (
     FilesExist,
     FilesNotExist,
 )
+from hammurabi.rules.ini import (
+    OptionRenamed,
+    OptionsExist,
+    OptionsNotExist,
+    SectionExists,
+    SectionNotExists,
+    SectionRenamed,
+)
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
 
