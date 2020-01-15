@@ -114,8 +114,10 @@ class Law(GitActionsMixin):
         """
 
         order = self.get_execution_order()
-        rule_names = "\n".join([f"* {r.name}" for r in order if r.made_changes])
-        self.git_commit(f"{self.documentation}\n\n{rule_names}")
+        rules = "\n".join([f"* {r.name}" for r in order if r.made_changes])
+
+        if rules:
+            self.git_commit(f"{self.documentation}\n\n{rules}")
 
     def enforce(self):
         """
