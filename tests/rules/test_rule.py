@@ -9,7 +9,7 @@ from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, TestRule
 
 
 @patch("hammurabi.rules.base.full_strip")
-def test_get_description(mock_full_strip):
+def test_description(mock_full_strip):
     expected_description = "test description"
     mock_full_strip.return_value = expected_description
 
@@ -20,7 +20,7 @@ def test_get_description(mock_full_strip):
 
 
 @patch("hammurabi.rules.base.full_strip")
-def test_get_documentation(mock_full_strip):
+def test_documentation(mock_full_strip):
     expected_description = "test description"
     expected_documentation = "test docstring"
     mock_full_strip.side_effect = [expected_description, expected_documentation]
@@ -36,7 +36,7 @@ def test_get_documentation(mock_full_strip):
 
 
 @given(name=st.text(), param=st.one_of(st.text(), st.integers()))
-def test_rule_executed(name: str, param: Any):
+def test_executed(name: str, param: Any):
     rule = TestRule(name=name, param=param)
 
     rule.pre_task_hook = Mock()
@@ -50,7 +50,7 @@ def test_rule_executed(name: str, param: Any):
     rule.post_task_hook.assert_called_once_with()
 
 
-def test_rule_executed_no_direct_param():
+def test_executed_no_direct_param():
     """
     This test case covers the situation of piped and child rules
     which has no direct parameter (it is set to None), but getting
@@ -72,7 +72,7 @@ def test_rule_executed_no_direct_param():
 
 
 @patch("hammurabi.rules.base.config")
-def test_rule_cannot_proceed_dry_run(config):
+def test_cannot_proceed_dry_run(config):
     config.dry_run = True
     rule = TestRule(name="Test", param="Rule")
 
@@ -87,7 +87,7 @@ def test_rule_cannot_proceed_dry_run(config):
     assert not rule.post_task_hook.called
 
 
-def test_rule_cannot_proceed_precondition():
+def test_cannot_proceed_precondition():
     rule = TestRule(
         name="Test",
         param="Rule",
@@ -105,7 +105,7 @@ def test_rule_cannot_proceed_precondition():
     assert not rule.post_task_hook.called
 
 
-def test_rule_cannot_proceed_pipe_and_children():
+def test_cannot_proceed_pipe_and_children():
     piped_rule = TestRule(name="Test", param=None)
     piped_rule.execute = Mock()
 
@@ -120,7 +120,7 @@ def test_rule_cannot_proceed_pipe_and_children():
     assert not child_rule.execute.called
 
 
-def test_rule_execute_pipe():
+def test_execute_pipe():
     piped_rule = TestRule(name="Test", param=None)
     piped_rule.execute = Mock()
 
@@ -132,7 +132,7 @@ def test_rule_execute_pipe():
     piped_rule.execute.assert_called_once_with(rule.param)
 
 
-def test_rule_execute_children():
+def test_execute_children():
     child_rule_1 = TestRule(name="Test", param=None)
     child_rule_1.execute = Mock()
 
@@ -158,7 +158,7 @@ def test_rule_execute_children():
         st.text(), st.integers(), st.iterables(st.one_of(st.text(), st.integers()))
     )
 )
-def test_rule_validate_param(value):
+def test_validate_param(value):
     rule = TestRule(name="Test", param="Rule")
 
     # Casting to string is the safest
@@ -172,7 +172,7 @@ def test_rule_validate_param(value):
         st.text(), st.integers(), st.iterables(st.one_of(st.text(), st.integers()))
     )
 )
-def test_rule_validate_no_casting(value):
+def test_validate_no_casting(value):
     rule = TestRule(name="Test", param="Rule")
 
     result = rule.validate(val=value)
@@ -188,7 +188,7 @@ def test_rule_validate_param_empty():
     assert result == "None"
 
 
-def test_rule_validate_param_required():
+def test_validate_param_required():
     rule = TestRule(name="Test", param="Rule")
 
     with pytest.raises(ValueError) as exc:
