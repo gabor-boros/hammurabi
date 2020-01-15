@@ -65,7 +65,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 
 format: ## run formatters on the package
 	isort --apply
-	black hammurabi
+	black {hammurabi,tests}
 
 lint: format ## run linters against the package
 	mypy hammurabi
