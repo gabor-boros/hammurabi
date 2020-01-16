@@ -74,7 +74,7 @@ lint: format ## run linters against the package
 	flake8 hammurabi --count --ignore=E501 --show-source --statistics
 
 test: ## run unit tests and generate coverage
-	coverage run --source hammurabi -m pytest --hypothesis-show-statistics --disable-warnings
+	coverage run --source hammurabi -m pytest --hypothesis-show-statistics --disable-warnings -vv
 
 download-test-reporter:
 	curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
