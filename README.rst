@@ -25,6 +25,10 @@ Hammurabi
     :target: https://github.com/ambv/black
     :alt: Black Formatted
 
+.. image:: https://bestpractices.coreinfrastructure.org/projects/3587/badge
+    :target: https://bestpractices.coreinfrastructure.org/projects/3587
+    :alt: CII Best Practices
+
 
 Mass changes made easy.
 
