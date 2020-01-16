@@ -19,6 +19,14 @@ hammurabi.config module
    :undoc-members:
    :show-inheritance:
 
+hammurabi.exceptions module
+---------------------------
+
+.. automodule:: hammurabi.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hammurabi.helpers module
 ------------------------
 

@@ -12,6 +12,7 @@ Documentation of Hammurabi
    config
    modules
    contributing
+   vulnerabilities
    authors
    history
 
