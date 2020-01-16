@@ -1,3 +1,4 @@
+import copy
 from typing import Any
 
 from hypothesis import given
@@ -91,7 +92,10 @@ def test_cannot_proceed_precondition():
     rule = TestRule(
         name="Test",
         param="Rule",
-        preconditions=(FAILING_PRECONDITION, PASSING_PRECONDITION),
+        preconditions=(
+            copy.deepcopy(FAILING_PRECONDITION),
+            copy.deepcopy(PASSING_PRECONDITION),
+        ),
     )
 
     rule.pre_task_hook = Mock()
@@ -180,7 +184,7 @@ def test_validate_no_casting(value):
     assert result is value
 
 
-def test_rule_validate_param_empty():
+def test_validate_param_empty():
     rule = TestRule(name="Test", param="Rule")
 
     result = rule.validate(val=None, cast_to=str)
@@ -195,3 +199,65 @@ def test_validate_param_required():
         rule.validate(val=None, cast_to=str, required=True)
 
     assert str(exc.value) == "The given value is empty"
+
+
+def test_execution_order():
+    rule_1 = TestRule(name="rule_1", param="rule_1")
+    rule_2 = TestRule(name="rule_2", param="rule_2")
+    rule_3 = TestRule(name="rule_3", param="rule_3")
+    rule_4 = TestRule(name="rule_4", param="rule_4")
+
+    rule_1.pipe = rule_2
+    rule_1.children = [rule_3, rule_4]
+    rule_1.get_rule_chain = Mock(side_effect=[[rule_2], [rule_3], [rule_4]])
+    expected_execution_order = [rule_1, rule_2, rule_3, rule_4]
+
+    order = rule_1.get_execution_order()
+
+    assert order == expected_execution_order
+    rule_1.get_rule_chain.assert_has_calls([
+        call(rule_2),
+        call(rule_3),
+        call(rule_4),
+    ])
+
+
+def test_execution_order_no_chain():
+    rule_1 = TestRule(name="rule_1", param="rule_1")
+    rule_1.get_rule_chain = Mock(return_value=[])
+    expected_execution_order = [rule_1]
+
+    order = rule_1.get_execution_order()
+
+    assert order == expected_execution_order
+    assert rule_1.get_rule_chain.called is False
+
+
+def test_rule_chain():
+    rule_1 = TestRule(name="rule_1", param="rule_1")
+    rule_2 = TestRule(name="rule_2", param="rule_2")
+    rule_3 = TestRule(name="rule_3", param="rule_3")
+    rule_4 = TestRule(name="rule_4", param="rule_4")
+    rule_5 = TestRule(name="rule_5", param="rule_5")
+    rule_6 = TestRule(name="rule_6", param="rule_6")
+    rule_7 = TestRule(name="rule_7", param="rule_7")
+
+    rule_1.pipe = rule_2
+    rule_1.children = [rule_3, rule_4, rule_7]
+    rule_4.pipe = rule_5
+    rule_5.children = [rule_6]
+
+    expected_chain_order = [rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_7]
+
+    chain = rule_1.get_rule_chain(rule_1)
+
+    assert chain == expected_chain_order
+
+
+def test_rule_chain_no_rule():
+    rule_1 = TestRule(name="rule_1", param="rule_1")
+
+    chain = rule_1.get_rule_chain(rule_1)
+
+    assert chain == [rule_1]
+

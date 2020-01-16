@@ -214,12 +214,7 @@ class Rule(ABC):
         :rtype: List[Rule]
         """
 
-        rules: List[Rule] = list()
-
-        if not rule:
-            return rules
-
-        rules.append(rule)
+        rules: List[Rule] = [rule]
 
         if rule.pipe:
             rules.extend(self.get_rule_chain(rule.pipe))
