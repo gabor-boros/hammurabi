@@ -215,11 +215,7 @@ def test_execution_order():
     order = rule_1.get_execution_order()
 
     assert order == expected_execution_order
-    rule_1.get_rule_chain.assert_has_calls([
-        call(rule_2),
-        call(rule_3),
-        call(rule_4),
-    ])
+    rule_1.get_rule_chain.assert_has_calls([call(rule_2), call(rule_3), call(rule_4)])
 
 
 def test_execution_order_no_chain():
@@ -260,4 +256,3 @@ def test_rule_chain_no_rule():
     chain = rule_1.get_rule_chain(rule_1)
 
     assert chain == [rule_1]
-

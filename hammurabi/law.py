@@ -13,6 +13,7 @@ import logging
 from typing import Iterable, List
 
 from hammurabi.config import config
+from hammurabi.exceptions import AbortLawError
 from hammurabi.helpers import full_strip
 from hammurabi.mixins import GitActionsMixin
 from hammurabi.rules.base import Rule
@@ -119,33 +120,54 @@ class Law(GitActionsMixin):
         if rules:
             self.git_commit(f"{self.documentation}\n\n{rules}")
 
+    @staticmethod
+    def __execute_rule(rule: Rule):
+        """
+        Execute the given rule. In case of an exception, the execution of rules
+        will continue except the failing one. The failed rule's pipe and children
+        will not be executed.
+
+        :param rule: A registered rule
+        :type rule: Rule
+
+        :raises: ``AbortLawError``
+        """
+
+        try:
+            rule.execute()
+        except Exception as exc:  # pylint: disable=broad-except
+            logging.error('Execution of "%s" is aborted: %s', rule.name, str(exc))
+
+            for chain in rule.get_rule_chain(rule):
+                logging.warning('Due to errors "%s" is aborted', chain.name)
+
+            raise AbortLawError(str(exc)) from exc
+
     def enforce(self):
         """
-        Execute all registered rule. In case of an exception, the execution
-        of rules will continue except the failing one. The failed rule's pipe
-        and children will not be executed.
-
-        If the ``rule_can_abort`` config option is set to ``True``, all
-        the rules will be aborted and an exception will be raised.
+        Execute all registered rule. If ``rule_can_abort`` config option
+        is set to ``True``, all the rules will be aborted and an exception
+        will be raised.
 
         When the whole execution chain is finished, the changes will be
         committed except the failed ones.
 
-        :raises: If ``rule_can_abort`` config is True, raise the original exception
+        :raises: ``AbortLawError``
         """
 
         logging.info('Executing law "%s"', self.name)
 
         for rule in self.rules:
             try:
-                rule.execute()
-            except Exception as exc:  # pylint: disable=broad-except
-                logging.error('Execution of "%s" is aborted: %s', rule.name, str(exc))
-
-                for chain in rule.get_rule_chain(rule):
-                    logging.warning('Due to errors "%s" is aborted', chain.name)
-
+                self.__execute_rule(rule)
+            except AbortLawError as exc:
                 if config.rule_can_abort:
                     raise exc
 
-        self.commit()
+        # We are allowing laws with empty rules, expecting that there will be
+        # scenarios when the rules will be populated later. Hence we need to
+        # make sure we are not wasting time on trying to commit if the law did
+        # not get any rule at the end.
+        # TODO: Not call commit when all the rules are failing
+        if self.rules:
+            self.commit()
