@@ -1,28 +1,45 @@
 from typing import Any
 
+from hammurabi.mixins import GitHubMixin, GitMixin
 from hammurabi.rules.base import Rule
 
 
-class TestPrecondition(Rule):
+class ExamplePrecondition(Rule):
     def task(self, param: bool) -> bool:
         return param
 
 
-class TestRule(Rule):
-    """TestRule docstring"""
+class ExampleRule(Rule):
+    """ExampleRule docstring"""
 
     def task(self, param: Any) -> Any:
-        """TestRule task docstring"""
+        """ExampleRule task docstring"""
         return param
 
 
-class TestExceptionRule(Rule):
+class ExampleExceptionRule(Rule):
     def task(self, param: Any) -> Any:
         raise Exception(param)
 
 
-PASSING_PRECONDITION = TestPrecondition(name="Passing", param=True)
-FAILING_PRECONDITION = TestPrecondition(name="Failing", param=False)
+class ExampleGitMixinRule(ExampleRule, GitMixin):
+    pass
 
-PASSING_RULE = TestRule(name="Passing", param="passing rule")
-FAILING_RULE = TestExceptionRule(name="Failing", param="raise exception")
+
+class ExampleGitHubMixinRule(ExampleRule, GitHubMixin):
+    pass
+
+
+PASSING_PRECONDITION = ExamplePrecondition(name="Passing", param=True)
+FAILING_PRECONDITION = ExamplePrecondition(name="Failing", param=False)
+
+PASSING_RULE = ExampleRule(name="Passing", param="passing rule")
+FAILING_RULE = ExampleExceptionRule(name="Failing", param="raise exception")
+
+
+def get_git_mixin_consumer():
+    return ExampleGitMixinRule(name="Passing", param="passing rule")
+
+
+def get_github_mixin_consumer():
+    return ExampleGitHubMixinRule(name="Passing", param="passing rule")

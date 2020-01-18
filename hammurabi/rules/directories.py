@@ -5,11 +5,11 @@ from pathlib import Path
 import shutil
 from typing import Optional
 
-from hammurabi.mixins import GitActionsMixin
+from hammurabi.mixins import GitMixin
 from hammurabi.rules.base import Rule
 
 
-class SingleDirectoryRule(Rule, GitActionsMixin):
+class SingleDirectoryRule(Rule, GitMixin):
     """
     Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle operations on a
     single directory.

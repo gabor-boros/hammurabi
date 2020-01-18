@@ -4,11 +4,11 @@ from typing import List, Set
 
 from hammurabi.config import config
 from hammurabi.law import Law
-from hammurabi.mixins import GitActionsMixin
+from hammurabi.mixins import GitHubMixin
 from hammurabi.rules.base import Rule
 
 
-class Pillar(GitActionsMixin):
+class Pillar(GitHubMixin):
     """
     Collection of :class:`Law`s which will be executed.
     """

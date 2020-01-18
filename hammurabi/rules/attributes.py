@@ -1,3 +1,9 @@
+"""
+Attributes module contains file and directory attribute manipulation
+rules which can be handy after creating new files or directories or
+even when adding execute permissions for a script in the project.
+"""
+
 from abc import abstractmethod
 import logging
 import os
@@ -5,14 +11,14 @@ from pathlib import Path
 import shutil
 from typing import Optional
 
-from hammurabi.mixins import GitActionsMixin
+from hammurabi.mixins import GitMixin
 from hammurabi.rules.base import Rule
 
 
-class SingleAttributeRule(Rule, GitActionsMixin):
+class SingleAttributeRule(Rule, GitMixin):
     """
-    Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle attributes of
-    a single directory or file.
+    Extend :class:`hammurabi.rules.base.Rule` to handle attributes of a single
+    file or directory.
     """
 
     def __init__(
@@ -35,25 +41,62 @@ class SingleAttributeRule(Rule, GitActionsMixin):
 
 class OwnerChanged(SingleAttributeRule):
     """
-    TODO: Rephrase this description.
-
     Change the ownership of a file or directory.
-    The new value can be set as user:group to set both,
-    user to set only the user and :group to set only the group.
+
+    The new ownership of a file or directory can be set in three ways.
+    To set only the user use ``new_value="username"``. To set only the
+    group use ``new_value=":group_name"`` (please note the colon ``:``).
+    It is also possible to set both username and group at the same time
+    by using ``new_value="username:group_name"``.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, OwnerChanged
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         OwnerChanged(
+        >>>             name="Change ownership of nginx config",
+        >>>             path=Path("./nginx.conf"),
+        >>>             new_value="www:web_admin"
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self, param: Path) -> Path:
+        """
+        Change the ownership of the given file or directory.
+        None of the new username or group name can contain colons,
+        otherwise only the first two colon separated values will be
+        used as username and group name.
+
+        :param param: Input parameter of the task
+        :type param: Path
+
+        :return: Return the input path as an output
+        :rtype: Path
+        """
+
         user, group = self.new_value.partition(":")[::2]
 
-        logging.debug('Changing owner of "%s" to "%s"', str(self.param), self.new_value)
-        shutil.chown(param, user=user or None, group=group or None)
+        logging.debug('Changing owner of "%s" to "%s"', param, self.new_value)
+        shutil.chown(str(param), user=user or None, group=group or None)
 
         return param
 
 
 class ModeChanged(SingleAttributeRule):
     """
-    TODO:
+    Change the mode of a file or directory.
 
     Supported modes:
 
@@ -98,6 +141,29 @@ class ModeChanged(SingleAttributeRule):
     +-------------------+-------------------------------------+
     | stat.S_IXOTH      | Execute by others.                  |
     +-------------------+-------------------------------------+
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> import stat
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, ModeChanged
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         ModeChanged(
+        >>>             name="Update script must be executable",
+        >>>             path=Path("./scripts/update.sh"),
+        >>>             new_value=stat.S_IXGRP | stat.S_IXGRP | stat.S_IXOTH
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def __init__(
@@ -107,10 +173,25 @@ class ModeChanged(SingleAttributeRule):
         new_value: Optional[int] = None,
         **kwargs
     ):
-        self.new_value = self.validate(new_value, cast_to=int, required=True)
-        super().__init__(name, path, **kwargs)
+        # Passing the new value and then re-defining it is ugly, but needed
+        # because the super class already has a validation on the new_value
+        # field. For the first time it will be casted to string and then in
+        # this __init__ it will be casted to integer. This logic can be
+        # changed when it became frustrating.
+        super().__init__(name, path, new_value=str(new_value), **kwargs)
+        self.new_value = self.validate(self.new_value, cast_to=int, required=True)
 
     def task(self, param: Path) -> Path:
-        logging.debug('Changing mode of "%s" to "%s"', str(self.param), self.new_value)
-        os.chmod(param, self.new_value)
+        """
+        Change the mode of the given file or directory.
+
+        :param param: Input parameter of the task
+        :type param: Path
+
+        :return: Return the input path as an output
+        :rtype: Path
+        """
+
+        logging.debug('Changing mode of "%s" to "%s"', param, self.new_value)
+        os.chmod(str(param), self.new_value)
         return param

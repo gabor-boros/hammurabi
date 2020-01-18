@@ -3,11 +3,11 @@ import logging
 from pathlib import Path
 from typing import Iterable, Optional
 
-from hammurabi.mixins import GitActionsMixin
+from hammurabi.mixins import GitMixin
 from hammurabi.rules.base import Rule
 
 
-class SingleFileRule(Rule, GitActionsMixin):
+class SingleFileRule(Rule, GitMixin):
     """
     Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle operations on a
     single file.
@@ -24,7 +24,7 @@ class SingleFileRule(Rule, GitActionsMixin):
         pass
 
 
-class MultipleFilesRule(Rule, GitActionsMixin):
+class MultipleFilesRule(Rule, GitMixin):
     """
     Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle operations on
     multiple files.

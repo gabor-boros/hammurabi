@@ -34,9 +34,9 @@ class Rule(ABC):
         >>> from typing import Optional
         >>> from pathlib import Path
         >>> from hammurabi import Rule
-        >>> from hammurabi.mixins import GitActionsMixin
+        >>> from hammurabi.mixins import GitMixin
         >>>
-        >>> class SingleFileRule(Rule, GitActionsMixin):
+        >>> class SingleFileRule(Rule, GitMixin):
         >>>     def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
         >>>         super().__init__(name, path, **kwargs)
         >>>
@@ -86,7 +86,7 @@ class Rule(ABC):
         if self.pipe and self.children:
             raise ValueError("pipe and children cannot be set at the same time")
 
-        # Set by GitActionsMixin or other mixins to indicate that the rule did changes.
+        # Set by GitMixin or other mixins to indicate that the rule did changes.
         # Rules can set this flag directly too. Only those rules will be indicated on
         # Git commit which are made changes.
         self.made_changes = False

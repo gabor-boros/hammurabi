@@ -6,7 +6,7 @@ from mock import Mock, call, patch
 import pytest
 
 from hammurabi import Law
-from tests.helpers import FAILING_RULE, PASSING_RULE, TestRule
+from tests.helpers import FAILING_RULE, PASSING_RULE, ExampleRule
 
 
 @given(name=st.text(), description=st.text())
@@ -91,9 +91,9 @@ def test_rule_execution_aborted(mocked_config, mocked_logging):
 
 
 def test_execution_order():
-    rule_1 = TestRule(name="rule_1", param="rule_1")
-    rule_2 = TestRule(name="rule_2", param="rule_2")
-    rule_3 = TestRule(name="rule_3", param="rule_3")
+    rule_1 = ExampleRule(name="rule_1", param="rule_1")
+    rule_2 = ExampleRule(name="rule_2", param="rule_2")
+    rule_3 = ExampleRule(name="rule_3", param="rule_3")
 
     rule_1.get_execution_order = Mock(return_value=[])
     rule_2.get_execution_order = Mock(return_value=[])

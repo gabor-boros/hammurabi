@@ -15,11 +15,11 @@ from typing import Iterable, List
 from hammurabi.config import config
 from hammurabi.exceptions import AbortLawError
 from hammurabi.helpers import full_strip
-from hammurabi.mixins import GitActionsMixin
+from hammurabi.mixins import GitMixin
 from hammurabi.rules.base import Rule
 
 
-class Law(GitActionsMixin):
+class Law(GitMixin):
     """
     A Law is a collection of Rules which is responsible for the rule execution
     and git committing.

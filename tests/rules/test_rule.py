@@ -6,7 +6,7 @@ from hypothesis import strategies as st
 from mock import Mock, call, patch
 import pytest
 
-from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, TestRule
+from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
 
 
 @patch("hammurabi.rules.base.full_strip")
@@ -14,10 +14,10 @@ def test_description(mock_full_strip):
     expected_description = "test description"
     mock_full_strip.return_value = expected_description
 
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     assert rule.description == expected_description
-    mock_full_strip.assert_called_once_with("TestRule task docstring")
+    mock_full_strip.assert_called_once_with("ExampleRule task docstring")
 
 
 @patch("hammurabi.rules.base.full_strip")
@@ -26,7 +26,7 @@ def test_documentation(mock_full_strip):
     expected_documentation = "test docstring"
     mock_full_strip.side_effect = [expected_description, expected_documentation]
 
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     documentation = f"{rule.name}\n{expected_description}\n{expected_documentation}"
     assert rule.documentation == documentation
@@ -38,7 +38,7 @@ def test_documentation(mock_full_strip):
 
 @given(name=st.text(), param=st.one_of(st.text(), st.integers()))
 def test_executed(name: str, param: Any):
-    rule = TestRule(name=name, param=param)
+    rule = ExampleRule(name=name, param=param)
 
     rule.pre_task_hook = Mock()
     rule.post_task_hook = Mock()
@@ -58,7 +58,7 @@ def test_executed_no_direct_param():
     it from the output of the previous rule as an input.
     """
 
-    rule = TestRule(name="Test", param=None)
+    rule = ExampleRule(name="Test", param=None)
     rule.param = "Rule"
 
     rule.pre_task_hook = Mock()
@@ -75,7 +75,7 @@ def test_executed_no_direct_param():
 @patch("hammurabi.rules.base.config")
 def test_cannot_proceed_dry_run(config):
     config.dry_run = True
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     rule.pre_task_hook = Mock()
     rule.post_task_hook = Mock()
@@ -89,7 +89,7 @@ def test_cannot_proceed_dry_run(config):
 
 
 def test_cannot_proceed_precondition():
-    rule = TestRule(
+    rule = ExampleRule(
         name="Test",
         param="Rule",
         preconditions=(
@@ -110,14 +110,14 @@ def test_cannot_proceed_precondition():
 
 
 def test_cannot_proceed_pipe_and_children():
-    piped_rule = TestRule(name="Test", param=None)
+    piped_rule = ExampleRule(name="Test", param=None)
     piped_rule.execute = Mock()
 
-    child_rule = TestRule(name="Test", param=None)
+    child_rule = ExampleRule(name="Test", param=None)
     child_rule.execute = Mock()
 
     with pytest.raises(ValueError) as exc:
-        TestRule(name="Test", param="Rule", pipe=piped_rule, children=[child_rule])
+        ExampleRule(name="Test", param="Rule", pipe=piped_rule, children=[child_rule])
 
     assert str(exc.value) == "pipe and children cannot be set at the same time"
     assert not piped_rule.execute.called
@@ -125,10 +125,10 @@ def test_cannot_proceed_pipe_and_children():
 
 
 def test_execute_pipe():
-    piped_rule = TestRule(name="Test", param=None)
+    piped_rule = ExampleRule(name="Test", param=None)
     piped_rule.execute = Mock()
 
-    rule = TestRule(name="Test", param="Rule", pipe=piped_rule)
+    rule = ExampleRule(name="Test", param="Rule", pipe=piped_rule)
     rule.execute()
 
     # Asserting that the output of the original rule - which in this case
@@ -137,16 +137,16 @@ def test_execute_pipe():
 
 
 def test_execute_children():
-    child_rule_1 = TestRule(name="Test", param=None)
+    child_rule_1 = ExampleRule(name="Test", param=None)
     child_rule_1.execute = Mock()
 
-    child_rule_2 = TestRule(name="Test", param=None)
+    child_rule_2 = ExampleRule(name="Test", param=None)
     child_rule_2.execute = Mock()
 
-    child_rule_3 = TestRule(name="Test", param=None)
+    child_rule_3 = ExampleRule(name="Test", param=None)
     child_rule_3.execute = Mock()
 
-    rule = TestRule(
+    rule = ExampleRule(
         name="Test", param="Rule", children=[child_rule_1, child_rule_2, child_rule_3]
     )
 
@@ -163,7 +163,7 @@ def test_execute_children():
     )
 )
 def test_validate_param(value):
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     # Casting to string is the safest
     result = rule.validate(value, cast_to=str)
@@ -177,7 +177,7 @@ def test_validate_param(value):
     )
 )
 def test_validate_no_casting(value):
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     result = rule.validate(val=value)
 
@@ -185,7 +185,7 @@ def test_validate_no_casting(value):
 
 
 def test_validate_param_empty():
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     result = rule.validate(val=None, cast_to=str)
 
@@ -193,7 +193,7 @@ def test_validate_param_empty():
 
 
 def test_validate_param_required():
-    rule = TestRule(name="Test", param="Rule")
+    rule = ExampleRule(name="Test", param="Rule")
 
     with pytest.raises(ValueError) as exc:
         rule.validate(val=None, cast_to=str, required=True)
@@ -202,10 +202,10 @@ def test_validate_param_required():
 
 
 def test_execution_order():
-    rule_1 = TestRule(name="rule_1", param="rule_1")
-    rule_2 = TestRule(name="rule_2", param="rule_2")
-    rule_3 = TestRule(name="rule_3", param="rule_3")
-    rule_4 = TestRule(name="rule_4", param="rule_4")
+    rule_1 = ExampleRule(name="rule_1", param="rule_1")
+    rule_2 = ExampleRule(name="rule_2", param="rule_2")
+    rule_3 = ExampleRule(name="rule_3", param="rule_3")
+    rule_4 = ExampleRule(name="rule_4", param="rule_4")
 
     rule_1.pipe = rule_2
     rule_1.children = [rule_3, rule_4]
@@ -219,7 +219,7 @@ def test_execution_order():
 
 
 def test_execution_order_no_chain():
-    rule_1 = TestRule(name="rule_1", param="rule_1")
+    rule_1 = ExampleRule(name="rule_1", param="rule_1")
     rule_1.get_rule_chain = Mock(return_value=[])
     expected_execution_order = [rule_1]
 
@@ -230,13 +230,13 @@ def test_execution_order_no_chain():
 
 
 def test_rule_chain():
-    rule_1 = TestRule(name="rule_1", param="rule_1")
-    rule_2 = TestRule(name="rule_2", param="rule_2")
-    rule_3 = TestRule(name="rule_3", param="rule_3")
-    rule_4 = TestRule(name="rule_4", param="rule_4")
-    rule_5 = TestRule(name="rule_5", param="rule_5")
-    rule_6 = TestRule(name="rule_6", param="rule_6")
-    rule_7 = TestRule(name="rule_7", param="rule_7")
+    rule_1 = ExampleRule(name="rule_1", param="rule_1")
+    rule_2 = ExampleRule(name="rule_2", param="rule_2")
+    rule_3 = ExampleRule(name="rule_3", param="rule_3")
+    rule_4 = ExampleRule(name="rule_4", param="rule_4")
+    rule_5 = ExampleRule(name="rule_5", param="rule_5")
+    rule_6 = ExampleRule(name="rule_6", param="rule_6")
+    rule_7 = ExampleRule(name="rule_7", param="rule_7")
 
     rule_1.pipe = rule_2
     rule_1.children = [rule_3, rule_4, rule_7]
@@ -251,7 +251,7 @@ def test_rule_chain():
 
 
 def test_rule_chain_no_rule():
-    rule_1 = TestRule(name="rule_1", param="rule_1")
+    rule_1 = ExampleRule(name="rule_1", param="rule_1")
 
     chain = rule_1.get_rule_chain(rule_1)
 

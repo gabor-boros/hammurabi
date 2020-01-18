@@ -253,11 +253,11 @@ For more reference please check how the existing rules are implemented.
     # custom.py
     import shutil
     import logging
-    from hammurabi.mixins import GitActionsMixin
+    from hammurabi.mixins import GitMixin
     from hammurabi.rules.base import Rule
 
 
-    class CustomOwnerChanged(Rule, GitActionsMixin):
+    class CustomOwnerChanged(Rule, GitMixin):
         """
         Change the ownership of a file or directory to <original user>:admin.
         """
