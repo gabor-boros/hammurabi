@@ -33,8 +33,13 @@ class ExampleGitHubMixinRule(ExampleRule, GitHubMixin):
 PASSING_PRECONDITION = ExamplePrecondition(name="Passing", param=True)
 FAILING_PRECONDITION = ExamplePrecondition(name="Failing", param=False)
 
-PASSING_RULE = ExampleRule(name="Passing", param="passing rule")
-FAILING_RULE = ExampleExceptionRule(name="Failing", param="raise exception")
+
+def get_passing_rule():
+    return ExampleRule(name="Passing", param="passing rule")
+
+
+def get_failing_rule():
+    return ExampleExceptionRule(name="Failing", param="raise exception")
 
 
 def get_git_mixin_consumer():

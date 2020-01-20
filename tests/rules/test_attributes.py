@@ -32,14 +32,14 @@ def test_single_attribute_rule():
     rule.git_add.assert_called_once_with(expected_param)
 
 
-@given(user=st.text(min_size=1))
+@given(user=st.text(min_size=2))
 @patch("hammurabi.rules.attributes.shutil")
 def test_owner_changed(mocked_shutil, user):
     expected_param = Path("test/path")
-    expected_user = user
+    expected_user = user.strip() or None
     expected_group = None
 
-    rule = OwnerChanged(name="Change owner of file", new_value=expected_user)
+    rule = OwnerChanged(name="Change owner of file", new_value=user)
 
     result = rule.task(expected_param)
 
@@ -54,7 +54,7 @@ def test_owner_changed(mocked_shutil, user):
 def test_group_changed(mocked_shutil, group):
     expected_param = Path("test/path")
     expected_user = None
-    expected_group = group
+    expected_group = group.strip() or None
 
     rule = OwnerChanged(name="Change owner of file", new_value=f":{group}")
 

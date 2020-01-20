@@ -1,12 +1,10 @@
-import copy
-
 from hypothesis import given
 from hypothesis import strategies as st
-from mock import Mock, call, patch
+from mock import Mock, patch
 import pytest
 
 from hammurabi import Law
-from tests.helpers import FAILING_RULE, PASSING_RULE, ExampleRule
+from tests.helpers import ExampleRule, get_failing_rule, get_passing_rule
 
 
 @given(name=st.text(), description=st.text())
@@ -30,7 +28,7 @@ def test_executes_no_task():
 
 
 def test_executes_task():
-    rule = copy.deepcopy(PASSING_RULE)
+    rule = get_passing_rule()
     rule.execute = Mock()
 
     law = Law(name="Passing", description="passing law", rules=(rule,))
@@ -50,9 +48,9 @@ def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
     mocked_logging.warning = Mock()
     expected_exception = "failed"
 
-    rule = copy.deepcopy(FAILING_RULE)
+    rule = get_failing_rule()
     rule.param = expected_exception
-    rule.get_rule_chain = Mock(return_value=[copy.deepcopy(PASSING_RULE)])
+    rule.get_rule_chain = Mock(return_value=[get_passing_rule()])
 
     law = Law(name="Passing", description="passing law", rules=(rule,))
     law.commit = Mock()
@@ -73,9 +71,9 @@ def test_rule_execution_aborted(mocked_config, mocked_logging):
     mocked_logging.warning = Mock()
     expected_exception = "failed"
 
-    rule = copy.deepcopy(FAILING_RULE)
+    rule = get_failing_rule()
     rule.param = expected_exception
-    rule.get_rule_chain = Mock(return_value=[copy.deepcopy(PASSING_RULE)])
+    rule.get_rule_chain = Mock(return_value=[get_passing_rule()])
 
     law = Law(name="Passing", description="passing law", rules=(rule,))
     law.commit = Mock()
@@ -108,7 +106,7 @@ def test_execution_order():
 
 
 def test_commit_changes():
-    rule = copy.deepcopy(PASSING_RULE)
+    rule = get_passing_rule()
     rule.execute = Mock()
     rule.made_changes = True
 
@@ -126,7 +124,7 @@ def test_commit_changes():
 
 
 def test_commit_no_changes():
-    rule = copy.deepcopy(PASSING_RULE)
+    rule = get_passing_rule()
     rule.execute = Mock()
     rule.made_changes = False
 

@@ -86,7 +86,7 @@ class OwnerChanged(SingleAttributeRule):
         :rtype: Path
         """
 
-        user, group = self.new_value.partition(":")[::2]
+        user, group = map(lambda x: x.strip(), self.new_value.partition(":")[::2])
 
         logging.debug('Changing owner of "%s" to "%s"', param, self.new_value)
         shutil.chown(str(param), user=user or None, group=group or None)
