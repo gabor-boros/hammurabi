@@ -36,7 +36,15 @@ class SingleAttributeRule(Rule, GitMixin):
 
     @abstractmethod
     def task(self, param: Path) -> Path:
-        pass
+        """
+        Abstract method which does nothing and must be implemented by inheritors.
+
+        :param param: The path of the target file which will be changed
+        :type param: Path
+
+        :return: Path of the file which was changed
+        :rtype: Path
+        """
 
 
 class OwnerChanged(SingleAttributeRule):
