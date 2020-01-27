@@ -33,7 +33,7 @@ class SingleDirectoryRule(Rule, GitMixin):
         """
         Abstract method which does nothing and must be implemented by inheritors.
 
-        :param param: The path of the target file which will be changed
+        :param param: The path of the target directory which will be changed
         :type param: Path
 
         :return: Path of the directory which was changed
