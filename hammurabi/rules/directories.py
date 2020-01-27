@@ -1,3 +1,10 @@
+"""
+Directories module contains directory specific manipulation rules. Please
+note that those rules which can be used for files and directories are
+located in other modules like :module:`hammurabi.rules.operations` or
+:module:`hammurabi.rules.attributes`.
+"""
+
 from abc import abstractmethod
 import logging
 import os
@@ -23,16 +30,34 @@ class SingleDirectoryRule(Rule, GitMixin):
 
     @abstractmethod
     def task(self, param: Path) -> Path:
-        pass
+        """
+        Abstract method which does nothing and must be implemented by inheritors.
+
+        :param param: The path of the target file which will be changed
+        :type param: Path
+
+        :return: Path of the directory which was changed
+        :rtype: Path
+        """
 
 
 class DirectoryExists(SingleDirectoryRule):
     """
     Ensure that a directory exists. If the directory does not exists,
-    this :class:`hammurabi.rules.base.Rule` will create it.
+    make sure the directory is created.
     """
 
     def task(self, param: Path) -> Path:
+        """
+        Create the given directory if not exists.
+
+        :param param: Input parameter of the task
+        :type param: Path
+
+        :return: Return the input path as an output
+        :rtype: Path
+        """
+
         logging.debug('Creating directory "%s" if not exists', str(self.param))
         param.mkdir()
 
@@ -54,6 +79,12 @@ class DirectoryNotExists(SingleDirectoryRule):
     def task(self, param: Path) -> Path:
         """
         Remove the given directory.
+
+        :param param: Input parameter of the task
+        :type param: Path
+
+        :return: Return the input path as an output
+        :rtype: Path
         """
 
         if param.exists():
@@ -65,12 +96,22 @@ class DirectoryNotExists(SingleDirectoryRule):
 
 class DirectoryEmptied(SingleDirectoryRule):
     """
-    Ensure that the given directory's content is removed.
+    Ensure that the given directory's content is removed. Please note the
+    difference between emptying a directory and recreating it. The latter
+    results in lost ACLs, permissions and modes.
     """
 
     def task(self, param: Path) -> Path:
         """
-        Remove the content of the given directory.
+        Iterate through the entries of the given directory and remove them.
+        If an entry is a file simply remove it, otherwise remove the whole
+        subdirectory and its content.
+
+        :param param: Input parameter of the task
+        :type param: Path
+
+        :return: Return the input path as an output
+        :rtype: Path
         """
 
         with os.scandir(param) as entries:
