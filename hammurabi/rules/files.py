@@ -1,87 +1,64 @@
-from abc import abstractmethod
+"""
+Files module contains file specific manipulation rules. Please note that
+those rules which can be used for files and directories are located in
+other modules like :module:`hammurabi.rules.operations` or
+:module:`hammurabi.rules.attributes`.
+"""
+
 import logging
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable
 
-from hammurabi.mixins import GitMixin
-from hammurabi.rules.base import Rule
-
-
-class SingleFileRule(Rule, GitMixin):
-    """
-    Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle operations on a
-    single file.
-    """
-
-    def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
-        super().__init__(name, path, **kwargs)
-
-    def post_task_hook(self):
-        self.git_add(self.param)
-
-    @abstractmethod
-    def task(self, param: Path) -> Path:
-        pass
+from hammurabi.rules.common import MultiplePathRule, SinglePathRule
 
 
-class MultipleFilesRule(Rule, GitMixin):
-    """
-    Abstract class which extends :class:`hammurabi.rules.base.Rule` to handle operations on
-    multiple files.
-    """
-
-    def __init__(self, name: str, paths: Optional[Iterable[Path]] = (), **kwargs):
-        super().__init__(name, paths, **kwargs)
-
-    def post_task_hook(self):
-        for path in self.param:
-            self.git_add(path)
-
-    @abstractmethod
-    def task(self, param: Iterable[Path]) -> Iterable[Path]:
-        pass
-
-
-class FileExists(SingleFileRule):
+class FileExists(SinglePathRule):
     """
     Ensure that a file exists. If the file does not exists,
-    this :class:`hammurabi.rules.base.Rule` will create it.
+    make sure the file is created.
     """
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         If the target file not exists, create the file to make sure we
         can manipulate it.
+
+        :return: The created/existing file's path
+        :rtype: Path
         """
 
-        logging.debug('Creating file "%s" if not exists', str(param))
-        param.touch()
+        logging.debug('Creating file "%s" if not exists', str(self.param))
+        self.param.touch()
 
-        return param
+        return self.param
 
 
-class FilesExist(MultipleFilesRule):
+class FilesExist(MultiplePathRule):
     """
     Ensure that all files exists. If the files does not exists,
-    this :class:`hammurabi.rules.base.Rule` will create them.
+    make sure the files are created.
     """
 
-    def task(self, param: Iterable[Path]) -> Iterable[Path]:
+    def task(self) -> Iterable[Path]:
         """
         If the target files not exist, create the files to make sure we
         can manipulate them.
+
+        :return: The created/existing files' path
+        :rtype: Iterable[Path]
         """
 
-        for path in param:
-            logging.debug('Creating file "%s" if not exists', str(param))
+        for path in self.param:
+            logging.debug('Creating file "%s" if not exists', str(path))
             path.touch()
 
-        return param
+        return self.param
 
 
-class FileNotExists(SingleFileRule):
+class FileNotExists(SinglePathRule):
     """
-    Ensure that the given file does not exists.
+    Ensure that the given file does not exists. If the file exists
+    remove it, otherwise do nothing and return the original path.
     """
 
     def post_task_hook(self):
@@ -91,21 +68,26 @@ class FileNotExists(SingleFileRule):
 
         self.git_remove(self.param)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
-        Remove the given file.
+        Remove the given file if exists, otherwise do nothing and
+        return the original path.
+
+        :return: Return the removed file's path
+        :rtype: Path
         """
 
-        if self.can_proceed and param.exists():
-            logging.debug('Unlinking "%s"', str(param))
-            param.unlink()
+        if self.param.exists():
+            logging.debug('Unlinking "%s"', str(self.param))
+            self.param.unlink()
 
-        return param
+        return self.param
 
 
-class FilesNotExist(MultipleFilesRule):
+class FilesNotExist(MultiplePathRule):
     """
-    Ensure that the given files does not exist.
+    Ensure that the given files does not exist. If the files exist
+    remove them, otherwise do nothing and return the original paths.
     """
 
     def post_task_hook(self):
@@ -116,27 +98,39 @@ class FilesNotExist(MultipleFilesRule):
         for path in self.param:
             self.git_remove(path)
 
-    def task(self, param: Iterable[Path]) -> Iterable[Path]:
+    def task(self) -> Iterable[Path]:
         """
         Remove all existing files.
+
+        :return: Return the removed files' paths
+        :rtype: Iterable[Path]
         """
 
-        if self.can_proceed:
-            for path in param:
-                if path.exists():
-                    logging.debug('Unlinking "%s"', str(path))
-                    path.unlink()
+        for path in self.param:
+            if path.exists():
+                logging.debug('Unlinking "%s"', str(path))
+                path.unlink()
 
-        return param
+        return self.param
 
 
-class FileEmptied(SingleFileRule):
+class FileEmptied(SinglePathRule):
     """
-    TODO: Fill
+    Remove the content of the given file, but keep the file. Please note the
+    difference between emptying a file and recreating it. The latter
+    results in lost ACLs, permissions and modes.
     """
 
-    def task(self, param: Path) -> Path:
-        logging.debug('Emptying "%s"', str(param))
-        param.write_text("")
+    def task(self) -> Path:
+        """
+        Remove the content of the given file. If the file does not exists
+        this rule will create the file without content.
 
-        return param
+        :return: Return the emptied/created file's path
+        :rtype: Path
+        """
+
+        logging.debug('Emptying "%s"', str(self.param))
+        self.param.write_text("")
+
+        return self.param
