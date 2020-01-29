@@ -105,5 +105,8 @@ ENV/
 .vscode/
 .idea/
 
+# Misc
+.DS_Store
+
 # hammurabi
 example/
