@@ -5,21 +5,21 @@ from hammurabi.rules.base import Rule
 
 
 class ExamplePrecondition(Rule):
-    def task(self, param: bool) -> bool:
-        return param
+    def task(self) -> bool:
+        return self.param
 
 
 class ExampleRule(Rule):
     """ExampleRule docstring"""
 
-    def task(self, param: Any) -> Any:
+    def task(self) -> Any:
         """ExampleRule task docstring"""
-        return param
+        return self.param
 
 
 class ExampleExceptionRule(Rule):
-    def task(self, param: Any) -> Any:
-        raise Exception(param)
+    def task(self) -> Any:
+        raise Exception(self.param)
 
 
 class ExampleGitMixinRule(ExampleRule, GitMixin):

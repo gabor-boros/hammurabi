@@ -3,10 +3,10 @@ from pathlib import Path
 import re
 from typing import Optional
 
-from hammurabi.rules.files import SingleFileRule
+from hammurabi.rules.common import SinglePathRule
 
 
-class LineExists(SingleFileRule):
+class LineExists(SinglePathRule):
     """
     Make sure that the given file contains the required line.
     """
@@ -36,16 +36,18 @@ class LineExists(SingleFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         :raises: -
         """
 
-        with param.open("r") as file:
+        with self.param.open("r") as file:
             lines = file.read().splitlines()
 
             if not lines:
-                logging.debug('File "%s" is empty. Adding "%s"', str(param), self.text)
+                logging.debug(
+                    'File "%s" is empty. Adding "%s"', str(self.param), self.text
+                )
                 lines.append(self.text)
 
         if not any(filter(self.criteria.match, lines)):
@@ -68,13 +70,13 @@ class LineExists(SingleFileRule):
 
             lines.insert(insert_position, self.text)
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             file.writelines((f"{line}\n" for line in lines))
 
-        return param
+        return self.param
 
 
-class LineNotExists(SingleFileRule):
+class LineNotExists(SinglePathRule):
     """
     Make sure that the given file not contains the specified line.
     """
@@ -94,23 +96,23 @@ class LineNotExists(SingleFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         :raises: -
         """
 
-        with param.open("r") as file:
+        with self.param.open("r") as file:
             lines = file.read().splitlines()
 
         lines = list(filter(lambda l: not self.criteria.match(l), lines))
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             file.writelines((f"{line}\n" for line in lines))
 
-        return param
+        return self.param
 
 
-class LineReplaced(SingleFileRule):
+class LineReplaced(SinglePathRule):
     """
     Replace a given line in a file
     """
@@ -136,16 +138,18 @@ class LineReplaced(SingleFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         :raises: -
         """
 
-        with param.open("r") as file:
+        with self.param.open("r") as file:
             lines = file.read().splitlines()
 
             if not lines:
-                logging.debug('File "%s" is empty. Adding "%s"', str(param), self.text)
+                logging.debug(
+                    'File "%s" is empty. Adding "%s"', str(self.param), self.text
+                )
                 lines.append(self.text)
 
         target_match = list(filter(self.target.match, lines))
@@ -165,7 +169,7 @@ class LineReplaced(SingleFileRule):
 
             lines[target_index] = self.text
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             file.writelines((f"{line}\n" for line in lines))
 
-        return param
+        return self.param

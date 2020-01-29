@@ -1,30 +1,12 @@
-from abc import abstractmethod
 import logging
 from pathlib import Path
 import shutil
 from typing import Optional
 
-from hammurabi.mixins import GitMixin
-from hammurabi.rules.base import Rule
+from hammurabi.rules.common import SinglePathRule
 
 
-class SingleOperationRule(Rule, GitMixin):
-    """
-    TODO:
-    """
-
-    def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
-        super().__init__(name, path, **kwargs)
-
-    def post_task_hook(self):
-        self.git_add(self.param)
-
-    @abstractmethod
-    def task(self, param: Path) -> Path:
-        pass
-
-
-class Moved(SingleOperationRule):
+class Moved(SinglePathRule):
     """
     TODO:
     """
@@ -51,13 +33,13 @@ class Moved(SingleOperationRule):
         self.git_remove(self.param)
         self.git_add(self.destination)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         Move the given path to the destination
         """
 
-        logging.debug('Moving "%s" to "%s"', str(param), str(self.destination))
-        shutil.move(param, self.destination)
+        logging.debug('Moving "%s" to "%s"', str(self.param), str(self.destination))
+        shutil.move(self.param, self.destination)
 
         return self.destination
 
@@ -83,7 +65,7 @@ class Renamed(Moved):
         super().__init__(name, path, destination, **kwargs)
 
 
-class Copied(SingleOperationRule):
+class Copied(SinglePathRule):
     """
     Ensure that the given file or directory is copied to the new path.
     """
@@ -109,12 +91,12 @@ class Copied(SingleOperationRule):
 
         self.git_add(self.destination)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         Copy the given file or directory to a new place.
         """
 
-        logging.debug('Copying "%s" to "%s"', str(param), str(self.destination))
-        shutil.copytree(param, self.destination)
+        logging.debug('Copying "%s" to "%s"', str(self.param), str(self.destination))
+        shutil.copytree(self.param, self.destination)
 
         return self.destination

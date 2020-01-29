@@ -46,7 +46,7 @@ def test_executed(name: str, param: Any):
 
     rule.execute(param)
 
-    rule.task.assert_called_once_with(param)
+    rule.task.assert_called_once_with()
     rule.pre_task_hook.assert_called_once_with()
     rule.post_task_hook.assert_called_once_with()
 
@@ -67,7 +67,7 @@ def test_executed_no_direct_param():
 
     rule.execute()
 
-    rule.task.assert_called_once_with(rule.param)
+    rule.task.assert_called_once_with()
     rule.pre_task_hook.assert_called_once_with()
     rule.post_task_hook.assert_called_once_with()
 

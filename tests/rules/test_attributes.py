@@ -9,8 +9,8 @@ from hammurabi.rules.attributes import ModeChanged, OwnerChanged, SingleAttribut
 
 
 class ExampleSingleAttributeRule(SingleAttributeRule):
-    def task(self, param: Path) -> Path:
-        return param
+    def task(self) -> Path:
+        return self.param
 
 
 def test_single_attribute_rule():
@@ -39,9 +39,11 @@ def test_owner_changed(mocked_shutil, user):
     expected_user = user.strip() or None
     expected_group = None
 
-    rule = OwnerChanged(name="Change owner of file", new_value=user)
+    rule = OwnerChanged(
+        name="Change owner of file", path=expected_param, new_value=user
+    )
 
-    result = rule.task(expected_param)
+    result = rule.task()
 
     assert result == expected_param
     mocked_shutil.chown.assert_called_once_with(
@@ -56,9 +58,11 @@ def test_group_changed(mocked_shutil, group):
     expected_user = None
     expected_group = group.strip() or None
 
-    rule = OwnerChanged(name="Change owner of file", new_value=f":{group}")
+    rule = OwnerChanged(
+        name="Change owner of file", path=expected_param, new_value=f":{group}"
+    )
 
-    result = rule.task(expected_param)
+    result = rule.task()
 
     assert result == expected_param
     mocked_shutil.chown.assert_called_once_with(
@@ -73,10 +77,12 @@ def test_owner_and_group_changed(mocked_shutil):
     expected_group = "group"
 
     rule = OwnerChanged(
-        name="Change owner of file", new_value=f"{expected_user}:{expected_group}"
+        name="Change owner of file",
+        path=expected_param,
+        new_value=f"{expected_user}:{expected_group}",
     )
 
-    result = rule.task(expected_param)
+    result = rule.task()
 
     assert result == expected_param
     mocked_shutil.chown.assert_called_once_with(
@@ -89,9 +95,11 @@ def test_mode_changed(mocked_os):
     expected_param = Path("test/path")
     expected_mode = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
 
-    rule = ModeChanged(name="Change owner of file", new_value=expected_mode)
+    rule = ModeChanged(
+        name="Change owner of file", path=expected_param, new_value=expected_mode
+    )
 
-    result = rule.task(expected_param)
+    result = rule.task()
 
     assert result == expected_param
     mocked_os.chmod.assert_called_once_with(str(expected_param), expected_mode)

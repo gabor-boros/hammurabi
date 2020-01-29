@@ -9,13 +9,12 @@ import logging
 import os
 from pathlib import Path
 import shutil
-from typing import Optional
+from typing import Any, Optional
 
-from hammurabi.mixins import GitMixin
-from hammurabi.rules.base import Rule
+from hammurabi.rules.common import SinglePathRule
 
 
-class SingleAttributeRule(Rule, GitMixin):
+class SingleAttributeRule(SinglePathRule):
     """
     Extend :class:`hammurabi.rules.base.Rule` to handle attributes of a single
     file or directory.
@@ -35,15 +34,13 @@ class SingleAttributeRule(Rule, GitMixin):
         self.git_add(self.param)
 
     @abstractmethod
-    def task(self, param: Path) -> Path:
+    def task(self) -> Any:
         """
-        Abstract method which does nothing and must be implemented by inheritors.
+        Abstract method representing how a :func:`hammurabi.rules.base.Rule.task`
+        must be parameterized. Any difference in the parameters will result in
+        pylint/mypy errors.
 
-        :param param: The path of the target file which will be changed
-        :type param: Path
-
-        :return: Path of the file which was changed
-        :rtype: Path
+        For more details please check :func:`hammurabi.rules.base.Rule.task`.
         """
 
 
@@ -80,15 +77,12 @@ class OwnerChanged(SingleAttributeRule):
         >>> pillar.register(example_law)
     """
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         Change the ownership of the given file or directory.
         None of the new username or group name can contain colons,
         otherwise only the first two colon separated values will be
         used as username and group name.
-
-        :param param: Input parameter of the task
-        :type param: Path
 
         :return: Return the input path as an output
         :rtype: Path
@@ -96,10 +90,10 @@ class OwnerChanged(SingleAttributeRule):
 
         user, group = map(lambda x: x.strip(), self.new_value.partition(":")[::2])
 
-        logging.debug('Changing owner of "%s" to "%s"', param, self.new_value)
-        shutil.chown(str(param), user=user or None, group=group or None)
+        logging.debug('Changing owner of "%s" to "%s"', self.param, self.new_value)
+        shutil.chown(str(self.param), user=user or None, group=group or None)
 
-        return param
+        return self.param
 
 
 class ModeChanged(SingleAttributeRule):
@@ -189,17 +183,14 @@ class ModeChanged(SingleAttributeRule):
         super().__init__(name, path, new_value=str(new_value), **kwargs)
         self.new_value = self.validate(self.new_value, cast_to=int, required=True)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         Change the mode of the given file or directory.
-
-        :param param: Input parameter of the task
-        :type param: Path
 
         :return: Return the input path as an output
         :rtype: Path
         """
 
-        logging.debug('Changing mode of "%s" to "%s"', param, self.new_value)
-        os.chmod(str(param), self.new_value)
-        return param
+        logging.debug('Changing mode of "%s" to "%s"', self.param, self.new_value)
+        os.chmod(str(self.param), self.new_value)
+        return self.param

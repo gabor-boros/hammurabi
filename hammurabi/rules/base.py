@@ -268,7 +268,7 @@ class Rule(ABC):
         """
 
     @abstractmethod
-    def task(self, param: Any) -> Any:
+    def task(self) -> Any:
         """
         Abstract method representing how a :func:`hammurabi.rules.base.Rule.task`
         must be parameterized. Any difference in the parameters will result in
@@ -277,11 +277,8 @@ class Rule(ABC):
         To be able to use the power of ``pipe`` and ``children``, return
         something which can be generally used for other rules as in input.
 
-        :param param: The "subject" of the rule
-        :type param: Any
-
         :return: Returns an output which can be used as an input for other rules
-        :rtype: Any (usually same as param's type)
+        :rtype: Any (usually same as `self.param`'s type)
 
         .. note::
 
@@ -298,10 +295,10 @@ class Rule(ABC):
             >>> from hammurabi.rules.files import SingleFileRule
             >>>
             >>> class FileExists(SingleFileRule):
-            >>>     def task(self, param: Path) -> Path:
-            >>>         logging.debug('Creating file "%s" if not exists', str(param))
-            >>>         param.touch()
-            >>>         return param
+            >>>     def task(self) -> Path:
+            >>>         logging.debug('Creating file "%s" if not exists', str(self.param))
+            >>>         self.param.touch()
+            >>>         return self.param
         """
 
     def execute(self, param: Optional[Any] = None):
@@ -347,7 +344,7 @@ class Rule(ABC):
         self.pre_task_hook()
 
         logging.info('Running task for "%s"', self.name)
-        result = self.task(self.param)
+        result = self.task()
 
         logging.debug('Running post task hook for" %s"', self.name)
         self.post_task_hook()

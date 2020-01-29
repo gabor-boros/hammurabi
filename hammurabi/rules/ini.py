@@ -1,9 +1,9 @@
 from abc import abstractmethod
 import logging
 from pathlib import Path
-from typing import Iterable, Optional, Tuple, Union
+from typing import Any, Iterable, Optional, Tuple, Union
 
-from hammurabi.rules.files import SingleFileRule
+from hammurabi.rules.common import SinglePathRule
 
 try:
     from configupdater import ConfigUpdater  # type: ignore
@@ -11,7 +11,7 @@ except ImportError as exc:
     raise RuntimeError(f"{str(exc)}: Run `pip install hammurabi[ini]`")
 
 
-class SingleConfigFileRule(SingleFileRule):
+class SingleConfigFileRule(SinglePathRule):
     """
     TODO:
     """
@@ -41,8 +41,14 @@ class SingleConfigFileRule(SingleFileRule):
         self.updater.read(self.param)
 
     @abstractmethod
-    def task(self, param: Path) -> Path:
-        pass
+    def task(self) -> Any:
+        """
+        Abstract method representing how a :func:`hammurabi.rules.base.Rule.task`
+        must be parameterized. Any difference in the parameters will result in
+        pylint/mypy errors.
+
+        For more details please check :func:`hammurabi.rules.base.Rule.task`.
+        """
 
 
 class SectionExists(SingleConfigFileRule):
@@ -71,7 +77,7 @@ class SectionExists(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         TARGET IS NOT REGEXP! HIGHLIGHT THIS IN DOCS.
         """
@@ -102,10 +108,10 @@ class SectionExists(SingleConfigFileRule):
             for option, value in self.options:
                 self.updater[self.section][option] = value
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             self.updater.write(file)
 
-        return param
+        return self.param
 
 
 class SectionNotExists(SingleConfigFileRule):
@@ -113,7 +119,7 @@ class SectionNotExists(SingleConfigFileRule):
     Make sure that the given file not contains the specified line.
     """
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         :raises: -
         """
@@ -123,10 +129,10 @@ class SectionNotExists(SingleConfigFileRule):
             logging.debug('Removing section "%s"', self.section)
             self.updater.remove_section(self.section)
 
-            with param.open("w") as file:
+            with self.param.open("w") as file:
                 self.updater.write(file)
 
-        return param
+        return self.param
 
 
 class SectionRenamed(SingleConfigFileRule):
@@ -149,7 +155,7 @@ class SectionRenamed(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         :raises: -
         """
@@ -160,10 +166,10 @@ class SectionRenamed(SingleConfigFileRule):
         logging.debug('Renaming "%s" to "%s"', self.section, self.new_name)
         self.updater[self.section].name = self.new_name
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             self.updater.write(file)
 
-        return param
+        return self.param
 
 
 class OptionsExist(SingleConfigFileRule):
@@ -192,7 +198,7 @@ class OptionsExist(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         TODO:
         """
@@ -202,10 +208,10 @@ class OptionsExist(SingleConfigFileRule):
                 logging.debug('Adding option "%s" = "%s"', option, value)
                 self.updater[self.section][option] = value
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             self.updater.write(file)
 
-        return param
+        return self.param
 
 
 class OptionsNotExist(SingleConfigFileRule):
@@ -228,7 +234,7 @@ class OptionsNotExist(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         TODO:
         """
@@ -237,10 +243,10 @@ class OptionsNotExist(SingleConfigFileRule):
             logging.debug('Removing option "%s"', option)
             self.updater.remove_option(self.section, option)
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             self.updater.write(file)
 
-        return param
+        return self.param
 
 
 class OptionRenamed(SingleConfigFileRule):
@@ -265,7 +271,7 @@ class OptionRenamed(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def task(self, param: Path) -> Path:
+    def task(self) -> Path:
         """
         TODO:
         """
@@ -279,7 +285,7 @@ class OptionRenamed(SingleConfigFileRule):
 
         self.updater[self.section][self.option].name = self.new_name
 
-        with param.open("w") as file:
+        with self.param.open("w") as file:
             self.updater.write(file)
 
-        return param
+        return self.param
