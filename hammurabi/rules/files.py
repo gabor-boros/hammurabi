@@ -1,8 +1,8 @@
 """
 Files module contains file specific manipulation rules. Please note that
 those rules which can be used for files and directories are located in
-other modules like :module:`hammurabi.rules.operations` or
-:module:`hammurabi.rules.attributes`.
+other modules like :mod:`hammurabi.rules.operations` or
+:mod:`hammurabi.rules.attributes`.
 """
 
 import logging
