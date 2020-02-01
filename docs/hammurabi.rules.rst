@@ -1,50 +1,78 @@
 hammurabi.rules package
 =======================
 
-hammurabi.rules.base
---------------------
+Submodules
+----------
 
-.. automodule:: hammurabi.rules.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-hammurabi.rules.attributes
---------------------------
+hammurabi.rules.attributes module
+---------------------------------
 
 .. automodule:: hammurabi.rules.attributes
    :members:
    :undoc-members:
    :show-inheritance:
 
-hammurabi.rules.directories
-----------------------------
+hammurabi.rules.base module
+---------------------------
+
+.. automodule:: hammurabi.rules.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hammurabi.rules.common module
+-----------------------------
+
+.. automodule:: hammurabi.rules.common
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hammurabi.rules.directories module
+----------------------------------
 
 .. automodule:: hammurabi.rules.directories
    :members:
    :undoc-members:
    :show-inheritance:
 
-hammurabi.rules.files
----------------------
+hammurabi.rules.files module
+----------------------------
 
 .. automodule:: hammurabi.rules.files
    :members:
    :undoc-members:
    :show-inheritance:
 
-hammurabi.rules.text
----------------------
+hammurabi.rules.ini module
+--------------------------
+
+.. automodule:: hammurabi.rules.ini
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hammurabi.rules.operations module
+---------------------------------
+
+.. automodule:: hammurabi.rules.operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hammurabi.rules.text module
+---------------------------
 
 .. automodule:: hammurabi.rules.text
    :members:
    :undoc-members:
    :show-inheritance:
 
-hammurabi.rules.ini
----------------------
 
-.. automodule:: hammurabi.rules.ini
+Module contents
+---------------
+
+.. automodule:: hammurabi.rules
    :members:
    :undoc-members:
    :show-inheritance:
