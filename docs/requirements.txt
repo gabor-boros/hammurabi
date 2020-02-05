@@ -1,4 +1,3 @@
-Warning: The lock file is not up to date with the latest changes in pyproject.toml. You may be getting outdated dependencies. Run update to update them.
 alabaster==0.7.12 \
     --hash=sha256:446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359 \
     --hash=sha256:a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02
@@ -144,9 +143,9 @@ github3.py==1.3.0 \
 gitpython==3.0.5 \
     --hash=sha256:c155c6a2653593ccb300462f6ef533583a913e17857cfef8fc617c246b6dc245 \
     --hash=sha256:9c2398ffc3dcb3c40b27324b316f08a4f93ad646d5a6328cafbb871aa79f5e42
-hypothesis==5.3.1 \
-    --hash=sha256:1b358250156fa63a5717f484da4d907343562ae375e454bc89562d8981ea1f77 \
-    --hash=sha256:7e44bff356b32ee5e1ba939f9778d192d094227b5be179cc3efc0d706f211619
+hypothesis==5.4.1 \
+    --hash=sha256:c7f5694f7bc27e49d5c41120adc6e075c1a7d625b7c80df44681c0ecaa84323e \
+    --hash=sha256:37a1ccbc5a0f177c0f37e40f1b61aee8bb92e55cc84b43fb26b32968ec4ac07e
 idna==2.8 \
     --hash=sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c \
     --hash=sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407
@@ -159,9 +158,9 @@ importlib-metadata==1.5.0; python_version < "3.8" \
 isort==4.3.21 \
     --hash=sha256:6e811fcb295968434526407adb8796944f1988c5b65e8139058f2014cbe100fd \
     --hash=sha256:54da7e92468955c4fceacd0c86bd0ec997b0e1ee80d97f67c35a78b719dccab1
-jinja2==2.11.0 \
-    --hash=sha256:6e7a3c2934694d59ad334c93dd1b6c96699cf24c53fdb8ec848ac6b23e685734 \
-    --hash=sha256:d6609ae5ec3d56212ca7d802eda654eaf2310000816ce815361041465b108be4
+jinja2==2.11.1 \
+    --hash=sha256:b0eaf100007721b5c16c1fc1eecb87409464edc10469ddc9a22a27a99123be49 \
+    --hash=sha256:93187ffbc7808079673ef52771baa950426fd664d3aad1d0fa3e95644360e250
 jwcrypto==0.6.0 \
     --hash=sha256:e6c517d8998956e531f0a1c158b2f324c29a532a9c4b677bc30b3be14d60ad4d \
     --hash=sha256:a87ac0922d09d9a65011f76d99849f1fbad3d95439c7452cebf4ab0871c2b665
@@ -219,12 +218,9 @@ markupsafe==1.1.1 \
 mccabe==0.6.1 \
     --hash=sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42 \
     --hash=sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f
-mock==3.0.5 \
-    --hash=sha256:d157e52d4e5b938c550f39eb2fd15610db062441a9c2747d3dbfa9298211d0f8 \
-    --hash=sha256:83657d894c90d5681d62155c82bda9c1187827525880eda8ff5df4ec813437c3
-more-itertools==8.1.0 \
-    --hash=sha256:c468adec578380b6281a114cb8a5db34eb1116277da92d7c46f904f0b52d3288 \
-    --hash=sha256:1a2a32c72400d365000412fe08eb4a24ebee89997c18d3d147544f70f5403b39
+more-itertools==8.2.0 \
+    --hash=sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507 \
+    --hash=sha256:5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c
 mypy==0.761 \
     --hash=sha256:7f672d02fffcbace4db2b05369142e0506cdcde20cea0e07c7c2171c4fd11dd6 \
     --hash=sha256:87c556fb85d709dacd4b4cb6167eecc5bbb4f0a9864b69136a0d4640fdc76a36 \
@@ -275,9 +271,9 @@ pylint==2.4.4 \
 pyparsing==2.4.6 \
     --hash=sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec \
     --hash=sha256:4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f
-pytest==5.3.4 \
-    --hash=sha256:c13d1943c63e599b98cf118fcb9703e4d7bde7caa9a432567bcdcae4bf512d20 \
-    --hash=sha256:1d122e8be54d1a709e56f82e2d85dcba3018313d64647f38a91aec88c239b600
+pytest==5.3.5 \
+    --hash=sha256:ff615c761e25eb25df19edddc0b970302d2a9091fbce0e7213298d85fb61fef6 \
+    --hash=sha256:0d5fe9189a148acc3c3eb2ac8e1ac0742cb7618c084f3d228baaec0c254b318d
 python-dateutil==2.8.1 \
     --hash=sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c \
     --hash=sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a
@@ -299,9 +295,9 @@ pyyaml==5.3 \
 requests==2.22.0 \
     --hash=sha256:9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31 \
     --hash=sha256:11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4
-ruamel.yaml==0.16.6 \
-    --hash=sha256:91d6bfe4fce401a00388deb0f5d29e10d2d3683a868c1113ae16bbc351ceb6a4 \
-    --hash=sha256:966e5a049eebf011c90424b9ec7dab6358cee8de0907354b27a27f20a8c4c2ec
+ruamel.yaml==0.16.7 \
+    --hash=sha256:dba517a7e330b6caf476b757022d21efa13c32694bfba1e057ce59a374f18f0a \
+    --hash=sha256:9d59fa89985c55155d35c886663e357813404ae8f94638cb673135b8c8c1a7c7
 ruamel.yaml.clib==0.2.0; platform_python_implementation == "CPython" and python_version < "3.8" \
     --hash=sha256:9c6d040d0396c28d3eaaa6cb20152cb3b2f15adf35a0304f4f40a3cf9f1d2448 \
     --hash=sha256:4d55386129291b96483edcb93b381470f7cd69f97585829b048a3d758d31210a \

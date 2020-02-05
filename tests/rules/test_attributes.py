@@ -3,7 +3,7 @@ import stat
 
 from hypothesis import given
 from hypothesis import strategies as st
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged, SingleAttributeRule
 

@@ -3,7 +3,7 @@ from typing import Any
 
 from hypothesis import given
 from hypothesis import strategies as st
-from mock import Mock, call, patch
+from unittest.mock import Mock, call, patch
 import pytest
 
 from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule

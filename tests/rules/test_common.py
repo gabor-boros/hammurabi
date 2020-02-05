@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterable
 
-from mock import Mock, call
+from unittest.mock import Mock, call
 
 from hammurabi.rules.common import MultiplePathRule, SinglePathRule
 

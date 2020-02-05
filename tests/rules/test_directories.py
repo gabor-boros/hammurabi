@@ -1,4 +1,4 @@
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 
 from hammurabi.rules.directories import (
     DirectoryEmptied,
