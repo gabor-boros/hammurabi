@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from unittest.mock import Mock, PropertyMock, patch
 
 from tests.helpers import get_git_mixin_consumer, get_github_mixin_consumer

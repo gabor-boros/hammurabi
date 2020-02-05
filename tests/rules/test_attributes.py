@@ -1,9 +1,9 @@
 from pathlib import Path
 import stat
+from unittest.mock import Mock, patch
 
 from hypothesis import given
 from hypothesis import strategies as st
-from unittest.mock import Mock, patch
 
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged, SingleAttributeRule
 

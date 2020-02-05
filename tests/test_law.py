@@ -1,6 +1,7 @@
+from unittest.mock import Mock, patch
+
 from hypothesis import given
 from hypothesis import strategies as st
-from unittest.mock import Mock, patch
 import pytest
 
 from hammurabi import Law

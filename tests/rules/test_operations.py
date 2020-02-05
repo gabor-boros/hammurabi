@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from unittest.mock import Mock, patch
 
 from hammurabi.rules.operations import Copied, Moved, Renamed

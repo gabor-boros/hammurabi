@@ -1,9 +1,9 @@
 import copy
 from typing import Any
+from unittest.mock import Mock, call, patch
 
 from hypothesis import given
 from hypothesis import strategies as st
-from unittest.mock import Mock, call, patch
 import pytest
 
 from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
