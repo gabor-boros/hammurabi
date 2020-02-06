@@ -143,7 +143,7 @@ class LineExists(SinglePathRule):
 
             lines.insert(insert_position, self.text)
 
-        if lines and file_was_empty or no_criteria_match:
+        if file_was_empty or no_criteria_match:
             self.__write_content_to_file(lines)
 
         return self.param
@@ -158,10 +158,10 @@ class LineNotExists(SinglePathRule):
         self,
         name: str,
         path: Optional[Path] = None,
-        criteria: Optional[str] = None,
+        text: Optional[str] = None,
         **kwargs,
     ):
-        self.criteria = re.compile(self.validate(criteria, cast_to=str, required=True))
+        self.text = re.compile(self.validate(text, cast_to=str, required=True))
 
         super().__init__(name, path, **kwargs)
 
@@ -177,10 +177,11 @@ class LineNotExists(SinglePathRule):
         with self.param.open("r") as file:
             lines = file.read().splitlines()
 
-        lines = list(filter(lambda l: not self.criteria.match(l), lines))
+        new_lines = list(filter(lambda l: not self.text.match(l), lines))
 
-        with self.param.open("w") as file:
-            file.writelines((f"{line}\n" for line in lines))
+        if new_lines != lines:
+            with self.param.open("w") as file:
+                file.writelines((f"{line}\n" for line in new_lines))
 
         return self.param
 
@@ -248,25 +249,17 @@ class LineReplaced(SinglePathRule):
 
     def __get_lines_from_file(self) -> Tuple[List[str], bool]:
         """
-        Get the lines from the given file. In case of the file is empty, then
-        append the expected line.
+        Get the lines from the given file.
 
         :return: Returns the parsed lines and an indicator if the file was empty
         :rtype: tuple
         """
 
-        file_was_empty = False
-
         with self.param.open("r") as file:
             logging.debug('Reading from "%s"', str(self.param))
             lines = file.read().splitlines()
 
-        if not lines:
-            logging.debug('Adding "%s" to "%s"', self.text, str(self.param))
-            lines.append(self.text)
-            file_was_empty = True
-
-        return lines, file_was_empty
+        return lines, not lines
 
     def __write_content_to_file(self, lines: List[str]):
         """
@@ -315,6 +308,6 @@ class LineReplaced(SinglePathRule):
             for target in self.__get_target_match(lines):
                 self.__replace_line(lines, target)
 
-        self.__write_content_to_file(lines)
+            self.__write_content_to_file(lines)
 
         return self.param
