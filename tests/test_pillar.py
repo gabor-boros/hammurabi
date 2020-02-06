@@ -66,7 +66,7 @@ def test_get_rule_not_registered():
     pillar.register(expected_law)
 
     with pytest.raises(StopIteration):
-        result = pillar.get_rule("no rule with this name")
+        pillar.get_rule("no rule with this name")
 
 
 @patch("hammurabi.pillar.config")
