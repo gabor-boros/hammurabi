@@ -127,7 +127,9 @@ class LineExists(SinglePathRule):
 
         lines, file_was_empty = self.__get_lines_from_file()
 
-        if not file_was_empty and not any(filter(self.criteria.match, lines)):
+        no_criteria_match = not any(filter(self.criteria.match, lines))
+
+        if not file_was_empty and no_criteria_match:
             target_match = self.__get_target_match(lines)
             target_match_index = lines.index(target_match)
 
@@ -141,7 +143,8 @@ class LineExists(SinglePathRule):
 
             lines.insert(insert_position, self.text)
 
-        self.__write_content_to_file(lines)
+        if lines and file_was_empty or no_criteria_match:
+            self.__write_content_to_file(lines)
 
         return self.param
 
