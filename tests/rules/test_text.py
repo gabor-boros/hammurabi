@@ -57,10 +57,11 @@ def test_line_exists():
         path=expected_path, target=target, lines=[target, "other line"]
     )
 
-    rule.task()
+    result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
     assert write_args == [f"{target}\n", f"{rule.text}\n", "other line\n"]
+    assert result == expected_path
 
 
 def test_line_exists_insert_before():
@@ -168,10 +169,11 @@ def test_line_not_exists():
     rule.param.open.return_value.__enter__ = Mock(return_value=mock_file)
     rule.param.open.return_value.__exit__ = Mock()
 
-    rule.task()
+    result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
     assert write_args == ["one\n", "three\n"]
+    assert result == expected_path
 
 
 @patch("hammurabi.rules.text.re")
@@ -206,10 +208,11 @@ def test_line_replaced():
 
     rule, mock_file = get_line_replaced_rule(path=expected_path, text=replacement)
 
-    rule.task()
+    result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
     assert write_args == [f"{replacement}\n"]
+    assert result == expected_path
 
 
 def test_line_replaced_with_indentation():
@@ -263,16 +266,3 @@ def test_line_replaced_no_match():
 
     assert str(exc.value).startswith("No matching line for")
     assert mock_file.writelines.called is False
-
-
-# def test_line_replaced_failed_criteria():
-#     expected_path = Mock()
-#     criteria = "criteria"
-#
-#     rule, mock_file = get_line_replaced_rule(
-#         path=expected_path, criteria=criteria, lines=[criteria, "other line"]
-#     )
-#
-#     rule.task()
-#
-#     assert mock_file.writelines.called is False
