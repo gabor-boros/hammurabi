@@ -7,7 +7,7 @@ parsed, then the modifications are made on the already parsed file.
 from abc import abstractmethod
 import logging
 from pathlib import Path
-from typing import Any, Iterable, Optional, Tuple, Union
+from typing import Any, Iterable, Optional, Tuple
 
 from configupdater import ConfigUpdater  # type: ignore
 
