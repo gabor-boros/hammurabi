@@ -22,14 +22,14 @@ def test_single_file_rule():
     class is that the post_task hook does what we expect.
     """
 
-    expected_param = Path("test/path")
+    expected_path = Path("test/path")
 
-    rule = ExampleSingleFileRule(name="Single file base rule", path=expected_param)
+    rule = ExampleSingleFileRule(name="Single file base rule", path=expected_path)
 
     rule.git_add = Mock()
     rule.post_task_hook()
 
-    rule.git_add.assert_called_once_with(expected_param)
+    rule.git_add.assert_called_once_with(expected_path)
 
 
 def test_multiple_files_rule():
@@ -41,10 +41,10 @@ def test_multiple_files_rule():
 
     expected_path_1 = Path("test/path1")
     expected_path_2 = Path("test/path2")
-    expected_param = [expected_path_1, expected_path_2]
+    expected_path = [expected_path_1, expected_path_2]
 
     rule = ExampleMultipleFilesRule(
-        name="Multiple files base rule", paths=expected_param
+        name="Multiple files base rule", paths=expected_path
     )
 
     rule.git_add = Mock()

@@ -39,9 +39,7 @@ def test_owner_changed(mocked_shutil, user):
     expected_user = user.strip() or None
     expected_group = None
 
-    rule = OwnerChanged(
-        name="Change owner of file", path=expected_path, new_value=user
-    )
+    rule = OwnerChanged(name="Change owner of file", path=expected_path, new_value=user)
 
     result = rule.task()
 
