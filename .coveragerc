@@ -1,0 +1,12 @@
+[run]
+source = hammurabi
+branch = True
+omit = *tests*
+       *__init__*
+       hammurabi/main.py
+
+[report]
+sort = cover
+fail_under = 85
+exclude_lines = pragma: no cover
+                if __name__ == .__main__.:
