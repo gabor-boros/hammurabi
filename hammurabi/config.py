@@ -27,6 +27,7 @@ class Config:
         self.log_level: str = "INFO"
         self.rule_can_abort: bool = False
         self.git_branch_name = "hammurabi"
+        self.git_base_name = "master"
         self.repository: str = ""
 
         logging.basicConfig(
@@ -78,7 +79,8 @@ class Config:
         self.github = login(token=project_config.get("github_token", ""))
         self.repo = Path(project_config.get("target", ""))
         self.repository = project_config.get("repository", "")
-        self.git_branch_name = project_config.get("git_branch_name", "hammurabi")
+        self.git_base_name = project_config.get("git_base_name", self.git_base_name)
+        self.git_branch_name = project_config.get("git_branch_name", self.git_branch_name)
         self.dry_run = bool(project_config.get("dry_run", ""))
         self.rule_can_abort = bool(project_config.get("rule_can_abort", ""))
 

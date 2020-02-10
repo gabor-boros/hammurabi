@@ -165,10 +165,10 @@ class GitHubMixin(GitMixin):
         +============+======================================+
         | repo       | repository (owner/repository format) |
         +------------+--------------------------------------+
+        | base       | git_baseh_name                       |
+        +------------+--------------------------------------+
         | branch     | git_branch_name                      |
         +------------+--------------------------------------+
-
-        TODO: The PR description is not filled yet.
         """
 
         if config.repo and not config.dry_run:
@@ -181,10 +181,11 @@ class GitHubMixin(GitMixin):
             )
 
             if not opened_pull_request:
+                description = ""
                 logging.info("Opening pull request")
                 github_repo.create_pull(
                     title="[hammurabi] Update to match the latest baseline",
-                    base="master",
+                    base=config.git_base_name,
                     head=config.git_branch_name,
-                    body="TODO",
+                    body=description,
                 )
