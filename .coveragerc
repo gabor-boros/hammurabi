@@ -1,6 +1,5 @@
 [run]
 source = hammurabi
-branch = True
 omit = *tests*
        *__init__*
        hammurabi/main.py
