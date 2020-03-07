@@ -146,7 +146,7 @@ def test_section_exists_no_sections(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target
+        target=expected_target,
     )
 
     rule.task()
@@ -176,7 +176,7 @@ def test_section_exists_no_target(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target
+        target=expected_target,
     )
 
     with pytest.raises(LookupError):
@@ -215,7 +215,7 @@ def test_section_exists_already_exists(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target
+        target=expected_target,
     )
 
     result = rule.task()
