@@ -6,6 +6,7 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
+from typing import List
 
 from github3.repos.repo import Repository  # type: ignore
 
@@ -154,7 +155,39 @@ class GitHubMixin(GitMixin):
     """
 
     @staticmethod
-    def create_pull_request():
+    def generate_pull_request_body(pillar) -> str:
+        """
+        Generate the body of the pull request based on the registered laws and rules.
+        The pull request body is markdown formatted.
+
+        :param pillar: Pillar configuration
+        :type pillar: :class:`hammurabi.pillar.Pillar`
+
+        :return: Returns the generated pull request description
+        :rtype: str
+        """
+
+        #  NOTE: The parameter type can not be hinted, because of circular import,
+        #  we must fix this in the future releases.
+
+        logging.debug("Generating pull request body")
+
+        body: List[str] = [
+            "## Description",
+            "Below you can find the executed laws and information about them.",
+        ]
+
+        for law in pillar.laws:
+            body.append(f"\n### {law.name}")
+            body.append(law.description)
+            body.append("\n#### Rules")
+
+            for rule in law.rules:
+                body.append(f"* {rule.name}")
+
+        return "\n".join(body)
+
+    def create_pull_request(self):
         """
         Create a PR on GitHub after the changes are pushed to remote. The pull
         request details (repository, branch) are set by the project
@@ -181,7 +214,8 @@ class GitHubMixin(GitMixin):
             )
 
             if not opened_pull_request:
-                description = ""
+                description = self.generate_pull_request_body(config.pillar)
+
                 logging.info("Opening pull request")
                 github_repo.create_pull(
                     title="[hammurabi] Update to match the latest baseline",

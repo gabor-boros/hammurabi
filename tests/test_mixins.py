@@ -1,7 +1,8 @@
 from pathlib import Path
 from unittest.mock import Mock, PropertyMock, patch
 
-from tests.helpers import get_git_mixin_consumer, get_github_mixin_consumer
+from hammurabi import Law
+from tests.helpers import ExampleRule, get_git_mixin_consumer, get_github_mixin_consumer
 
 
 @patch("hammurabi.mixins.config")
@@ -227,18 +228,74 @@ def test_push_changes_no_repo(mocked_config):
     mocked_repo_prop.assert_called_once_with()
 
 
-@patch("hammurabi.mixins.config")
-def test_github_pull_request(mocked_config):
+def test_generate_pull_request_body():
+    mocked_pillar = Mock()
+    mocked_pillar.laws = [
+        Law(
+            name="Test law 1",
+            description="Test description 1",
+            rules=[ExampleRule(name="Test rule 1", param=Mock())],
+        ),
+        Law(
+            name="Test law 2",
+            description="Test description 2",
+            rules=[ExampleRule(name="Test rule 2", param=Mock())],
+        ),
+        Law(
+            name="Test law 3",
+            description="Test description 3",
+            rules=[
+                ExampleRule(name="Test rule 3", param=Mock()),
+                ExampleRule(name="Test rule 4", param=Mock()),
+            ],
+        ),
+    ]
+
+    expected_body = """## Description
+Below you can find the executed laws and information about them.
+
+### Test law 1
+Test description 1
+
+#### Rules
+* Test rule 1
+
+### Test law 2
+Test description 2
+
+#### Rules
+* Test rule 2
+
+### Test law 3
+Test description 3
+
+#### Rules
+* Test rule 3
+* Test rule 4"""
+
     github = get_github_mixin_consumer()
 
+    body = github.generate_pull_request_body(mocked_pillar)
+
+    assert body == expected_body
+
+
+@patch("hammurabi.mixins.config")
+def test_github_pull_request(mocked_config):
     expected_branch_name = "awesome_branch"
     expected_owner = "gabor-boros"
     expected_repo_name = "hammurabi"
+    expected_pull_request_body = "test pull body"
     mocked_repository = Mock()
     mocked_repository.pull_requests.return_value = []
 
+    github = get_github_mixin_consumer()
+    github.generate_pull_request_body = Mock()
+    github.generate_pull_request_body.return_value = expected_pull_request_body
+
     mocked_config.dry_run = False
     mocked_config.git_branch_name = expected_branch_name
+    mocked_config.git_base_name = "master"
     mocked_config.repository = f"{expected_owner}/{expected_repo_name}"
     mocked_config.github.repository.return_value = mocked_repository
 
@@ -256,7 +313,7 @@ def test_github_pull_request(mocked_config):
         title="[hammurabi] Update to match the latest baseline",
         base="master",
         head=expected_branch_name,
-        body="TODO",
+        body=expected_pull_request_body,
     )
 
 

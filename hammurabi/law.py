@@ -107,11 +107,11 @@ class Law(GitMixin):
         .. code-block:: text
 
             Migrate to next generation project template
-            - Create pyproject.toml
-            - Add meta info from setup.py to pyproject.toml
-            - Add existing dependencies
-            - Remove requirements.txt
-            - Remove setup.py
+            * Create pyproject.toml
+            * Add meta info from setup.py to pyproject.toml
+            * Add existing dependencies
+            * Remove requirements.txt
+            * Remove setup.py
         """
 
         order = self.get_execution_order()
