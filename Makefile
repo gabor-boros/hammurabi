@@ -74,7 +74,15 @@ lint: format ## run linters against the package
 	pylint hammurabi
 	flake8 hammurabi --count --ignore=E501 --show-source --statistics
 
-test: ## run unit tests and generate coverage
+test-unit: ## run unit tests and generate coverage
+	coverage run -m pytest -m "not integration" --hypothesis-show-statistics -vv
+	coverage report
+
+test-integration: ## run unit tests and generate coverage
+	coverage run -m pytest -m "integration" --hypothesis-show-statistics -vv
+	coverage report
+
+test: ## run all tests and generate coverage
 	coverage run -m pytest --hypothesis-show-statistics -vv
 	coverage report
 

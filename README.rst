@@ -298,29 +298,33 @@ virtualenv and install development dependencies for you.
 Useful make Commands
 --------------------
 
-+-------------+----------------------------------+
-| Command     | Description                      |
-+=============+==================================+
-| help        | Print available make commands    |
-+-------------+----------------------------------+
-| clean       | Remove all artifacts             |
-+-------------+----------------------------------+
-| clean-build | Remove build artifacts           |
-+-------------+----------------------------------+
-| clean-mypy  | Remove mypy artifacts            |
-+-------------+----------------------------------+
-| clean-pyc   | Remove Python artifacts          |
-+-------------+----------------------------------+
-| clean-test  | Remove test artifacts            |
-+-------------+----------------------------------+
-| doc         | Genereate Sphinx documentation   |
-+-------------+----------------------------------+
-| format      | Run several formatters           |
-+-------------+----------------------------------+
-| lint        | Run several linters after format |
-+-------------+----------------------------------+
-| test        | Run unit tests with coverage     |
-+-------------+----------------------------------+
++------------------+-------------------------------------+
+| Command          | Description                         |
++==================+=====================================+
+| help             | Print available make commands       |
++------------------+-------------------------------------+
+| clean            | Remove all artifacts                |
++------------------+-------------------------------------+
+| clean-build      | Remove build artifacts              |
++------------------+-------------------------------------+
+| clean-mypy       | Remove mypy artifacts               |
++------------------+-------------------------------------+
+| clean-pyc        | Remove Python artifacts             |
++------------------+-------------------------------------+
+| clean-test       | Remove test artifacts               |
++------------------+-------------------------------------+
+| doc              | Genereate Sphinx documentation      |
++------------------+-------------------------------------+
+| format           | Run several formatters              |
++------------------+-------------------------------------+
+| lint             | Run several linters after format    |
++------------------+-------------------------------------+
+| test             | Run all tests with coverage         |
++------------------+-------------------------------------+
+| test-unit        | Run unit tests with coverage        |
++------------------+-------------------------------------+
+| test-integration | Run integration tests with coverage |
++------------------+-------------------------------------+
 
 Why Hammurabi?
 ==============
