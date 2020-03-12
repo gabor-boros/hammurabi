@@ -4,8 +4,6 @@ import tempfile
 
 import pytest
 
-# Fixture usage is not recognized by PyCharm - do not remove
-# this import
 from hammurabi.rules.files import (
     FileEmptied,
     FileExists,
@@ -13,6 +11,7 @@ from hammurabi.rules.files import (
     FilesExist,
     FilesNotExist,
 )
+# Fixture usage is not recognized by PyCharm - do not remove this import
 from tests.rules.fixtures import temporary_file
 
 
@@ -20,16 +19,11 @@ from tests.rules.fixtures import temporary_file
 def test_file_exists():
     expected_file = Path(tempfile.gettempdir()).joinpath("test_file_exists")
 
-    # Remove expected file for sure
-    try:
-        os.unlink(expected_file)
-    except FileNotFoundError:
-        pass
-
     rule = FileExists(name="File exists rule", path=expected_file)
     rule.task()
 
     assert expected_file.exists() is True
+    expected_file.unlink()
 
 
 @pytest.mark.integration
@@ -40,13 +34,14 @@ def test_files_exist():
         Path(tempfile.gettempdir()).joinpath("test_files_exist_3"),
     ]
 
-    # Remove expected file for sure
-    map(os.remove, expected_files)
-
     rule = FilesExist(name="Files exist rule", paths=expected_files)
     rule.task()
 
     assert all([f.exists() for f in expected_files]) is True
+
+    # Cleanup
+    for expected_file in expected_files:
+        expected_file.unlink()
 
 
 @pytest.mark.integration

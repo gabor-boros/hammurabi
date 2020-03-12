@@ -145,10 +145,10 @@ class SectionExists(SingleConfigFileRule):
             logging.debug('adding section "%s"', self.section)
             target = self.updater[self.target]
 
-            if not self.add_after:
-                target.add_before.section(self.section).space(self.space)
-            else:
+            if self.add_after:
                 target.add_after.space(self.space).section(self.section)
+            else:
+                target.add_before.section(self.section)
 
             for option, value in self.options:
                 self.updater[self.section][option] = value
@@ -193,7 +193,7 @@ class SectionNotExists(SingleConfigFileRule):
         :rtype: Path
         """
 
-        if self.section in self.updater.sections():
+        if self.updater.has_section(self.section):
 
             logging.debug('Removing section "%s"', self.section)
             self.updater.remove_section(self.section)

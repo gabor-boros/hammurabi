@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, Mock, PropertyMock, patch
 
 import pytest
 
-from hammurabi.rules.ini import SectionExists, SingleConfigFileRule
+from hammurabi.rules.ini import SectionExists, SingleConfigFileRule, SectionNotExists, SectionRenamed
 
 
 class ExampleSingleConfigFileRule(SingleConfigFileRule):
@@ -78,12 +78,6 @@ def test_section_exists(mocked_updater_class):
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")
-def test_section_exists_with_options(mocked_updater_class):
-    # TODO: Test for config options assignment
-    pass
-
-
-@patch("hammurabi.rules.ini.ConfigUpdater")
 def test_section_exists_add_before(mocked_updater_class):
     mock_file = Mock()
     expected_path = Mock()
@@ -119,15 +113,12 @@ def test_section_exists_add_before(mocked_updater_class):
     mocked_updater.has_section.assert_called_once_with(expected_section)
     mocked_prop.assert_called_once_with()
     mock_add_before_return.section.assert_called_once_with(expected_section)
-    mock_add_before_return.section.return_value.space.assert_called_once_with(
-        rule.space
-    )
+    assert mock_add_before_return.section.return_value.space.called is False
     assert result == expected_path
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")
 def test_section_exists_no_sections(mocked_updater_class):
-    # TODO: Test for config options assignment
     mock_file = Mock()
     expected_path = Mock()
     expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
@@ -225,3 +216,118 @@ def test_section_exists_already_exists(mocked_updater_class):
     assert mocked_before.called is False
     assert mocked_after.called is False
     assert result == expected_path
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_not_exists(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock()
+
+    mocked_updater = MagicMock()
+    mocked_updater.has_section.return_value = True
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionNotExists(
+        name="Section not exists rule",
+        path=expected_path,
+        section=expected_section
+    )
+
+    result = rule.task()
+
+    mocked_updater.has_section.assert_called_once_with(expected_section)
+    mocked_updater.remove_section.assert_called_once_with(expected_section)
+    assert result == expected_path
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_not_exists_no_section(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock()
+
+    mocked_updater = MagicMock()
+    mocked_updater.has_section.return_value = False
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionNotExists(
+        name="Section not exists rule",
+        path=expected_path,
+        section=expected_section
+    )
+
+    result = rule.task()
+
+    mocked_updater.has_section.assert_called_once_with(expected_section)
+    assert mocked_updater.remove_section.called is False
+    assert result == expected_path
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_renamed(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock(name="banana")
+    new_section_name = "apple"
+
+    mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.sections.return_value = [expected_section]
+    mocked_updater.has_section.return_value = True
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionRenamed(
+        name="Section exists rule",
+        path=expected_path,
+        section=expected_section,
+        new_name=new_section_name
+    )
+
+    result = rule.task()
+
+    mocked_updater.has_section.assert_called_once_with(expected_section)
+    assert expected_section.name == new_section_name
+    assert result == expected_path
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_renamed_no_section(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock(name="banana")
+    original_section_name = expected_section.name
+    new_section_name = "apple"
+
+    mocked_updater = MagicMock()
+    mocked_updater.has_section.return_value = False
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionRenamed(
+        name="Section exists rule",
+        path=expected_path,
+        section=expected_section,
+        new_name=new_section_name
+    )
+
+    with pytest.raises(LookupError):
+        rule.task()
+
+    mocked_updater.has_section.assert_called_once_with(expected_section)
+    assert expected_section.name == original_section_name
