@@ -110,3 +110,6 @@ ENV/
 
 # hammurabi
 example/
+
+# test reporter
+cc-test-reporter
