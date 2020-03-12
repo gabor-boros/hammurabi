@@ -35,10 +35,6 @@ Mass changes made easy.
 Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules
 on a git repository.
 
-.. raw:: html
-
-    <script id="asciicast-xpNqwTl96eh8ngIRlwj24Axdh" src="https://asciinema.org/a/xpNqwTl96eh8ngIRlwj24Axdh.js" async></script>
-
 Features
 ========
 
