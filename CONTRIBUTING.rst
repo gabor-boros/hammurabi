@@ -117,5 +117,6 @@ Please follow this checklist for the release:
 1. Make sure that formatters are not complaining (``make format`` returns 0)
 2. Make sure that linters are not complaining (``make lint`` returns 0)
 3. Update CHANGELOG.rst
-4. Create a new Release on GitHub with a detailed release description based on
+4. Update version in ``pyproject.toml`` and ``docs/conf.py``
+5. Create a new Release on GitHub with a detailed release description based on
    the previous releases.
