@@ -11,7 +11,6 @@ from hammurabi.rules.files import (
     FilesExist,
     FilesNotExist,
 )
-# Fixture usage is not recognized by PyCharm - do not remove this import
 from tests.rules.fixtures import temporary_file
 
 
@@ -56,9 +55,7 @@ def test_file_not_exists(temporary_file):
 
 @pytest.mark.integration
 def test_files_not_exist(temporary_file):
-    expected_files = [
-        Path(temporary_file.name),
-    ]
+    expected_files = [Path(temporary_file.name)]
 
     rule = FilesNotExist(name="Files not exist rule", paths=expected_files)
     rule.task()

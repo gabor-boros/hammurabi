@@ -3,7 +3,12 @@ from unittest.mock import MagicMock, Mock, PropertyMock, patch
 
 import pytest
 
-from hammurabi.rules.ini import SectionExists, SingleConfigFileRule, SectionNotExists, SectionRenamed
+from hammurabi.rules.ini import (
+    SectionExists,
+    SectionNotExists,
+    SectionRenamed,
+    SingleConfigFileRule,
+)
 
 
 class ExampleSingleConfigFileRule(SingleConfigFileRule):
@@ -233,9 +238,7 @@ def test_section_not_exists(mocked_updater_class):
     mocked_updater_class.return_value = mocked_updater
 
     rule = SectionNotExists(
-        name="Section not exists rule",
-        path=expected_path,
-        section=expected_section
+        name="Section not exists rule", path=expected_path, section=expected_section
     )
 
     result = rule.task()
@@ -260,9 +263,7 @@ def test_section_not_exists_no_section(mocked_updater_class):
     mocked_updater_class.return_value = mocked_updater
 
     rule = SectionNotExists(
-        name="Section not exists rule",
-        path=expected_path,
-        section=expected_section
+        name="Section not exists rule", path=expected_path, section=expected_section
     )
 
     result = rule.task()
@@ -293,7 +294,7 @@ def test_section_renamed(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        new_name=new_section_name
+        new_name=new_section_name,
     )
 
     result = rule.task()
@@ -323,7 +324,7 @@ def test_section_renamed_no_section(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        new_name=new_section_name
+        new_name=new_section_name,
     )
 
     with pytest.raises(LookupError):
