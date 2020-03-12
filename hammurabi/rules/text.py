@@ -26,6 +26,30 @@ class LineExists(SinglePathRule):
     target line, and respect its indentation. Please note that ``text``,
     ``criteria`` and ``target`` parameters are required.
 
+    Example usage:
+
+    .. code-block:: python
+
+            >>> from pathlib import Path
+            >>> from hammurabi import Law, Pillar, LineExists
+            >>>
+            >>> example_law = Law(
+            >>>     name="Name of the law",
+            >>>     description="Well detailed description what this law does.",
+            >>>     rules=(
+            >>>         LineExists(
+            >>>             name="Extend gunicorn config",
+            >>>             path=Path("./gunicorn.conf.py"),
+            >>>             text="keepalive = 65",
+            >>>             criteria=r"^keepalive.*",
+            >>>             target=r"^bind.*",
+            >>>         ),
+            >>>     )
+            >>> )
+            >>>
+            >>> pillar = Pillar()
+            >>> pillar.register(example_law)
+
     .. note::
 
         The indentation of the target text will be extracted by a simple
@@ -152,6 +176,28 @@ class LineExists(SinglePathRule):
 class LineNotExists(SinglePathRule):
     """
     Make sure that the given file not contains the specified line.
+
+    Example usage:
+
+    .. code-block:: python
+
+            >>> from pathlib import Path
+            >>> from hammurabi import Law, Pillar, LineNotExists
+            >>>
+            >>> example_law = Law(
+            >>>     name="Name of the law",
+            >>>     description="Well detailed description what this law does.",
+            >>>     rules=(
+            >>>         LineNotExists(
+            >>>             name="Remove keepalive",
+            >>>             path=Path("./gunicorn.conf.py"),
+            >>>             text="keepalive = 65",
+            >>>         ),
+            >>>     )
+            >>> )
+            >>>
+            >>> pillar = Pillar()
+            >>> pillar.register(example_law)
     """
 
     def __init__(
@@ -195,6 +241,29 @@ class LineReplaced(SinglePathRule):
     can be turned off by setting the ``respect_indentation`` parameter
     to False.  Please note that ``text`` and ``target`` parameters are
     required.
+
+    Example usage:
+
+    .. code-block:: python
+
+            >>> from pathlib import Path
+            >>> from hammurabi import Law, Pillar, LineReplaced
+            >>>
+            >>> example_law = Law(
+            >>>     name="Name of the law",
+            >>>     description="Well detailed description what this law does.",
+            >>>     rules=(
+            >>>         LineReplaced(
+            >>>             name="Replace typo using regex",
+            >>>             path=Path("./gunicorn.conf.py"),
+            >>>             text="keepalive = 65",
+            >>>             target=r"^kepalive.*",
+            >>>         ),
+            >>>     )
+            >>> )
+            >>>
+            >>> pillar = Pillar()
+            >>> pillar.register(example_law)
 
     .. note::
 

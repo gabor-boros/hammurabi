@@ -115,6 +115,28 @@ class Renamed(Moved):
 class Copied(SinglePathRule):
     """
     Ensure that the given file or directory is copied to the new path.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, Copied
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         Copied(
+        >>>             name="Create backup file",
+        >>>             path=Path("./service.yaml"),
+        >>>             destination=Path("./service.bkp.yaml")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def __init__(

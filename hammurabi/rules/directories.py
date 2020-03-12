@@ -17,6 +17,27 @@ class DirectoryExists(SinglePathRule):
     """
     Ensure that a directory exists. If the directory does not exists,
     make sure the directory is created.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, DirectoryExists
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         DirectoryExists(
+        >>>             name="Create secrets directory",
+        >>>             path=Path("./secrets")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self) -> Path:
@@ -36,6 +57,27 @@ class DirectoryExists(SinglePathRule):
 class DirectoryNotExists(SinglePathRule):
     """
     Ensure that the given directory does not exists.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, DirectoryNotExists
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         DirectoryNotExists(
+        >>>             name="Remove unnecessary directory",
+        >>>             path=Path("./temp")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def post_task_hook(self):
@@ -65,6 +107,27 @@ class DirectoryEmptied(SinglePathRule):
     Ensure that the given directory's content is removed. Please note the
     difference between emptying a directory and recreating it. The latter
     results in lost ACLs, permissions and modes.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, DirectoryEmptied
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         DirectoryEmptied(
+        >>>             name="Empty results directory",
+        >>>             path=Path("./test-results")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self) -> Path:

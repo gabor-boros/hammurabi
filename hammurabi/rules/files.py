@@ -16,6 +16,27 @@ class FileExists(SinglePathRule):
     """
     Ensure that a file exists. If the file does not exists,
     make sure the file is created.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, FileExists
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         FileExists(
+        >>>             name="Create service descriptor",
+        >>>             path=Path("./service.yaml")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self) -> Path:
@@ -37,6 +58,31 @@ class FilesExist(MultiplePathRule):
     """
     Ensure that all files exists. If the files does not exists,
     make sure the files are created.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, FilesExist
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         FilesExist(
+        >>>             name="Create test files",
+        >>>             paths=[
+        >>>                 Path("./file_1"),
+        >>>                 Path("./file_2"),
+        >>>                 Path("./file_3"),
+        >>>             ]
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self) -> Iterable[Path]:
@@ -59,6 +105,27 @@ class FileNotExists(SinglePathRule):
     """
     Ensure that the given file does not exists. If the file exists
     remove it, otherwise do nothing and return the original path.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, FileNotExists
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         FileNotExists(
+        >>>             name="Remove unused file",
+        >>>             path=Path("./debug.yaml")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def post_task_hook(self):
@@ -88,6 +155,32 @@ class FilesNotExist(MultiplePathRule):
     """
     Ensure that the given files does not exist. If the files exist
     remove them, otherwise do nothing and return the original paths.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, FilesNotExist
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         FilesNotExist(
+        >>>             name="Remove several files",
+        >>>             paths=[
+        >>>                 Path("./file_1"),
+        >>>                 Path("./file_2"),
+        >>>                 Path("./file_3"),
+        >>>             ]
+        >>>         ),
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def post_task_hook(self):
@@ -119,6 +212,27 @@ class FileEmptied(SinglePathRule):
     Remove the content of the given file, but keep the file. Please note the
     difference between emptying a file and recreating it. The latter
     results in lost ACLs, permissions and modes.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, FileEmptied
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         FileEmptied(
+        >>>             name="Empty the check log file",
+        >>>             path=Path("/var/log/service/check.log")
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar()
+        >>> pillar.register(example_law)
     """
 
     def task(self) -> Path:
