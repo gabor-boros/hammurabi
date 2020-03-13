@@ -264,10 +264,12 @@ For more reference please check how the existing rules are implemented.
         def post_task_hook(self):
             self.git_add(self.param)
 
-        def task(self, param: Path) -> Path:
+        def task(self) -> Path:
+            # Since ``Rule`` is setting its 2nd parameter to ``self.param``,
+            # we can use ``self.param`` to access the target file's path.
             logging.debug('Changing group of "%s" to admin', str(self.param))
-            shutil.chown(param, group="admin")
-            return param
+            shutil.chown(self.param, group="admin")
+            return self.param
 
 Contributing
 ============
