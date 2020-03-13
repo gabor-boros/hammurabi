@@ -8,7 +8,22 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
-[0.1.0] - 2020-03-12
+Unreleased_
+--------------------
+
+Changed
+~~~~~~~
+
+* Moved unreleased section of CHANGELOG to the top
+* Updated changelog entries to contain links for release versions
+* Updated CONTRIBUTING document to mention changelog links
+
+Fixed
+~~~~~
+
+* Fixed wrong custom rule example in the README
+
+0.1.0_ - 2020-03-12
 --------------------
 
 Added
@@ -50,12 +65,12 @@ Added
     * Initial documentation
     * CI/CD integration
 
+.. Hyperlinks for releases
 
-[Unreleased]
---------------------
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.1.0...master
+.. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 
-..
-    EXAMPLE CHANGELOG ENTRY
+.. EXAMPLE CHANGELOG ENTRY
 
     [0.1.0] - 2020-01-xx
     --------------------
