@@ -49,6 +49,7 @@ pyhocon = "^0.3.54"
 python = "^3.7"
 toml = "^0.10.0"
 ujson = "^1.35"
+pydantic = "^1.4"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.6"
