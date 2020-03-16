@@ -59,8 +59,8 @@ class GitMixin:
             git checkout -b <branch name>
         """
 
-        if config.repo and not config.dry_run:
-            branch = config.git_branch_name
+        if config.repo and not config.settings.dry_run:
+            branch = config.settings.git_branch_name
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
@@ -79,7 +79,7 @@ class GitMixin:
             git add <path>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.debug('Git add "%s"', str(param))
             # Disabling no-member pylint error, due to the has_changes
             # function will return false if the target directory is not
@@ -101,7 +101,7 @@ class GitMixin:
             git rm <path>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.debug('Git remove "%s"', str(param))
             # Disabling no-member pylint error, due to the has_changes
             # function will return false if the target directory is not
@@ -122,7 +122,7 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.dry_run and self.has_changes:
+        if config.repo and not config.settings.dry_run and self.has_changes:
             logging.debug("Creating git commit for the changes")
             # Disabling no-member pylint error, due to the has_changes
             # function will return false if the target directory is not
@@ -142,9 +142,9 @@ class GitMixin:
             git push origin <branch name>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.info("Pushing changes")
-            branch = config.git_branch_name
+            branch = config.settings.git_branch_name
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
 
@@ -204,22 +204,22 @@ class GitHubMixin(GitMixin):
         +------------+--------------------------------------+
         """
 
-        if config.repo and not config.dry_run:
-            owner, repository = config.repository.split("/")
+        if config.repo and not config.settings.dry_run:
+            owner, repository = config.settings.repository.split("/")
             github_repo: Repository = config.github.repository(owner, repository)
 
             logging.info("Checking for opened pull request")
             opened_pull_request = github_repo.pull_requests(
-                state="open", head=config.git_branch_name, base="master"
+                state="open", head=config.settings.git_branch_name, base="master"
             )
 
             if not opened_pull_request:
-                description = self.generate_pull_request_body(config.pillar)
+                description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")
                 github_repo.create_pull(
                     title="[hammurabi] Update to match the latest baseline",
-                    base=config.git_base_name,
-                    head=config.git_branch_name,
+                    base=config.settings.git_base_name,
+                    head=config.settings.git_branch_name,
                     body=description,
                 )

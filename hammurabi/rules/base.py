@@ -196,7 +196,7 @@ class Rule(ABC):
         if self.preconditions:
             proceed = all([condition.execute() for condition in self.preconditions])
 
-        return not config.dry_run and proceed
+        return not config.settings.dry_run and proceed
 
     def get_rule_chain(self, rule: "Rule") -> List["Rule"]:
         """

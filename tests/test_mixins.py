@@ -8,7 +8,7 @@ from tests.helpers import ExampleRule, get_git_mixin_consumer, get_github_mixin_
 @patch("hammurabi.mixins.config")
 def test_has_changes(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_config.repo.is_dirty.return_value = True
 
     has_changes = git_mixin.has_changes
@@ -20,7 +20,7 @@ def test_has_changes(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_has_no_changes(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_config.repo.is_dirty.return_value = False
 
     has_changes = git_mixin.has_changes
@@ -32,7 +32,7 @@ def test_has_no_changes(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_has_changes_no_repo(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
 
@@ -45,7 +45,7 @@ def test_has_changes_no_repo(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_has_changes_no_repo_but_changes(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
     git_mixin.made_changes = True
@@ -60,8 +60,8 @@ def test_has_changes_no_repo_but_changes(mocked_config):
 def test_checkout_branch(mocked_config):
     expected_branch_name = "awesome_branch"
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
-    mocked_config.git_branch_name = expected_branch_name
+    mocked_config.settings.dry_run = False
+    mocked_config.settings.git_branch_name = expected_branch_name
 
     git_mixin.checkout_branch()
 
@@ -73,7 +73,7 @@ def test_checkout_branch(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_checkout_branch_dry_run(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
 
     git_mixin.checkout_branch()
 
@@ -83,7 +83,7 @@ def test_checkout_branch_dry_run(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_checkout_no_repo(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
 
@@ -96,7 +96,7 @@ def test_checkout_no_repo(mocked_config):
 def test_git_add(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
 
     git_mixin.git_add(expected_path)
 
@@ -107,7 +107,7 @@ def test_git_add(mocked_config):
 def test_git_add_dry_run(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
 
     git_mixin.git_add(expected_path)
 
@@ -118,7 +118,7 @@ def test_git_add_dry_run(mocked_config):
 def test_git_add_no_repo(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
 
@@ -131,7 +131,7 @@ def test_git_add_no_repo(mocked_config):
 def test_git_remove(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
 
     git_mixin.git_remove(expected_path)
 
@@ -142,7 +142,7 @@ def test_git_remove(mocked_config):
 def test_git_remove_dry_run(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
 
     git_mixin.git_remove(expected_path)
 
@@ -153,7 +153,7 @@ def test_git_remove_dry_run(mocked_config):
 def test_git_remove_no_repo(mocked_config):
     expected_path = Path("/tmp/path")
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
 
@@ -166,7 +166,7 @@ def test_git_remove_no_repo(mocked_config):
 def test_git_commit(mocked_config):
     expected_path = "message"
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
 
     git_mixin.git_commit(expected_path)
 
@@ -176,7 +176,7 @@ def test_git_commit(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_git_commit_dry_run(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
 
     git_mixin.git_commit("message")
 
@@ -186,7 +186,7 @@ def test_git_commit_dry_run(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_git_commit_no_changes(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_config.repo.is_dirty.return_value = False
 
     git_mixin.git_commit("message")
@@ -198,8 +198,8 @@ def test_git_commit_no_changes(mocked_config):
 def test_push_changes(mocked_config):
     expected_branch_name = "awesome_branch"
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
-    mocked_config.git_branch_name = expected_branch_name
+    mocked_config.settings.dry_run = False
+    mocked_config.settings.git_branch_name = expected_branch_name
 
     git_mixin.push_changes()
 
@@ -209,7 +209,7 @@ def test_push_changes(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_push_changes_dry_run(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
 
     git_mixin.push_changes()
 
@@ -219,7 +219,7 @@ def test_push_changes_dry_run(mocked_config):
 @patch("hammurabi.mixins.config")
 def test_push_changes_no_repo(mocked_config):
     git_mixin = get_git_mixin_consumer()
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
 
@@ -293,10 +293,10 @@ def test_github_pull_request(mocked_config):
     github.generate_pull_request_body = Mock()
     github.generate_pull_request_body.return_value = expected_pull_request_body
 
-    mocked_config.dry_run = False
-    mocked_config.git_branch_name = expected_branch_name
-    mocked_config.git_base_name = "master"
-    mocked_config.repository = f"{expected_owner}/{expected_repo_name}"
+    mocked_config.settings.dry_run = False
+    mocked_config.settings.git_branch_name = expected_branch_name
+    mocked_config.settings.git_base_name = "master"
+    mocked_config.settings.repository = f"{expected_owner}/{expected_repo_name}"
     mocked_config.github.repository.return_value = mocked_repository
 
     github.create_pull_request()
@@ -322,7 +322,7 @@ def test_github_pull_request_dry_run(mocked_config):
     github = get_github_mixin_consumer()
     mocked_repository = Mock()
 
-    mocked_config.dry_run = True
+    mocked_config.settings.dry_run = True
     mocked_config.github.repository.return_value = mocked_repository
 
     github.create_pull_request()
@@ -338,7 +338,7 @@ def test_github_pull_request_no_repo(mocked_config):
     github = get_github_mixin_consumer()
     mocked_repository = Mock()
 
-    mocked_config.dry_run = False
+    mocked_config.settings.dry_run = False
     mocked_repo_prop = PropertyMock(return_value=None)
     type(mocked_config).repo = mocked_repo_prop
     mocked_config.github.repository.return_value = mocked_repository
@@ -346,7 +346,7 @@ def test_github_pull_request_no_repo(mocked_config):
     github.create_pull_request()
 
     assert mocked_repo_prop.called is True
-    assert mocked_config.repository.called is False
+    assert mocked_config.settings.repository.called is False
     assert mocked_config.github.repository.called is False
     assert mocked_repository.pull_requests.called is False
     assert mocked_repository.create_pull.called is False
@@ -362,9 +362,9 @@ def test_github_pull_request_has_opened_pr(mocked_config):
     mocked_repository = Mock()
     mocked_repository.pull_requests.return_value = [Mock()]
 
-    mocked_config.dry_run = False
-    mocked_config.git_branch_name = expected_branch_name
-    mocked_config.repository = f"{expected_owner}/{expected_repo_name}"
+    mocked_config.settings.dry_run = False
+    mocked_config.settings.git_branch_name = expected_branch_name
+    mocked_config.settings.repository = f"{expected_owner}/{expected_repo_name}"
     mocked_config.github.repository.return_value = mocked_repository
 
     github.create_pull_request()

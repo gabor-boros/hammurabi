@@ -17,8 +17,11 @@ def test_exists():
     assert result == mocked_path
 
 
+@patch("hammurabi.rules.base.config")
 @patch("hammurabi.rules.directories.shutil")
-def test_not_exists(mocked_shutil):
+def test_not_exists(mocked_shutil, mocked_config):
+    mocked_config.settings.dry_run = False
+
     mocked_path = Mock()
     mocked_path.exists.return_value = True
     rule = DirectoryNotExists(name="Test dir not exists", path=mocked_path)

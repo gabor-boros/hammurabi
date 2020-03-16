@@ -161,7 +161,7 @@ class Law(GitMixin):
             try:
                 self.__execute_rule(rule)
             except AbortLawError as exc:
-                if config.rule_can_abort:
+                if config.settings.rule_can_abort:
                     raise exc
 
         # We are allowing laws with empty rules, expecting that there will be

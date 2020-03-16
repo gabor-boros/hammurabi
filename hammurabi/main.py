@@ -70,8 +70,8 @@ def cli(
         config.github = login(github_token)
 
     if log_level:
-        config.log_level = log_level
-        logging.root.setLevel(config.log_level)
+        config.settings.log_level = log_level
+        logging.root.setLevel(config.settings.log_level)
 
     ctx.ensure_object(dict)
     ctx.obj["config"] = config
