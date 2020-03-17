@@ -21,30 +21,6 @@ class GitMixin:
     any rules which can make modifications during its execution.
     """
 
-    @property
-    def has_changes(self) -> bool:
-        """
-        Check if the rule made any changes. The check will return True if the
-        git branch is dirty after the rule execution or the Rule set the
-        ``made_changes`` attribute directly. In usual cases, the ``made_changes``
-        attribute will not be set directly by any rule.
-
-        :return: True if the git branch is dirty or ``made_changes`` attribute is True
-        :rtype: bool
-        """
-
-        if config.repo and config.repo.is_dirty():  # pylint: disable=no-member
-            # The made_changes attribute defined by rules. If a rule not
-            # defines the attribute or made changes set this attribute
-            # to true. This will indicate to the law that the rule's
-            # description should be used in the commit message.
-            self.made_changes = True  # pylint: disable=attribute-defined-outside-init
-
-        # Not only rules can use this class. If the class which uses this mixin
-        # has no attribute ``made_changes``, do not raise attribute error, but
-        # return False.
-        return getattr(self, "made_changes", False)
-
     @staticmethod
     def checkout_branch():
         """
@@ -64,8 +40,7 @@ class GitMixin:
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
-    @staticmethod
-    def git_add(param: Path):
+    def git_add(self, param: Path):
         """
         Add file contents to the index.
 
@@ -80,14 +55,12 @@ class GitMixin:
         """
 
         if config.repo and not config.settings.dry_run:
-            logging.debug('Git add "%s"', str(param))
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
+            param = str(param)
+            logging.debug('Git add "%s"', param)
             config.repo.git.add(param)  # pylint: disable=no-member
+            self.made_changes = True
 
-    @staticmethod
-    def git_remove(param: Path):
+    def git_remove(self, param: Path):
         """
         Remove files from the working tree and from the index.
 
@@ -102,11 +75,10 @@ class GitMixin:
         """
 
         if config.repo and not config.settings.dry_run:
-            logging.debug('Git remove "%s"', str(param))
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
-            config.repo.index.remove(param)  # pylint: disable=no-member
+            param = str(param)
+            logging.debug('Git remove "%s"', param)
+            config.repo.index.remove((param, ), ignore_unmatch=True)  # pylint: disable=no-member
+            self.made_changes = True
 
     def git_commit(self, message: str):
         """
@@ -122,11 +94,8 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.settings.dry_run and self.has_changes:
+        if config.repo and not config.settings.dry_run and self.made_changes:
             logging.debug("Creating git commit for the changes")
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod

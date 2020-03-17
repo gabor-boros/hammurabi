@@ -6,57 +6,6 @@ from tests.helpers import ExampleRule, get_git_mixin_consumer, get_github_mixin_
 
 
 @patch("hammurabi.mixins.config")
-def test_has_changes(mocked_config):
-    git_mixin = get_git_mixin_consumer()
-    mocked_config.settings.dry_run = False
-    mocked_config.repo.is_dirty.return_value = True
-
-    has_changes = git_mixin.has_changes
-
-    mocked_config.repo.is_dirty.assert_called_once_with()
-    assert has_changes is True
-
-
-@patch("hammurabi.mixins.config")
-def test_has_no_changes(mocked_config):
-    git_mixin = get_git_mixin_consumer()
-    mocked_config.settings.dry_run = False
-    mocked_config.repo.is_dirty.return_value = False
-
-    has_changes = git_mixin.has_changes
-
-    mocked_config.repo.is_dirty.assert_called_once_with()
-    assert has_changes is False
-
-
-@patch("hammurabi.mixins.config")
-def test_has_changes_no_repo(mocked_config):
-    git_mixin = get_git_mixin_consumer()
-    mocked_config.settings.dry_run = False
-    mocked_repo_prop = PropertyMock(return_value=None)
-    type(mocked_config).repo = mocked_repo_prop
-
-    has_changes = git_mixin.has_changes
-
-    assert has_changes is False
-    mocked_repo_prop.assert_called_once_with()
-
-
-@patch("hammurabi.mixins.config")
-def test_has_changes_no_repo_but_changes(mocked_config):
-    git_mixin = get_git_mixin_consumer()
-    mocked_config.settings.dry_run = False
-    mocked_repo_prop = PropertyMock(return_value=None)
-    type(mocked_config).repo = mocked_repo_prop
-    git_mixin.made_changes = True
-
-    has_changes = git_mixin.has_changes
-
-    assert has_changes is True
-    mocked_repo_prop.assert_called_once_with()
-
-
-@patch("hammurabi.mixins.config")
 def test_checkout_branch(mocked_config):
     expected_branch_name = "awesome_branch"
     git_mixin = get_git_mixin_consumer()

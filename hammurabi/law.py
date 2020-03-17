@@ -118,6 +118,7 @@ class Law(GitMixin):
         rules = "\n".join([f"* {r.name}" for r in order if r.made_changes])
 
         if rules:
+            logging.debug("Committing changes")
             self.git_commit(f"{self.documentation}\n\n{rules}")
 
     @staticmethod
