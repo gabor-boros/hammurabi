@@ -97,7 +97,7 @@ class GitMixin:
 
         if config.repo and not config.settings.dry_run:
             logging.debug("Creating git commit for the changes")
-            config.repo.index.commit(message)  # pylint: disable=no-member
+            config.repo.index.commit(message, author="Hammurabi")  # pylint: disable=no-member
 
     @staticmethod
     def push_changes():
