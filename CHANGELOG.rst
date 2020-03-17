@@ -11,17 +11,22 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 --------------------
 
+[0.1.1] - 2020-03-17
+--------------------
+
 Changed
 ~~~~~~~
 
 * Moved unreleased section of CHANGELOG to the top
 * Updated changelog entries to contain links for release versions
 * Updated CONTRIBUTING document to mention changelog links
+* Refactored configuration handling (https://github.com/gabor-boros/hammurabi/pull/5)
 
 Fixed
 ~~~~~
 
 * Fixed wrong custom rule example in the README
+* Smaller issues around git committing and pushing (https://github.com/gabor-boros/hammurabi/pull/5)
 
 0.1.0_ - 2020-03-12
 --------------------
