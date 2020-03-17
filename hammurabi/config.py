@@ -10,10 +10,6 @@ from pydantic import BaseSettings
 import toml
 
 
-def dummy_callable():
-    pass
-
-
 class CommonSettings(BaseSettings):
     """
     Common settings which applies to both TOML and CLI
