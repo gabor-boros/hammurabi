@@ -11,7 +11,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 --------------------
 
-[0.1.1] - 2020-03-17
+0.1.1_ - 2020-03-17
 --------------------
 
 Changed
@@ -72,12 +72,13 @@ Added
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.1.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.1.1...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
+.. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 
 .. EXAMPLE CHANGELOG ENTRY
 
-    [0.1.0] - 2020-01-xx
+    0.1.0_ - 2020-01-xx
     --------------------
 
     Added
