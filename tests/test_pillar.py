@@ -109,7 +109,9 @@ def test_create_lock_file(mocked_path, mocked_config):
 
     pillar.create_lock_file()
 
-    mocked_path.assert_called_once_with(mocked_config.settings.working_dir, "hammurabi.lock")
+    mocked_path.assert_called_once_with(
+        mocked_config.settings.working_dir, "hammurabi.lock"
+    )
     expected_path.exists.assert_called_once_with()
     expected_path.touch.assert_called_once_with()
 
@@ -127,7 +129,9 @@ def test_double_create_lock_file(mocked_path, mocked_config):
     with pytest.raises(RuntimeError):
         pillar.create_lock_file()
 
-    mocked_path.assert_called_once_with(mocked_config.settings.working_dir, "hammurabi.lock")
+    mocked_path.assert_called_once_with(
+        mocked_config.settings.working_dir, "hammurabi.lock"
+    )
     expected_path.exists.assert_called_once_with()
     assert expected_path.touch.called is False
 
@@ -144,7 +148,9 @@ def test_release_lock_file(mocked_path, mocked_config):
 
     pillar.release_lock_file()
 
-    mocked_path.assert_called_once_with(mocked_config.settings.working_dir, "hammurabi.lock")
+    mocked_path.assert_called_once_with(
+        mocked_config.settings.working_dir, "hammurabi.lock"
+    )
     expected_path.exists.assert_called_once_with()
     expected_path.unlink.assert_called_once_with()
 

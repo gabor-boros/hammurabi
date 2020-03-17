@@ -9,20 +9,21 @@ Hammurabi configuration
 =======================
 
 You can set the following options in your ``pyproject.toml``
-config file's `[hammurabi]` section.
+config file's `[hammurabi]` section. Config option marked with ``*`` (asterisk)
+is mandatory (set by CLI argument or project config).
 
 +-----------------+-----------------------------------------------+-----------------+
 | Config option   | Description                                   | Default value   |
 +=================+===============================================+=================+
-| config          | location of pyproject.toml                    | pyproject.toml  |
+| pillar_config * | location of pillar config                     | None            |
 +-----------------+-----------------------------------------------+-----------------+
-| pillar          | name of the pillar variable                   | pillar          |
+| pillar_name     | name of the pillar variable                   | pillar          |
 +-----------------+-----------------------------------------------+-----------------+
 | log_level       | logging level of the program                  | INFO            |
 +-----------------+-----------------------------------------------+-----------------+
 | target          | location of the target directory              | . (current dir) |
 +-----------------+-----------------------------------------------+-----------------+
-| repository      | github repository (owner/repo)                | None            |
+| repository      | git repository (owner/repo)                   | None            |
 +-----------------+-----------------------------------------------+-----------------+
 | git_branch_name | working branch name                           | hammurabi       |
 +-----------------+-----------------------------------------------+-----------------+
@@ -39,8 +40,10 @@ Example content of the ``pyproject.toml`` file.
 .. code-block:: toml
 
     [hammurabi]
+    pillar_config = "/tmp/config/global_config.py"
+    working_dir = "/tmp/clones/hammurabi"
     repository = "gabor-boros/hammurabi"
-    git_branch_name = "custom-branch"
+    git_branch_name = "custom-branch-name"
     log_level = "WARNING"
     rule_can_abort = true
 

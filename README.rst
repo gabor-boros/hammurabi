@@ -111,6 +111,9 @@ Command line options
 Usage examples
 ==============
 
+In every case, make sure that you clone the target repository prior using Hammurabi.
+It will not clone the target repository.
+
 Enforce registered laws
 -----------------------
 

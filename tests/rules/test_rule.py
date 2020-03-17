@@ -35,6 +35,7 @@ def test_documentation(mock_full_strip):
         [call(expected_description), call(expected_documentation)]
     )
 
+
 @patch("hammurabi.rules.base.config")
 @given(name=st.text(), param=st.one_of(st.text(), st.integers()))
 def test_executed(name: str, param: Any, mocked_config):
