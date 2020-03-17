@@ -32,6 +32,10 @@ is mandatory (set by CLI argument or project config).
 | rule_can_abort  | if a rule fails it aborts the whole execution | False           |
 +-----------------+-----------------------------------------------+-----------------+
 
+For HTTPS git remotes do not forget to set the ``GIT_USERNAME`` and ``GIT_PASSWORD``
+environment variables. For SSH git remotes please add your ssh key before using
+Hammurabi.
+
 Examples
 --------
 
