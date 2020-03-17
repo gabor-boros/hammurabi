@@ -113,13 +113,13 @@ def test_git_remove_no_repo(mocked_config):
 
 @patch("hammurabi.mixins.config")
 def test_git_commit(mocked_config):
-    expected_path = "message"
+    commit_message = "message"
     git_mixin = get_git_mixin_consumer()
     mocked_config.settings.dry_run = False
 
-    git_mixin.git_commit(expected_path)
+    git_mixin.git_commit(commit_message)
 
-    mocked_config.repo.index.commit.assert_called_once_with(expected_path)
+    mocked_config.repo.index.commit.assert_called_once_with(commit_message, author='Hammurabi')
 
 
 @patch("hammurabi.mixins.config")
