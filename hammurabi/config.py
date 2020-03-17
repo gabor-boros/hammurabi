@@ -1,3 +1,5 @@
+# pylint: disable=too-few-public-methods
+
 from importlib.util import module_from_spec, spec_from_file_location
 import logging
 import os
