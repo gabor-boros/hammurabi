@@ -69,6 +69,9 @@ coverage = "^5.0.3"
 # ujson = ["ujson"]
 # yaml = ["ruamel.yaml"]
 
+[tool.black]
+target-version = ['py37']
+
 [tool.isort]
 atomic = true
 case_sensitive = true
