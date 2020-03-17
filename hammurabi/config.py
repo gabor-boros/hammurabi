@@ -209,7 +209,7 @@ class Config:
 
         # Set after self.settings is set since the following
         # may depend on settings read from environment or config file
-        self.github = login(project_config.github_token)
+        self.github = login(token=project_config.github_token)
         self.repo = project_config.target
 
         # Set logging
