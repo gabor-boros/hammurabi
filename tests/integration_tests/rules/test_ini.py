@@ -3,7 +3,9 @@ from pathlib import Path
 import pytest
 
 from hammurabi.rules.ini import SectionExists, SectionNotExists, SectionRenamed
-from tests.rules.fixtures import temporary_file
+from tests.fixtures import temporary_file
+
+assert temporary_file
 
 
 @pytest.mark.integration

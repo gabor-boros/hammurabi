@@ -36,8 +36,11 @@ def test_documentation(mock_full_strip):
     )
 
 
+@patch("hammurabi.rules.base.config")
 @given(name=st.text(), param=st.one_of(st.text(), st.integers()))
-def test_executed(name: str, param: Any):
+def test_executed(name: str, param: Any, mocked_config):
+    mocked_config.settings.dry_run = False
+
     rule = ExampleRule(name=name, param=param)
 
     rule.pre_task_hook = Mock()
@@ -51,12 +54,15 @@ def test_executed(name: str, param: Any):
     rule.post_task_hook.assert_called_once_with()
 
 
-def test_executed_no_direct_param():
+@patch("hammurabi.rules.base.config")
+def test_executed_no_direct_param(mocked_config):
     """
     This test case covers the situation of piped and child rules
     which has no direct parameter (it is set to None), but getting
     it from the output of the previous rule as an input.
     """
+
+    mocked_config.settings.dry_run = False
 
     rule = ExampleRule(name="Test", param=None)
     rule.param = "Rule"
@@ -88,7 +94,10 @@ def test_cannot_proceed_dry_run(config):
     assert not rule.post_task_hook.called
 
 
-def test_cannot_proceed_precondition():
+@patch("hammurabi.rules.base.config")
+def test_cannot_proceed_precondition(mocked_config):
+    mocked_config.settings.dry_run = False
+
     rule = ExampleRule(
         name="Test",
         param="Rule",
@@ -124,7 +133,10 @@ def test_cannot_proceed_pipe_and_children():
     assert not child_rule.execute.called
 
 
-def test_execute_pipe():
+@patch("hammurabi.rules.base.config")
+def test_execute_pipe(mocked_config):
+    mocked_config.settings.dry_run = False
+
     piped_rule = ExampleRule(name="Test", param=None)
     piped_rule.execute = Mock()
 
@@ -136,7 +148,10 @@ def test_execute_pipe():
     piped_rule.execute.assert_called_once_with(rule.param)
 
 
-def test_execute_children():
+@patch("hammurabi.rules.base.config")
+def test_execute_children(mocked_config):
+    mocked_config.settings.dry_run = False
+
     child_rule_1 = ExampleRule(name="Test", param=None)
     child_rule_1.execute = Mock()
 

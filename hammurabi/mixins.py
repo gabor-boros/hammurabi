@@ -21,30 +21,6 @@ class GitMixin:
     any rules which can make modifications during its execution.
     """
 
-    @property
-    def has_changes(self) -> bool:
-        """
-        Check if the rule made any changes. The check will return True if the
-        git branch is dirty after the rule execution or the Rule set the
-        ``made_changes`` attribute directly. In usual cases, the ``made_changes``
-        attribute will not be set directly by any rule.
-
-        :return: True if the git branch is dirty or ``made_changes`` attribute is True
-        :rtype: bool
-        """
-
-        if config.repo and config.repo.is_dirty():  # pylint: disable=no-member
-            # The made_changes attribute defined by rules. If a rule not
-            # defines the attribute or made changes set this attribute
-            # to true. This will indicate to the law that the rule's
-            # description should be used in the commit message.
-            self.made_changes = True  # pylint: disable=attribute-defined-outside-init
-
-        # Not only rules can use this class. If the class which uses this mixin
-        # has no attribute ``made_changes``, do not raise attribute error, but
-        # return False.
-        return getattr(self, "made_changes", False)
-
     @staticmethod
     def checkout_branch():
         """
@@ -59,13 +35,12 @@ class GitMixin:
             git checkout -b <branch name>
         """
 
-        if config.repo and not config.dry_run:
-            branch = config.git_branch_name
+        if config.repo and not config.settings.dry_run:
+            branch = config.settings.git_branch_name
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
-    @staticmethod
-    def git_add(param: Path):
+    def git_add(self, param: Path):
         """
         Add file contents to the index.
 
@@ -79,15 +54,12 @@ class GitMixin:
             git add <path>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.debug('Git add "%s"', str(param))
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
-            config.repo.git.add(param)  # pylint: disable=no-member
+            config.repo.git.add(str(param))  # pylint: disable=no-member
+            self.made_changes = True
 
-    @staticmethod
-    def git_remove(param: Path):
+    def git_remove(self, param: Path):
         """
         Remove files from the working tree and from the index.
 
@@ -101,14 +73,15 @@ class GitMixin:
             git rm <path>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.debug('Git remove "%s"', str(param))
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
-            config.repo.index.remove(param)  # pylint: disable=no-member
+            config.repo.index.remove(
+                (str(param),), ignore_unmatch=True
+            )  # pylint: disable=no-member
+            self.made_changes = True
 
-    def git_commit(self, message: str):
+    @staticmethod
+    def git_commit(message: str):
         """
         Commit the changes on the checked out branch.
 
@@ -122,12 +95,9 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.dry_run and self.has_changes:
+        if config.repo and not config.settings.dry_run:
             logging.debug("Creating git commit for the changes")
-            # Disabling no-member pylint error, due to the has_changes
-            # function will return false if the target directory is not
-            # a git repository.
-            config.repo.index.commit(message)  # pylint: disable=no-member
+            config.repo.index.commit(message, author="Hammurabi")  # pylint: disable=no-member
 
     @staticmethod
     def push_changes():
@@ -142,9 +112,9 @@ class GitMixin:
             git push origin <branch name>
         """
 
-        if config.repo and not config.dry_run:
+        if config.repo and not config.settings.dry_run:
             logging.info("Pushing changes")
-            branch = config.git_branch_name
+            branch = config.settings.git_branch_name
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
 
@@ -204,22 +174,22 @@ class GitHubMixin(GitMixin):
         +------------+--------------------------------------+
         """
 
-        if config.repo and not config.dry_run:
-            owner, repository = config.repository.split("/")
+        if config.repo and not config.settings.dry_run:
+            owner, repository = config.settings.repository.split("/")
             github_repo: Repository = config.github.repository(owner, repository)
 
             logging.info("Checking for opened pull request")
             opened_pull_request = github_repo.pull_requests(
-                state="open", head=config.git_branch_name, base="master"
+                state="open", head=config.settings.git_branch_name, base="master"
             )
 
             if not opened_pull_request:
-                description = self.generate_pull_request_body(config.pillar)
+                description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")
                 github_repo.create_pull(
                     title="[hammurabi] Update to match the latest baseline",
-                    base=config.git_base_name,
-                    head=config.git_branch_name,
+                    base=config.settings.git_base_name,
+                    head=config.settings.git_branch_name,
                     body=description,
                 )

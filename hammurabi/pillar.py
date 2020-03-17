@@ -30,7 +30,7 @@ class Pillar(GitHubMixin):
 
     def __init__(self):
         self.__laws: Set[Law] = set()
-        self.__lock_file = Path(config.working_dir, "hammurabi.lock")
+        self.__lock_file = Path(config.settings.working_dir, "hammurabi.lock")
 
     @property
     def laws(self) -> Set[Law]:

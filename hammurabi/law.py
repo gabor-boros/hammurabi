@@ -115,10 +115,15 @@ class Law(GitMixin):
         """
 
         order = self.get_execution_order()
-        rules = "\n".join([f"* {r.name}" for r in order if r.made_changes])
+        rules = [f"* {r.name}" for r in order if r.made_changes]
+        rules_commit_message = "\n".join(rules)
 
-        if rules:
-            self.git_commit(f"{self.documentation}\n\n{rules}")
+        if not rules:
+            logging.warning('No changes made by "%s"', self.name)
+            return
+
+        logging.debug('Committing changes made by "%s"', self.name)
+        self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
     @staticmethod
     def __execute_rule(rule: Rule):
@@ -161,7 +166,7 @@ class Law(GitMixin):
             try:
                 self.__execute_rule(rule)
             except AbortLawError as exc:
-                if config.rule_can_abort:
+                if config.settings.rule_can_abort:
                     raise exc
 
         # We are allowing laws with empty rules, expecting that there will be

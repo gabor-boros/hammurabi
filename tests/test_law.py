@@ -44,7 +44,7 @@ def test_executes_task():
 @patch("hammurabi.law.logging")
 @patch("hammurabi.law.config")
 def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
-    mocked_config.rule_can_abort = False
+    mocked_config.settings.rule_can_abort = False
     mocked_logging.error = Mock()
     mocked_logging.warning = Mock()
     expected_exception = "failed"
@@ -64,10 +64,12 @@ def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
     law.commit.assert_called_once_with()
 
 
-@patch("hammurabi.law.logging")
+@patch("hammurabi.rules.base.config")
 @patch("hammurabi.law.config")
-def test_rule_execution_aborted(mocked_config, mocked_logging):
-    mocked_config.rule_can_abort = True
+@patch("hammurabi.law.logging")
+def test_rule_execution_aborted(mocked_logging, law_config, base_rule_config):
+    law_config.settings.rule_can_abort = True
+    base_rule_config.settings.dry_run = False
     mocked_logging.error = Mock()
     mocked_logging.warning = Mock()
     expected_exception = "failed"

@@ -11,7 +11,9 @@ from hammurabi.rules.files import (
     FilesExist,
     FilesNotExist,
 )
-from tests.rules.fixtures import temporary_file
+from tests.fixtures import temporary_file
+
+assert temporary_file
 
 
 @pytest.mark.integration
