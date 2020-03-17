@@ -5,7 +5,7 @@ from git import Repo
 import pytest
 import toml
 
-from hammurabi.config import config
+from hammurabi.config import config, Settings
 from tests.fixtures import temporary_dir, temporary_file_generator
 
 assert temporary_file_generator
@@ -16,7 +16,7 @@ assert temporary_dir
 def test_config_not_loaded():
     assert config.github is None
     assert config.repo is None
-    assert config.settings is None
+    assert config.settings.dict() == Settings().dict()
 
 
 @pytest.mark.integration

@@ -6,8 +6,12 @@ from typing import Any, Dict, Optional, Union
 
 from git import Repo
 from github3 import GitHub, login
-from pydantic import BaseSettings, PyObject
+from pydantic import BaseSettings
 import toml
+
+
+def dummy_callable():
+    pass
 
 
 class CommonSettings(BaseSettings):
@@ -56,7 +60,7 @@ class Settings(CommonSettings):
     execution.
     """
 
-    pillar: PyObject
+    pillar: object = None
     working_dir: Path = Path(".")
 
 
@@ -70,7 +74,7 @@ class Config:
     def __init__(self):
         self.__repo: Repo = None
         self.github: Optional[GitHub] = None
-        self.settings: Settings = None
+        self.settings: Settings = Settings()
 
     @property
     def repo(self) -> Union[Repo, None]:
@@ -109,7 +113,7 @@ class Config:
         )
 
     @staticmethod
-    def __load_pillar_config(project_config: TOMLSettings) -> PyObject:
+    def __load_pillar_config(project_config: TOMLSettings) -> object:
         """
         Load ``pillar`` configuration based on the dotted style path in the
         ``pyproject.toml``, set by ``config`` configuration section.
@@ -195,6 +199,7 @@ class Config:
         project_config = self.__load_pyproject_toml(toml_file)
 
         # Merge settings and make sure we keep config priority
+        # Override the default settings by the merged ones
         self.settings = self.__merge_settings(
             {
                 "pillar": self.__load_pillar_config(project_config),

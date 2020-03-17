@@ -109,12 +109,12 @@ def enforce(ctx: click.Context, rule_can_abort: bool, dry_run: bool):
     """
 
     if dry_run:
-        ctx.obj["config"].dry_run = dry_run
+        ctx.obj["config"].settings.dry_run = dry_run
 
     if rule_can_abort:
-        ctx.obj["config"].rule_can_abort = rule_can_abort
+        ctx.obj["config"].settings.rule_can_abort = rule_can_abort
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
     pillar.enforce()
 
 
@@ -132,7 +132,7 @@ def get_order(ctx: click.Context):
     Show the Pillar's execution order.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
 
     for law in pillar.laws:
         click.echo(f"- {law.name}")
@@ -148,7 +148,7 @@ def get_laws(ctx: click.Context):
     Show the registered Laws and rules on the Pillar.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
 
     for law in pillar.laws:
         click.echo(f"- {law.name}")
@@ -162,7 +162,7 @@ def get_law(ctx: click.Context, law: str):
     Show specific registered Law.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
 
     try:
         registered_law = pillar.get_law(law)
@@ -179,7 +179,7 @@ def get_rules(ctx: click.Context):
     TODO
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
 
     for rule in pillar.rules:
         click.echo(f"- {rule.name}")
@@ -193,7 +193,7 @@ def get_rule(ctx: click.Context, rule: str):
     Specific rule to get.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
 
     try:
         registered_rule = pillar.get_rule(rule)
@@ -218,7 +218,7 @@ def describe_law(ctx: click.Context, law: str):
     Show details of the given Law.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
     registered_law = pillar.get_law(law)
 
     if not registered_law:
@@ -238,7 +238,7 @@ def describe_rule(ctx: click.Context, rule: str):
     Specific rule to describe.
     """
 
-    pillar: Pillar = ctx.obj["config"].pillar
+    pillar: Pillar = ctx.obj["config"].settings.pillar
     registered_rule = pillar.get_rule(rule)
 
     if not registered_rule:
