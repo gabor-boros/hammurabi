@@ -5,7 +5,7 @@ from git import Repo
 import pytest
 import toml
 
-from hammurabi.config import config, Settings
+from hammurabi.config import Settings, config
 from tests.fixtures import temporary_dir, temporary_file_generator
 
 assert temporary_file_generator
