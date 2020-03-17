@@ -115,11 +115,15 @@ class Law(GitMixin):
         """
 
         order = self.get_execution_order()
-        rules = "\n".join([f"* {r.name}" for r in order if r.made_changes])
+        rules = [f"* {r.name}" for r in order if r.made_changes]
+        rules_commit_message = "\n".join(rules)
 
-        if rules:
-            logging.debug("Committing changes")
-            self.git_commit(f"{self.documentation}\n\n{rules}")
+        if not rules:
+            logging.warning('No changes made by "%s"', self.name)
+            return
+
+        logging.debug('Committing changes made by "%s"', self.name)
+        self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
     @staticmethod
     def __execute_rule(rule: Rule):

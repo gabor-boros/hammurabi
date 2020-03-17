@@ -55,9 +55,8 @@ class GitMixin:
         """
 
         if config.repo and not config.settings.dry_run:
-            param = str(param)
-            logging.debug('Git add "%s"', param)
-            config.repo.git.add(param)  # pylint: disable=no-member
+            logging.debug('Git add "%s"', str(param))
+            config.repo.git.add(str(param))  # pylint: disable=no-member
             self.made_changes = True
 
     def git_remove(self, param: Path):
@@ -75,12 +74,14 @@ class GitMixin:
         """
 
         if config.repo and not config.settings.dry_run:
-            param = str(param)
-            logging.debug('Git remove "%s"', param)
-            config.repo.index.remove((param, ), ignore_unmatch=True)  # pylint: disable=no-member
+            logging.debug('Git remove "%s"', str(param))
+            config.repo.index.remove(
+                (str(param),), ignore_unmatch=True
+            )  # pylint: disable=no-member
             self.made_changes = True
 
-    def git_commit(self, message: str):
+    @staticmethod
+    def git_commit(message: str):
         """
         Commit the changes on the checked out branch.
 
@@ -94,7 +95,7 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.settings.dry_run and self.made_changes:
+        if config.repo and not config.settings.dry_run:
             logging.debug("Creating git commit for the changes")
             config.repo.index.commit(message)  # pylint: disable=no-member
 

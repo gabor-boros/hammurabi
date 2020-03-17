@@ -49,7 +49,7 @@ def test_git_add(mocked_config):
 
     git_mixin.git_add(expected_path)
 
-    mocked_config.repo.git.add.assert_called_once_with(expected_path)
+    mocked_config.repo.git.add.assert_called_once_with(str(expected_path))
 
 
 @patch("hammurabi.mixins.config")
@@ -84,7 +84,7 @@ def test_git_remove(mocked_config):
 
     git_mixin.git_remove(expected_path)
 
-    mocked_config.repo.index.remove.assert_called_once_with(expected_path)
+    mocked_config.repo.index.remove.assert_called_once_with((str(expected_path), ), ignore_unmatch=True)
 
 
 @patch("hammurabi.mixins.config")
@@ -126,17 +126,6 @@ def test_git_commit(mocked_config):
 def test_git_commit_dry_run(mocked_config):
     git_mixin = get_git_mixin_consumer()
     mocked_config.settings.dry_run = True
-
-    git_mixin.git_commit("message")
-
-    assert mocked_config.repo.index.commit.called is False
-
-
-@patch("hammurabi.mixins.config")
-def test_git_commit_no_changes(mocked_config):
-    git_mixin = get_git_mixin_consumer()
-    mocked_config.settings.dry_run = False
-    mocked_config.repo.is_dirty.return_value = False
 
     git_mixin.git_commit("message")
 
