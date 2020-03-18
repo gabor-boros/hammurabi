@@ -314,7 +314,7 @@ Useful make Commands
 +------------------+-------------------------------------+
 | clean-test       | Remove test artifacts               |
 +------------------+-------------------------------------+
-| doc              | Genereate Sphinx documentation      |
+| docs             | Generate Sphinx documentation       |
 +------------------+-------------------------------------+
 | format           | Run several formatters              |
 +------------------+-------------------------------------+
