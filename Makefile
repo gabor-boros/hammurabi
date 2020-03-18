@@ -69,6 +69,7 @@ format: ## run formatters on the package
 
 stubs: ## generate stubs for the package
 	stubgen --include-private -o .stubs hammurabi
+	black .stubs
 	@echo "Do not forget to update stubs! More info: "
 
 lint: stubs format ## run linters against the package

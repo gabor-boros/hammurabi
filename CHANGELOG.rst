@@ -11,6 +11,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 --------------------
 
+Changed
+~~~~~~~
+
+* Add stub formatting to Makefile's `stubs` command
+
 0.1.2_ - 2020-03-18
 --------------------
 
