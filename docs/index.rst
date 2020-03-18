@@ -11,6 +11,7 @@ Documentation of Hammurabi
    installation
    config
    modules
+   stubs
    contributing
    vulnerabilities
    authors

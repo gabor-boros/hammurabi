@@ -67,10 +67,11 @@ format: ## run formatters on the package
 	isort --apply -rc hammurabi tests
 	black hammurabi tests
 
-stubgen: ## generate stubs for the package
-	stubgen --include-private hammurabi
+stubs: ## generate stubs for the package
+	stubgen --include-private -o .stubs hammurabi
+	@echo "Do not forget to update stubs! More info: "
 
-lint: stubgen format ## run linters against the package
+lint: stubs format ## run linters against the package
 	mypy hammurabi
 	bandit -q -r hammurabi
 	pylint hammurabi

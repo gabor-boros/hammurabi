@@ -107,6 +107,7 @@ ENV/
 
 # Misc
 .DS_Store
+.stubs
 
 # hammurabi
 example/

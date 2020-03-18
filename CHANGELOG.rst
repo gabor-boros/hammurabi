@@ -18,6 +18,8 @@ Changed
 ~~~~~~~
 
 * Extended Makefile to generate stubs
+* Extend documentation how to generate and update stubs
+* Update how to release section of CONTRIBUTING.rst
 
 0.1.1_ - 2020-03-17
 --------------------
