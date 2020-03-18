@@ -72,7 +72,7 @@ stubs: ## generate stubs for the package
 	black .stubs
 	@echo "Do not forget to update stubs! More info: "
 
-lint: stubs format ## run linters against the package
+lint: format ## run linters against the package
 	mypy hammurabi
 	bandit -q -r hammurabi
 	pylint hammurabi
