@@ -69,6 +69,7 @@ format: ## run formatters on the package
 	black tests
 
 lint: format ## run linters against the package
+	stubgen hammurabi
 	mypy hammurabi
 	bandit -q -r hammurabi
 	pylint hammurabi
