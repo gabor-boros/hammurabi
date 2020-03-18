@@ -11,6 +11,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 --------------------
 
+Added
+~~~~~
+
+* Render files from Jinja2 templates (``TemplateRendered`` rule)
+
 Changed
 ~~~~~~~
 

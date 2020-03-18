@@ -50,6 +50,7 @@ python = "^3.7"
 toml = "^0.10.0"
 ujson = "^1.35"
 pydantic = "^1.4"
+jinja2 = "^2.11.1"
 
 [tool.poetry.dev-dependencies]
 bandit = "^1.6"

@@ -60,6 +60,14 @@ hammurabi.rules.operations module
    :undoc-members:
    :show-inheritance:
 
+hammurabi.rules.templates module
+--------------------------------
+
+.. automodule:: hammurabi.rules.templates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hammurabi.rules.text module
 ---------------------------
 
