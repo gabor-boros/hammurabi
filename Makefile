@@ -64,14 +64,13 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	$(BROWSER) docs/_build/html/index.html
 
 format: ## run formatters on the package
-	isort --apply
-	black hammurabi
-	black tests
+	isort --apply -rc hammurabi tests
+	black hammurabi tests
 
-stubgen: format ## generate stubs for the package
-	stubgen hammurabi
+stubgen: ## generate stubs for the package
+	stubgen --include-private hammurabi
 
-lint: stubgen ## run linters against the package
+lint: stubgen format ## run linters against the package
 	mypy hammurabi
 	bandit -q -r hammurabi
 	pylint hammurabi

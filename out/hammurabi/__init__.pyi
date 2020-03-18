@@ -8,3 +8,5 @@ from hammurabi.rules.files import FileEmptied as FileEmptied, FileExists as File
 from hammurabi.rules.ini import OptionRenamed as OptionRenamed, OptionsExist as OptionsExist, OptionsNotExist as OptionsNotExist, SectionExists as SectionExists, SectionNotExists as SectionNotExists, SectionRenamed as SectionRenamed
 from hammurabi.rules.operations import Copied as Copied, Moved as Moved, Renamed as Renamed
 from hammurabi.rules.text import LineExists as LineExists, LineNotExists as LineNotExists, LineReplaced as LineReplaced
+
+__version__: str

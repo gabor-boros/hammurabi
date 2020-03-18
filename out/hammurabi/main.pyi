@@ -1,5 +1,5 @@
 import click
-from hammurabi import Pillar as Pillar
+from hammurabi import Pillar as Pillar, __version__ as __version__
 from hammurabi.config import config as config
 from typing import Any
 
