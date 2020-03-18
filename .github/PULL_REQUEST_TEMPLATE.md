@@ -14,6 +14,7 @@ If applicable, add code examples to help explain your changes.
 
 - [ ] Unit tests created/updated
 - [ ] Documentation extended/updated
+- [ ] Stubs created/updated
 
 **References**
 

@@ -84,7 +84,9 @@ def test_git_remove(mocked_config):
 
     git_mixin.git_remove(expected_path)
 
-    mocked_config.repo.index.remove.assert_called_once_with((str(expected_path), ), ignore_unmatch=True)
+    mocked_config.repo.index.remove.assert_called_once_with(
+        (str(expected_path),), ignore_unmatch=True
+    )
 
 
 @patch("hammurabi.mixins.config")
@@ -119,7 +121,9 @@ def test_git_commit(mocked_config):
 
     git_mixin.git_commit(commit_message)
 
-    mocked_config.repo.index.commit.assert_called_once_with(commit_message, author='Hammurabi')
+    mocked_config.repo.index.commit.assert_called_once_with(
+        commit_message, author="Hammurabi"
+    )
 
 
 @patch("hammurabi.mixins.config")

@@ -28,4 +28,4 @@ from hammurabi.rules.ini import (
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
