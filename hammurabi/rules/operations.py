@@ -44,7 +44,7 @@ class Moved(SinglePathRule):
         path: Optional[Path] = None,
         destination: Optional[Path] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.destination = self.validate(destination, required=True)
         super().__init__(name, path, **kwargs)
 
@@ -106,7 +106,7 @@ class Renamed(Moved):
         path: Optional[Path] = None,
         new_name: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> None:
         path_name: str = self.validate(new_name, required=True)
         destination = Path((path or self.param).parent, path_name)
         super().__init__(name, path, destination, **kwargs)
@@ -145,7 +145,7 @@ class Copied(SinglePathRule):
         path: Optional[Path] = None,
         destination: Optional[Path] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.destination = self.validate(destination, required=True)
         super().__init__(name, path, **kwargs)
 

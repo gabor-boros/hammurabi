@@ -28,7 +28,7 @@ class Pillar(GitHubMixin):
     methods.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__laws: Set[Law] = set()
         self.__lock_file = Path(config.settings.working_dir, "hammurabi.lock")
 

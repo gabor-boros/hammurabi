@@ -76,7 +76,7 @@ class Rule(ABC):
         preconditions: Iterable["Rule"] = (),
         pipe: Optional["Rule"] = None,
         children: Iterable["Rule"] = (),
-    ):
+    ) -> None:
         self.param = param
         self.name = name.strip()
         self.pipe = pipe
