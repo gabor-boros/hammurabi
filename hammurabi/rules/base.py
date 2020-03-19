@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Any, Iterable, List, Optional
+from typing import Any, Iterable, List, Optional, Union
 
 from hammurabi.config import config
 from hammurabi.helpers import full_strip
@@ -281,7 +281,8 @@ class Rule(AbstractRule, ABC):
         :rtype: List[Rule]
         """
 
-        rules: List[Rule] = [rule]
+        rules: List[Union[Rule, Precondition]] = list(rule.preconditions)
+        rules.append(rule)
 
         if rule.pipe:
             rules.extend(self.get_rule_chain(rule.pipe))
@@ -297,8 +298,8 @@ class Rule(AbstractRule, ABC):
         for the root rule.
         """
 
-        # TODO: Include preconditions as well
-        order: List[Rule] = [self]
+        order: List[Union[Rule, Precondition]] = list(self.preconditions)
+        order.append(self)
 
         if self.pipe:
             order.extend(self.get_rule_chain(self.pipe))
