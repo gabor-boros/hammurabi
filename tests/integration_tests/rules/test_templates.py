@@ -20,9 +20,7 @@ def test_rendered(temporary_file_generator):
         name="Template rendered",
         template=template_path,
         destination=destination_path,
-        context={
-            "magic_word": "World"
-        },
+        context={"magic_word": "World"},
     )
 
     rule.task()
@@ -43,9 +41,7 @@ def test_destination_overwrite(temporary_file_generator):
         name="Template rendered",
         template=template_path,
         destination=destination_path,
-        context={
-            "magic_word": "World"
-        },
+        context={"magic_word": "World"},
     )
 
     rule.task()
