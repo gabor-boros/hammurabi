@@ -15,11 +15,13 @@ Added
 ~~~~~
 
 * Render files from Jinja2 templates (``TemplateRendered`` rule)
+* Add new ``Precondition`` base class (https://github.com/gabor-boros/hammurabi/pull/9)
 
 Changed
 ~~~~~~~
 
 * Add stub formatting to Makefile's `stubs` command
+* Extract common methods of ``Precondition`` and ``Rule`` to a new ``AbstractRule`` class (https://github.com/gabor-boros/hammurabi/pull/9)
 
 0.1.2_ - 2020-03-18
 --------------------

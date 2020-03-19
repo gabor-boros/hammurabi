@@ -10,13 +10,13 @@ will be aborted and the original exception will be re-raised.
 """
 
 import logging
-from typing import Iterable, List
+from typing import Iterable, List, Union
 
 from hammurabi.config import config
 from hammurabi.exceptions import AbortLawError
 from hammurabi.helpers import full_strip
 from hammurabi.mixins import GitMixin
-from hammurabi.rules.base import Rule
+from hammurabi.rules.base import Precondition, Rule
 
 
 class Law(GitMixin):
@@ -78,7 +78,7 @@ class Law(GitMixin):
 
         return f"{self.name}\n{self.description}"
 
-    def get_execution_order(self) -> List[Rule]:
+    def get_execution_order(self) -> List[Union[Rule, Precondition]]:
         """
         Get the execution order of the registered rules. The order will
         contain the pipes and children as well.
@@ -90,7 +90,7 @@ class Law(GitMixin):
         :rtype: List[Rule]
         """
 
-        order: List[Rule] = list()
+        order: List[Union[Rule, Precondition]] = list()
 
         for rule in self.rules:
             order.extend(rule.get_execution_order())

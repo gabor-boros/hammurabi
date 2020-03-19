@@ -225,7 +225,9 @@ def test_execution_order():
     rule_1.pipe = rule_2
     rule_1.children = [rule_3, rule_4]
     rule_1.get_rule_chain = Mock(side_effect=[[rule_2], [rule_3], [rule_4]])
-    expected_execution_order = [rule_1, rule_2, rule_3, rule_4]
+    rule_1.preconditions = [PASSING_PRECONDITION]
+
+    expected_execution_order = [PASSING_PRECONDITION, rule_1, rule_2, rule_3, rule_4]
 
     order = rule_1.get_execution_order()
 
@@ -254,11 +256,23 @@ def test_rule_chain():
     rule_7 = ExampleRule(name="rule_7", param="rule_7")
 
     rule_1.pipe = rule_2
+    rule_1.preconditions = [FAILING_PRECONDITION]
     rule_1.children = [rule_3, rule_4, rule_7]
     rule_4.pipe = rule_5
     rule_5.children = [rule_6]
+    rule_5.preconditions = [PASSING_PRECONDITION]
 
-    expected_chain_order = [rule_1, rule_2, rule_3, rule_4, rule_5, rule_6, rule_7]
+    expected_chain_order = [
+        FAILING_PRECONDITION,
+        rule_1,
+        rule_2,
+        rule_3,
+        rule_4,
+        PASSING_PRECONDITION,
+        rule_5,
+        rule_6,
+        rule_7,
+    ]
 
     chain = rule_1.get_rule_chain(rule_1)
 

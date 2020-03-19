@@ -13,83 +13,27 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Any, Iterable, List, Optional
+from typing import Any, Iterable, List, Optional, Union
 
 from hammurabi.config import config
 from hammurabi.helpers import full_strip
 
 
-class Rule(ABC):
+class AbstractRule(ABC):
     """
-    Abstract class which describes the bare minimum and helper functions for Rules.
-    A rule defines what and how should be executed. Since a rule can have piped and
-    children rules, the "parent" rule is responsible for those executions. This kind
-    of abstraction allows to run both piped and children rules sequentially in a given
-    order.
-
-    Example usage:
-
-    .. code-block:: python
-
-        >>> from typing import Optional
-        >>> from pathlib import Path
-        >>> from hammurabi import Rule
-        >>> from hammurabi.mixins import GitMixin
-        >>>
-        >>> class SingleFileRule(Rule, GitMixin):
-        >>>     def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
-        >>>         super().__init__(name, path, **kwargs)
-        >>>
-        >>>     def post_task_hook(self):
-        >>>         self.git_add(self.param)
-        >>>
-        >>>     @abstractmethod
-        >>>     def task(self, param: Path) -> Path:
-        >>>         pass
+    Abstract class which describes the common behaviour for any kind of rule even
+    it is a :class:`hammurabi.rules.base.Rule` or :class:`hammurabi.rules.base.Precondition`
 
     :param name: Name of the rule which will be used for printing
     :type name: str
 
-    :param preconditions: "Boolean Rules" which returns a truthy or falsy value
-    :type preconditions: Iterable["Rule"]
-
-    :param pipe: Pipe will be called when the rule is executed successfully
-    :type pipe: Optional["Rule"]
-
-    :param children: Children will be executed after the piped rule if there is any
-    :type children: Iterable["Rule"]
-
-    .. warning::
-
-        Preconditions can be used in several ways. The most common way is to run
-        "Boolean Rules" which takes a parameter and returns a truthy or falsy value.
-        In case of a falsy return, the precondition will fail and the rule will not be executed.
-
-        If any modification is done by any of the rules which are used as a
-        precondition, those changes will be committed.
+    :param param: Input parameter of the rule will be used as ``self.param``
+    :type param: Any
     """
 
-    def __init__(
-        self,
-        name: str,
-        param: Any,
-        preconditions: Iterable["Rule"] = (),
-        pipe: Optional["Rule"] = None,
-        children: Iterable["Rule"] = (),
-    ) -> None:
+    def __init__(self, name: str, param: Any) -> None:
         self.param = param
         self.name = name.strip()
-        self.pipe = pipe
-        self.children = children
-        self.preconditions = preconditions
-
-        if self.pipe and self.children:
-            raise ValueError("pipe and children cannot be set at the same time")
-
-        # Set by GitMixin or other mixins to indicate that the rule did changes.
-        # Rules can set this flag directly too. Only those rules will be indicated on
-        # Git commit which are made changes.
-        self.made_changes = False
 
     @staticmethod
     def validate(val: Any, cast_to: Optional[Any] = None, required=False) -> Any:
@@ -147,7 +91,7 @@ class Rule(ABC):
 
         .. note::
 
-            As of this method returns the docstring of :func:`hammurabi.rules.base.Rule.task`
+            As of this property returns the docstring of :func:`hammurabi.rules.base.Rule.task`
             method, it worth to take care of its description when initialized.
         """
 
@@ -170,75 +114,6 @@ class Rule(ABC):
 
         doc = full_strip(getattr(self, "__doc__", ""))
         return f"{self.name}\n{doc}\n{self.description}"
-
-    @property
-    def can_proceed(self) -> bool:
-        """
-        Evaluate if a rule can continue its execution. In case the execution
-        is called with ``dry_run`` config option set to true, this method will
-        always return ``False`` to make sure not performing any changes. If
-        preconditions are set, those will be evaluated by this method.
-
-        :return: Return with the result of evaluation
-        :rtype: bool
-
-        .. warning::
-
-            :func:`hammurabi.rules.base.Rule.can_proceed` checks the result of
-            ``self.preconditions``, which means the preconditions are executed.
-            Make sure that you are not doing any modifications within rules used
-            as preconditions, otherwise take extra attention for those rules.
-        """
-
-        logging.debug('Checking if "%s" can proceed with execution', self.name)
-        proceed: bool = True
-
-        if self.preconditions:
-            proceed = all([condition.execute() for condition in self.preconditions])
-
-        return not config.settings.dry_run and proceed
-
-    def get_rule_chain(self, rule: "Rule") -> List["Rule"]:
-        """
-        Get the execution chain of the given rule. The execution
-        order is the following:
-
-        * task (current rule's :func:`hammurabi.rules.base.Rule.task`)
-        * Piped rule
-        * Children rules (in the order provided by the iterator used)
-
-        :param rule: The rule which execution chain should be returned
-        :type rule: :class:`hammurabi.rules.base.Rule`
-
-        :return: Returns the list of rules in the order above
-        :rtype: List[Rule]
-        """
-
-        rules: List[Rule] = [rule]
-
-        if rule.pipe:
-            rules.extend(self.get_rule_chain(rule.pipe))
-
-        for child in rule.children:
-            rules.extend(self.get_rule_chain(child))
-
-        return rules
-
-    def get_execution_order(self) -> List["Rule"]:
-        """
-        Same as :func:`hammurabi.rules.base.Rule.get_rule_chain` but
-        for the root rule.
-        """
-
-        order: List[Rule] = [self]
-
-        if self.pipe:
-            order.extend(self.get_rule_chain(self.pipe))
-
-        for child in self.children:
-            order.extend(self.get_rule_chain(child))
-
-        return order
 
     def pre_task_hook(self):
         """
@@ -285,20 +160,159 @@ class Rule(ABC):
             Although it is a good practice to return the same type for the output
             that the input has, but this is not the case for "Boolean Rules".
             "Boolean Rules" should return True (or truthy) or False (or falsy) values.
+        """
 
-        Example usage:
 
-        .. code-block:: python
+class Rule(AbstractRule, ABC):
+    """
+    Abstract class which describes the bare minimum and helper functions for Rules.
+    A rule defines what and how should be executed. Since a rule can have piped and
+    children rules, the "parent" rule is responsible for those executions. This kind
+    of abstraction allows to run both piped and children rules sequentially in a given
+    order.
 
-            >>> import logging
-            >>> from pathlib import Path
-            >>> from hammurabi.rules.files import SingleFileRule
-            >>>
-            >>> class FileExists(SingleFileRule):
-            >>>     def task(self) -> Path:
-            >>>         logging.debug('Creating file "%s" if not exists', str(self.param))
-            >>>         self.param.touch()
-            >>>         return self.param
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from typing import Optional
+        >>> from pathlib import Path
+        >>> from hammurabi import Rule
+        >>> from hammurabi.mixins import GitMixin
+        >>>
+        >>> class SingleFileRule(Rule, GitMixin):
+        >>>     def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
+        >>>         super().__init__(name, path, **kwargs)
+        >>>
+        >>>     def post_task_hook(self):
+        >>>         self.git_add(self.param)
+        >>>
+        >>>     @abstractmethod
+        >>>     def task(self) -> Path:
+        >>>         pass
+
+    :param name: Name of the rule which will be used for printing
+    :type name: str
+
+    :param param: Input parameter of the rule will be used as ``self.param``
+    :type param: Any
+
+    :param preconditions: "Boolean Rules" which returns a truthy or falsy value
+    :type preconditions: Iterable["Rule"]
+
+    :param pipe: Pipe will be called when the rule is executed successfully
+    :type pipe: Optional["Rule"]
+
+    :param children: Children will be executed after the piped rule if there is any
+    :type children: Iterable["Rule"]
+
+    .. warning::
+
+        Preconditions can be used in several ways. The most common way is to run
+        "Boolean Rules" which takes a parameter and returns a truthy or falsy value.
+        In case of a falsy return, the precondition will fail and the rule will not be executed.
+
+        If any modification is done by any of the rules which are used as a
+        precondition, those changes will be committed.
+    """
+
+    def __init__(
+        self,
+        name: str,
+        param: Any,
+        preconditions: Iterable[Precondition] = (),
+        pipe: Optional["Rule"] = None,
+        children: Iterable["Rule"] = (),
+    ) -> None:
+        self.pipe = pipe
+        self.children = children
+        self.preconditions = preconditions
+
+        if self.pipe and self.children:
+            raise ValueError("pipe and children cannot be set at the same time")
+
+        # Set by GitMixin or other mixins to indicate that the rule did changes.
+        # Rules can set this flag directly too. Only those rules will be indicated on
+        # Git commit which are made changes.
+        self.made_changes = False
+
+        super().__init__(name, param)
+
+    @property
+    def can_proceed(self) -> bool:
+        """
+        Evaluate if a rule can continue its execution. In case the execution
+        is called with ``dry_run`` config option set to true, this method will
+        always return ``False`` to make sure not performing any changes. If
+        preconditions are set, those will be evaluated by this method.
+
+        :return: Return with the result of evaluation
+        :rtype: bool
+
+        .. warning::
+
+            :func:`hammurabi.rules.base.Rule.can_proceed` checks the result of
+            ``self.preconditions``, which means the preconditions are executed.
+            Make sure that you are not doing any modifications within rules used
+            as preconditions, otherwise take extra attention for those rules.
+        """
+
+        logging.debug('Checking if "%s" can proceed with execution', self.name)
+        proceed: bool = True
+
+        if self.preconditions:
+            proceed = all([condition.execute() for condition in self.preconditions])
+
+        return not config.settings.dry_run and proceed
+
+    def get_rule_chain(self, rule: "Rule") -> List[Union["Rule", Precondition]]:
+        """
+        Get the execution chain of the given rule. The execution
+        order is the following:
+
+        * task (current rule's :func:`hammurabi.rules.base.Rule.task`)
+        * Piped rule
+        * Children rules (in the order provided by the iterator used)
+
+        :param rule: The rule which execution chain should be returned
+        :type rule: :class:`hammurabi.rules.base.Rule`
+
+        :return: Returns the list of rules in the order above
+        :rtype: List[Rule]
+        """
+
+        rules: List[Union[Rule, Precondition]] = list(rule.preconditions)
+        rules.append(rule)
+
+        if rule.pipe:
+            rules.extend(self.get_rule_chain(rule.pipe))
+
+        for child in rule.children:
+            rules.extend(self.get_rule_chain(child))
+
+        return rules
+
+    def get_execution_order(self) -> List[Union["Rule", Precondition]]:
+        """
+        Same as :func:`hammurabi.rules.base.Rule.get_rule_chain` but
+        for the root rule.
+        """
+
+        order: List[Union[Rule, Precondition]] = list(self.preconditions)
+        order.append(self)
+
+        if self.pipe:
+            order.extend(self.get_rule_chain(self.pipe))
+
+        for child in self.children:
+            order.extend(self.get_rule_chain(child))
+
+        return order
+
+    @abstractmethod
+    def task(self) -> Any:
+        """
+        See the documentation of :func:`hammurabi.rules.base.AbstractRule.task`
         """
 
     def execute(self, param: Optional[Any] = None):
@@ -360,3 +374,79 @@ class Rule(ABC):
             for child in self.children:
                 logging.debug('Executing child "%s" of "%s"', child.name, self.name)
                 child.execute(result)
+
+
+class Precondition(AbstractRule, ABC):
+    """
+    This class which describes the bare minimum and helper functions for Preconditions.
+    A precondition defines what and how should be checked/validated before executing a Rule.
+    Since preconditions are special rules, all the functions available what can be used for
+    :class:`hammurabi.rules.base.AbstractRule`.
+
+    As said, preconditions are special from different angles. While this is not true for
+    Rules, Preconditions will always have a name, hence giving a name to a Precondition is not
+    necessary. In case no name given to a precondition, the name will be the name of the class
+    and " precondition" suffix.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> import logging
+        >>> from typing import Optional
+        >>> from pathlib import Path
+        >>> from hammurabi import Precondition
+        >>>
+        >>> class IsFileExists(Precondition):
+        >>>     def __init__(self, path: Optional[Path] = None, **kwargs):
+        >>>         super().__init__(None, path, **kwargs)
+        >>>
+        >>>     def task(self) -> bool:
+        >>>         return self.param and self.param.exists()
+
+    :param name: Name of the rule which will be used for printing
+    :type name: Optional[str]
+
+    :param param: Input parameter of the rule will be used as ``self.param``
+    :type param: Any
+
+    .. note:
+
+        Since ``Precondition`` inherits from ``Rule``, the parameter after the name of the
+        precondition will be used for ``self.param``. This can be handy for interacting
+        with input parameters.
+
+    .. warning:
+
+        Although ``Precondition`` inherits from ``Rule``, the pipe and children execution
+        is intentionally not implemented.
+    """
+
+    def __init__(self, name: Optional[str] = None, param: Optional[Any] = None) -> None:
+        name = name or f"{self.__class__.__name__} precondition"
+        super().__init__(name, param)
+
+    @abstractmethod
+    def task(self) -> bool:
+        """
+        Abstract method representing how a :func:`hammurabi.rules.base.Precondition.task`
+        must be parameterized. Any difference in the parameters or return type will result
+        in pylint/mypy errors.
+
+        To be able to use the power of ``pipe`` and ``children``, return
+        something which can be generally used for other rules as in input.
+
+        :return: Returns an output which can be used as an input for other rules
+        :rtype: Any (usually same as `self.param`'s type)
+        """
+
+    def execute(self) -> bool:
+        """
+        Execute the precondition.
+
+        :raise: ``AssertionError``
+        :return: None
+        """
+
+        logging.info('Running task for "%s"', self.name)
+        return self.task()
