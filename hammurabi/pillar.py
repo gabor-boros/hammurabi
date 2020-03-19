@@ -8,7 +8,7 @@ will be executed in the order of the registration.
 
 import logging
 from pathlib import Path
-from typing import List, Set
+from typing import List
 
 from hammurabi.config import config
 from hammurabi.law import Law
