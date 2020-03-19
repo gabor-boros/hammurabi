@@ -16,6 +16,7 @@ Added
 
 * Render files from Jinja2 templates (``TemplateRendered`` rule)
 * Add new ``Precondition`` base class (https://github.com/gabor-boros/hammurabi/pull/9)
+* Add Code of Conduct to meet community requirements (https://github.com/gabor-boros/hammurabi/pull/10)
 
 Changed
 ~~~~~~~
