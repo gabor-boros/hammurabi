@@ -265,7 +265,7 @@ class Rule(AbstractRule, ABC):
 
         return not config.settings.dry_run and proceed
 
-    def get_rule_chain(self, rule: "Rule") -> List["Rule"]:
+    def get_rule_chain(self, rule: "Rule") -> List[Union["Rule", Precondition]]:
         """
         Get the execution chain of the given rule. The execution
         order is the following:
@@ -292,7 +292,7 @@ class Rule(AbstractRule, ABC):
 
         return rules
 
-    def get_execution_order(self) -> List["Rule"]:
+    def get_execution_order(self) -> List[Union["Rule", Precondition]]:
         """
         Same as :func:`hammurabi.rules.base.Rule.get_rule_chain` but
         for the root rule.
@@ -422,9 +422,9 @@ class Precondition(AbstractRule, ABC):
         is intentionally not implemented.
     """
 
-    def __init__(self, name: Optional[str], *args, **kwargs) -> None:
+    def __init__(self, name: Optional[str] = None, param: Optional[Any] = None) -> None:
         name = name or f"{self.__class__.__name__} precondition"
-        super().__init__(name, *args, **kwargs)
+        super().__init__(name, param)
 
     @abstractmethod
     def task(self) -> bool:

@@ -1,10 +1,10 @@
 from typing import Any
 
 from hammurabi.mixins import GitHubMixin, GitMixin
-from hammurabi.rules.base import Rule
+from hammurabi.rules.base import Precondition, Rule
 
 
-class ExamplePrecondition(Rule):
+class ExamplePrecondition(Precondition):
     def task(self) -> bool:
         return self.param
 
