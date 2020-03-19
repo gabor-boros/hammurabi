@@ -2,7 +2,7 @@
 Pillar module is responsible for handling the whole execution chain including
 managing a lock file, executing the registered laws, pushing the changes to
 the VCS and creating a pull request. All the laws registered to the pillar
-will be executed not in the order of the registration.
+will be executed in the order of the registration.
 """
 
 
@@ -29,13 +29,13 @@ class Pillar(GitHubMixin):
     """
 
     def __init__(self) -> None:
-        self.__laws: Set[Law] = set()
+        self.__laws: List[Law] = list()
         self.__lock_file = Path(config.settings.working_dir, "hammurabi.lock")
 
     @property
-    def laws(self) -> Set[Law]:
+    def laws(self) -> List[Law]:
         """
-        Return the registered laws not in order of the registration.
+        Return the registered laws in order of the registration.
         """
 
         return self.__laws
@@ -139,7 +139,7 @@ class Pillar(GitHubMixin):
             conflicts.
         """
 
-        self.__laws.add(law)
+        self.__laws.append(law)
 
     def enforce(self):
         """
