@@ -26,7 +26,7 @@ class SingleConfigFileRule(SinglePathRule):
         path: Optional[Path] = None,
         section: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.section = self.validate(section, required=True)
         self.updater = ConfigUpdater()
 
@@ -105,7 +105,7 @@ class SectionExists(SingleConfigFileRule):
         options: Iterable[Tuple[str, Any]] = (),
         add_after: bool = True,
         **kwargs,
-    ):
+    ) -> None:
         self.target = self.validate(target, required=True)
         self.options = options
         self.add_after = add_after
@@ -236,7 +236,7 @@ class SectionRenamed(SingleConfigFileRule):
         path: Optional[Path] = None,
         new_name: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.new_name = self.validate(new_name, required=True)
 
         super().__init__(name, path, **kwargs)
@@ -310,7 +310,7 @@ class OptionsExist(SingleConfigFileRule):
         options: Iterable[Tuple[str, Any]] = None,
         force_value: bool = False,
         **kwargs,
-    ):
+    ) -> None:
         self.options = self.validate(options, required=True)
         self.force_value = force_value
 
@@ -378,7 +378,7 @@ class OptionsNotExist(SingleConfigFileRule):
         path: Optional[Path] = None,
         options: Iterable[str] = (),
         **kwargs,
-    ):
+    ) -> None:
         self.options = self.validate(options, required=True)
 
         super().__init__(name, path, **kwargs)
@@ -442,7 +442,7 @@ class OptionRenamed(SingleConfigFileRule):
         option: Optional[str] = None,
         new_name: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.option = self.validate(option, required=True)
         self.new_name = self.validate(new_name, required=True)
 

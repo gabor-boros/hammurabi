@@ -67,7 +67,7 @@ class LineExists(SinglePathRule):
         position: int = 1,
         respect_indentation: bool = True,
         **kwargs,
-    ):
+    ) -> None:
         self.text = self.validate(text, required=True)
         self.criteria = re.compile(self.validate(criteria, required=True))
         self.target = re.compile(self.validate(target, required=True))
@@ -206,7 +206,7 @@ class LineNotExists(SinglePathRule):
         path: Optional[Path] = None,
         text: Optional[str] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.text = re.compile(self.validate(text, cast_to=str, required=True))
 
         super().__init__(name, path, **kwargs)
@@ -286,7 +286,7 @@ class LineReplaced(SinglePathRule):
         target: Optional[str] = None,
         respect_indentation: bool = True,
         **kwargs,
-    ):
+    ) -> None:
         self.text = self.validate(text, required=True)
         self.target = re.compile(self.validate(target, required=True))
         self.respect_indentation = respect_indentation

@@ -69,7 +69,7 @@ class Config:
     to PEP-518.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.__repo: Repo = None
         self.github: Optional[GitHub] = None
         self.settings: Settings = Settings()

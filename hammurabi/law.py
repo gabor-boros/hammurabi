@@ -46,7 +46,7 @@ class Law(GitMixin):
         >>> pillar.register(example_law)
     """
 
-    def __init__(self, name: str, description: str, rules: Iterable[Rule]):
+    def __init__(self, name: str, description: str, rules: Iterable[Rule]) -> None:
         """
         :param name: Name of the law
         :type name: str

@@ -49,7 +49,7 @@ class TemplateRendered(SinglePathRule):
         destination: Optional[Path] = None,
         context: Optional[Dict[str, Any]] = None,
         **kwargs,
-    ):
+    ) -> None:
         self.destination: Path = self.validate(destination, required=True)
         self.context: Dict[str, Any] = context or dict()
         super().__init__(name, template, **kwargs)

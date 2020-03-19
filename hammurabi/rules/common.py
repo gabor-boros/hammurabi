@@ -12,7 +12,7 @@ class SinglePathRule(Rule, GitMixin):
     single directory.
     """
 
-    def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
+    def __init__(self, name: str, path: Optional[Path] = None, **kwargs) -> None:
         super().__init__(name, path, **kwargs)
 
     def post_task_hook(self):
@@ -35,7 +35,9 @@ class MultiplePathRule(Rule, GitMixin):
     multiple files.
     """
 
-    def __init__(self, name: str, paths: Optional[Iterable[Path]] = (), **kwargs):
+    def __init__(
+        self, name: str, paths: Optional[Iterable[Path]] = (), **kwargs
+    ) -> None:
         super().__init__(name, paths, **kwargs)
 
     def post_task_hook(self):

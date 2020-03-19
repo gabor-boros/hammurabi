@@ -26,7 +26,7 @@ class SingleAttributeRule(SinglePathRule):
         path: Optional[Path] = None,
         new_value: Optional[str] = None,
         **kwargs
-    ):
+    ) -> None:
         self.new_value = self.validate(new_value, cast_to=str, required=True)
         super().__init__(name, path, **kwargs)
 
@@ -174,7 +174,7 @@ class ModeChanged(SingleAttributeRule):
         path: Optional[Path] = None,
         new_value: Optional[int] = None,
         **kwargs
-    ):
+    ) -> None:
         # Passing the new value and then re-defining it is ugly, but needed
         # because the super class already has a validation on the new_value
         # field. For the first time it will be casted to string and then in
