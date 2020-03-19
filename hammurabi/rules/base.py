@@ -312,7 +312,7 @@ class Rule(AbstractRule, ABC):
     @abstractmethod
     def task(self) -> Any:
         """
-        See the documentation of :method:`hammurabi.rules.base.AbstractRule.task`
+        See the documentation of :func:`hammurabi.rules.base.AbstractRule.task`
         """
 
     def execute(self, param: Optional[Any] = None):
@@ -381,7 +381,7 @@ class Precondition(AbstractRule, ABC):
     This class which describes the bare minimum and helper functions for Preconditions.
     A precondition defines what and how should be checked/validated before executing a Rule.
     Since preconditions are special rules, all the functions available what can be used for
-    :class:`hammurabi.rules.base.AbstractRule.
+    :class:`hammurabi.rules.base.AbstractRule`.
 
     As said, preconditions are special from different angles. While this is not true for
     Rules, Preconditions will always have a name, hence giving a name to a Precondition is not
