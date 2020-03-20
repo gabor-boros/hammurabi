@@ -121,9 +121,7 @@ def test_git_commit(mocked_config):
 
     git_mixin.git_commit(commit_message)
 
-    mocked_config.repo.index.commit.assert_called_once_with(
-        commit_message, author="Hammurabi"
-    )
+    mocked_config.repo.index.commit.assert_called_once_with(commit_message)
 
 
 @patch("hammurabi.mixins.config")
