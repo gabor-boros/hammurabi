@@ -27,6 +27,11 @@ Changed
 * Extended CONTRIBUTING guidelines to include a notice for adding ``Rules`` and ``Preconditions`` (https://github.com/gabor-boros/hammurabi/pull/11)
 * Refactor package structure and extract preconditions to separate submodule (https://github.com/gabor-boros/hammurabi/pull/11)
 
+Fixed
+~~~~~
+
+* Remove faulty author of git committing (https://github.com/gabor-boros/hammurabi/pull/12)
+
 0.1.2_ - 2020-03-18
 --------------------
 
