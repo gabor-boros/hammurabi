@@ -23,7 +23,13 @@ def test_precondition_without_name():
 def test_executed():
     rule = Example()
     rule.task = Mock(return_value=True)
+    rule.pre_task_hook = Mock()
+    rule.post_task_hook = Mock()
+
     result = rule.execute()
 
     rule.task.assert_called_once_with()
+    rule.pre_task_hook.assert_called_once_with()
+    rule.post_task_hook.assert_called_once_with()
+
     assert result is True
