@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from hammurabi.rules.base import Precondition
+from hammurabi.preconditions.base import Precondition
 
 
 class Example(Precondition):
