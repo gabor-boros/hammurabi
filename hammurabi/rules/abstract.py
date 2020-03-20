@@ -21,6 +21,8 @@ class AbstractRule(ABC):
     :type param: Any
     """
 
+    __slots__ = ("param", "name", "made_changes")
+
     def __init__(self, name: str, param: Any) -> None:
         self.param = param
         self.name = name.strip()
