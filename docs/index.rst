@@ -10,6 +10,7 @@ Documentation of Hammurabi
    readme
    installation
    config
+   rules_and_preconditions
    modules
    stubs
    contributing
