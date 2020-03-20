@@ -4,6 +4,14 @@ hammurabi.rules package
 Submodules
 ----------
 
+hammurabi.rules.abstract module
+-------------------------------
+
+.. automodule:: hammurabi.rules.abstract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hammurabi.rules.attributes module
 ---------------------------------
 

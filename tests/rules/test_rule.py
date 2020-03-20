@@ -9,7 +9,7 @@ import pytest
 from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
 
 
-@patch("hammurabi.rules.base.full_strip")
+@patch("hammurabi.rules.abstract.full_strip")
 def test_description(mock_full_strip):
     expected_description = "test description"
     mock_full_strip.return_value = expected_description
@@ -20,7 +20,7 @@ def test_description(mock_full_strip):
     mock_full_strip.assert_called_once_with("ExampleRule task docstring")
 
 
-@patch("hammurabi.rules.base.full_strip")
+@patch("hammurabi.rules.abstract.full_strip")
 def test_documentation(mock_full_strip):
     expected_description = "test description"
     expected_documentation = "test docstring"

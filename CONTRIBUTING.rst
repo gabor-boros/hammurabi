@@ -33,7 +33,8 @@ Implement Features
 ~~~~~~~~~~~~~~~~~~
 
 Look through the GitHub issues for features. Anything tagged with "enhancement"
-and "help wanted" is open to whoever wants to implement it.
+and "help wanted" is open to whoever wants to implement it. In case you added a
+new Rule or Precondition, do not forget to add them to the docs as well.
 
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~

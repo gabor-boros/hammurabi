@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+   hammurabi.preconditions
    hammurabi.rules
 
 Submodules

@@ -3,8 +3,9 @@
 from hammurabi.config import config
 from hammurabi.law import Law
 from hammurabi.pillar import Pillar
+from hammurabi.preconditions.base import Precondition
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged
-from hammurabi.rules.base import Precondition, Rule
+from hammurabi.rules.base import Rule
 from hammurabi.rules.directories import (
     DirectoryEmptied,
     DirectoryExists,
