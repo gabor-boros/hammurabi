@@ -88,11 +88,6 @@ class Rule(AbstractRule, ABC):
         if self.pipe and self.children:
             raise ValueError("pipe and children cannot be set at the same time")
 
-        # Set by GitMixin or other mixins to indicate that the rule did changes.
-        # Rules can set this flag directly too. Only those rules will be indicated on
-        # Git commit which are made changes.
-        self.made_changes = False
-
         super().__init__(name, param)
 
     @property

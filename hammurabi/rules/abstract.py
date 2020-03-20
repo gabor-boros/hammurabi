@@ -25,6 +25,11 @@ class AbstractRule(ABC):
         self.param = param
         self.name = name.strip()
 
+        # Set by GitMixin or other mixins to indicate that the rule did changes.
+        # Rules can set this flag directly too. Only those rules will be indicated on
+        # Git commit which are made changes.
+        self.made_changes = False
+
     @staticmethod
     def validate(val: Any, cast_to: Optional[Any] = None, required=False) -> Any:
         """
