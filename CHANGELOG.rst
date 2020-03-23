@@ -11,11 +11,6 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
-Changed
-~~~~~~~
-
-* Update requirements
-
 0.2.0_ - 2020-03-23
 --------------------
 
@@ -45,6 +40,7 @@ Changed
 * Call expandvar and expanduser of configuration files (https://github.com/gabor-boros/hammurabi/pull/13)
 * Hammurabi only works in the current working directory (https://github.com/gabor-boros/hammurabi/pull/13)
 * Read settings (pyproject.toml) path from ``HAMMURABI_SETTINGS_PATH`` environment variable (https://github.com/gabor-boros/hammurabi/pull/13)
+* Fix version handling in docs
 
 Fixed
 ~~~~~
