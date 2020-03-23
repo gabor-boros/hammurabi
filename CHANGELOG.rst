@@ -38,6 +38,7 @@ Fixed
 * Remove faulty author of git committing (https://github.com/gabor-boros/hammurabi/pull/12)
 * Only attempt to create a PR if there is no PR from Hammurabi (https://github.com/gabor-boros/hammurabi/pull/12)
 * Fix double committing issue (https://github.com/gabor-boros/hammurabi/pull/12)
+* Fix committing of laws when nothing changed (https://github.com/gabor-boros/hammurabi/pull/12)
 
 0.1.2_ - 2020-03-18
 --------------------
