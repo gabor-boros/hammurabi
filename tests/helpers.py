@@ -1,6 +1,6 @@
 from typing import Any
 
-from hammurabi.mixins import GitHubMixin, GitMixin
+from hammurabi.mixins import GitHubMixin, GitMixin, PullRequestHelperMixin
 from hammurabi.rules.base import Precondition, Rule
 
 
@@ -34,6 +34,10 @@ class ExampleGitMixinRule(ExampleRule, GitMixin):
     pass
 
 
+class ExamplePullRequestHelperMixinRule(ExampleRule, GitMixin, PullRequestHelperMixin):
+    pass
+
+
 class ExampleGitHubMixinRule(ExampleRule, GitHubMixin):
     pass
 
@@ -52,6 +56,10 @@ def get_failing_rule():
 
 def get_git_mixin_consumer():
     return ExampleGitMixinRule(name="Passing", param="passing rule")
+
+
+def get_pull_request_helper_mixin_consumer():
+    return ExamplePullRequestHelperMixinRule(name="Passing", param="passing rule")
 
 
 def get_github_mixin_consumer():

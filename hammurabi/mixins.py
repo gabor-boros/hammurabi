@@ -6,7 +6,7 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import List
+from typing import List, Iterable
 
 from github3.repos.repo import Repository  # type: ignore
 
@@ -23,11 +23,20 @@ class GitMixin:
     """
 
     @staticmethod
-    def __can_proceed():
+    def __can_proceed() -> bool:
+        """
+        Determine if the next change can be done or not. For git related
+        operations it is extremely important to abort or skip an execution
+        if not needed.
+
+        :return: Returns True if the next changes should be done
+        :rtype: bool
+        """
+
         return config.repo and not config.settings.dry_run and config.repo.is_dirty()
 
     @staticmethod
-    def checkout_branch():
+    def checkout_branch() -> None:
         """
         Perform a simple git checkout, to not pollute the default branch and
         use that branch for the pull request later. The branch name can be
@@ -45,7 +54,7 @@ class GitMixin:
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
-    def git_add(self, param: Path):
+    def git_add(self, param: Path) -> None:
         """
         Add file contents to the index.
 
@@ -64,7 +73,7 @@ class GitMixin:
             config.repo.git.add(str(param))  # pylint: disable=no-member
             self.made_changes = True
 
-    def git_remove(self, param: Path):
+    def git_remove(self, param: Path) -> None:
         """
         Remove files from the working tree and from the index.
 
@@ -85,7 +94,7 @@ class GitMixin:
             )  # pylint: disable=no-member
             self.made_changes = True
 
-    def git_commit(self, message: str):
+    def git_commit(self, message: str) -> None:
         """
         Commit the changes on the checked out branch.
 
@@ -104,7 +113,7 @@ class GitMixin:
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
-    def push_changes():
+    def push_changes() -> None:
         """
         Push the changes with the given branch set by ``git_branch_name``
         config option to the remote origin.
@@ -121,8 +130,53 @@ class GitMixin:
             branch = config.settings.git_branch_name
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
+
+class PullRequestHelperMixin:
+    """
+    Give helper classes for pull request related operations
+    """
+
     @staticmethod
-    def generate_pull_request_body(pillar) -> str:
+    def __get_chained_rules(target: Rule, chain: Iterable[Rule]) -> Iterable[Rule]:
+        """
+        Return all the chained rules excluding the root rule.
+
+        :param target: The root Rule
+        :type target: Rule
+
+        :param chain: The whole chain
+        :type chain: Iterable[Rule]
+
+        :return: The filtered list of chained rules
+        :rtype: Iterable[Rule]
+        """
+
+        rules = filter(lambda i: isinstance(i, Rule), chain)
+        return filter(lambda r: r != target, rules)
+
+    def __get_rules_body(self, rules: Iterable[Rule]) -> List[str]:
+        """
+        Generate the PR body's executed rules section for the root
+        and chained rules excluding their preconditions.
+
+        :param rules: List of passing of failed rules
+        :type rules: Iterable[Rule]
+
+        :return: Body of the PR section in a list format
+        :rtype: List[str]
+        """
+
+        body: List[str] = list()
+
+        for rule in rules:
+            body.append(f"* {rule.name}")
+
+            for chain in self.__get_chained_rules(rule, rule.get_rule_chain(rule)):
+                body.append(f"** {chain.name}")
+
+        return body
+
+    def generate_pull_request_body(self, pillar) -> str:
         """
         Generate the body of the pull request based on the registered laws and rules.
         The pull request body is markdown formatted.
@@ -137,10 +191,6 @@ class GitMixin:
         #  NOTE: The parameter type can not be hinted, because of circular import,
         #  we must fix this in the future releases.
 
-        def get_chained_rules(target, items):
-            rules = filter(lambda i: isinstance(i, Rule), items)
-            return filter(lambda r: r != target, rules)
-
         logging.debug("Generating pull request body")
 
         body: List[str] = [
@@ -151,27 +201,22 @@ class GitMixin:
         for law in pillar.laws:
             body.append(f"\n### {law.name}")
             body.append(law.description)
+
             body.append("\n#### Passed rules")
-
-            for rule in [rule for rule in law.rules if rule.made_changes]:
-                body.append(f"* {rule.name}")
-
-                for chain in get_chained_rules(rule, rule.get_rule_chain(rule)):
-                    body.append(f"** {chain.name}")
+            body.extend(
+                self.__get_rules_body([rule for rule in law.rules if rule.made_changes])
+            )
 
             if law.failed_rules:
                 body.append("\n#### Failed rules (manual fix is needed)")
-
-            for rule in law.failed_rules:
-                body.append(f"* {rule.name}")
-
-                for chain in get_chained_rules(rule, rule.get_rule_chain(rule)):
-                    body.append(f"** {chain.name}")
+                body.extend(
+                    self.__get_rules_body(law.failed_rules)
+                )
 
         return "\n".join(body)
 
 
-class GitHubMixin(GitMixin):
+class GitHubMixin(GitMixin, PullRequestHelperMixin):
     """
     Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
     on GitHub after changes are pushed to remote.

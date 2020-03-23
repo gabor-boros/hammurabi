@@ -10,7 +10,7 @@ from tests.helpers import (
     get_git_mixin_consumer,
     get_github_mixin_consumer,
     get_passing_rule,
-)
+    get_pull_request_helper_mixin_consumer)
 
 
 @patch("hammurabi.mixins.config")
@@ -221,9 +221,9 @@ Test description 3
 * Test rule 3
 * Test rule 4"""
 
-    git_consumer = get_git_mixin_consumer()
+    pr_helper = get_pull_request_helper_mixin_consumer()
 
-    body = git_consumer.generate_pull_request_body(mocked_pillar)
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
 
     assert body == expected_body
 
@@ -282,9 +282,9 @@ Test description 3
 * Test rule 3
 * Test rule 4"""
 
-    git_consumer = get_git_mixin_consumer()
+    pr_helper = get_pull_request_helper_mixin_consumer()
 
-    body = git_consumer.generate_pull_request_body(mocked_pillar)
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
 
     assert body == expected_body
 
@@ -357,9 +357,9 @@ Test description 3
 * Test rule 3
 * Test rule 4"""
 
-    git_consumer = get_git_mixin_consumer()
+    pr_helper = get_pull_request_helper_mixin_consumer()
 
-    body = git_consumer.generate_pull_request_body(mocked_pillar)
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
 
     assert body == expected_body
 
