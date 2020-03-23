@@ -11,6 +11,7 @@ from typing import List
 from github3.repos.repo import Repository  # type: ignore
 
 from hammurabi.config import config
+from hammurabi.rules.base import Rule
 
 
 class GitMixin:
@@ -20,6 +21,10 @@ class GitMixin:
     be used by :class:`hammurabi.law.Law`s, :class:`hammurabi.rules.base` or
     any rules which can make modifications during its execution.
     """
+
+    @staticmethod
+    def __can_proceed():
+        return config.repo and not config.settings.dry_run and config.repo.is_dirty()
 
     @staticmethod
     def checkout_branch():
@@ -54,7 +59,7 @@ class GitMixin:
             git add <path>
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug('Git add "%s"', str(param))
             config.repo.git.add(str(param))  # pylint: disable=no-member
             self.made_changes = True
@@ -73,15 +78,14 @@ class GitMixin:
             git rm <path>
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug('Git remove "%s"', str(param))
             config.repo.index.remove(
                 (str(param),), ignore_unmatch=True
             )  # pylint: disable=no-member
             self.made_changes = True
 
-    @staticmethod
-    def git_commit(message: str):
+    def git_commit(self, message: str):
         """
         Commit the changes on the checked out branch.
 
@@ -95,7 +99,7 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug("Creating git commit for the changes")
             config.repo.index.commit(message)  # pylint: disable=no-member
 
@@ -117,13 +121,6 @@ class GitMixin:
             branch = config.settings.git_branch_name
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
-
-class GitHubMixin(GitMixin):
-    """
-    Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
-    on GitHub after changes are pushed to remote.
-    """
-
     @staticmethod
     def generate_pull_request_body(pillar) -> str:
         """
@@ -140,6 +137,10 @@ class GitHubMixin(GitMixin):
         #  NOTE: The parameter type can not be hinted, because of circular import,
         #  we must fix this in the future releases.
 
+        def get_chained_rules(target, items):
+            rules = filter(lambda i: isinstance(i, Rule), items)
+            return filter(lambda r: r != target, rules)
+
         logging.debug("Generating pull request body")
 
         body: List[str] = [
@@ -150,12 +151,31 @@ class GitHubMixin(GitMixin):
         for law in pillar.laws:
             body.append(f"\n### {law.name}")
             body.append(law.description)
-            body.append("\n#### Rules")
+            body.append("\n#### Passed rules")
 
-            for rule in law.rules:
+            for rule in [rule for rule in law.rules if rule.made_changes]:
                 body.append(f"* {rule.name}")
 
+                for chain in get_chained_rules(rule, rule.get_rule_chain(rule)):
+                    body.append(f"** {chain.name}")
+
+            if law.failed_rules:
+                body.append("\n#### Failed rules (manual fix is needed)")
+
+            for rule in law.failed_rules:
+                body.append(f"* {rule.name}")
+
+                for chain in get_chained_rules(rule, rule.get_rule_chain(rule)):
+                    body.append(f"** {chain.name}")
+
         return "\n".join(body)
+
+
+class GitHubMixin(GitMixin):
+    """
+    Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
+    on GitHub after changes are pushed to remote.
+    """
 
     def create_pull_request(self):
         """
@@ -174,6 +194,12 @@ class GitHubMixin(GitMixin):
         +------------+--------------------------------------+
         """
 
+        if not config.github:
+            raise RuntimeError(
+                "The GitHub client is not initialized properly. Make sure that "
+                "you set the GITHUB_TOKEN or HAMMURABI_GITHUB_TOKEN before execution. "
+            )
+
         if config.repo and not config.settings.dry_run:
             owner, repository = config.settings.repository.split("/")
             github_repo: Repository = config.github.repository(owner, repository)
@@ -183,7 +209,7 @@ class GitHubMixin(GitMixin):
                 state="open", head=config.settings.git_branch_name, base="master"
             )
 
-            if not opened_pull_request:
+            if opened_pull_request.count == -1:
                 description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")
