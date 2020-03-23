@@ -21,6 +21,9 @@ Added
 * Collect failed rules for every law (``Law.failed_rules``) (https://github.com/gabor-boros/hammurabi/pull/12)
 * Add chained rules to PR body (https://github.com/gabor-boros/hammurabi/pull/12)
 * Add failed rules to PR body (https://github.com/gabor-boros/hammurabi/pull/12)
+* Throw a warning when no GitHub client is initialized (https://github.com/gabor-boros/hammurabi/pull/12)
+* Raise runtime error when no GitHub client is initialized, but PR creation called (https://github.com/gabor-boros/hammurabi/pull/12)
+* Guess owner/repository based on the origin url of the working directory (https://github.com/gabor-boros/hammurabi/pull/12)
 
 Changed
 ~~~~~~~
@@ -31,6 +34,9 @@ Changed
 * Refactor package structure and extract preconditions to separate submodule (https://github.com/gabor-boros/hammurabi/pull/11)
 * Pull request body generation moved to the common ``GitMixin`` class (https://github.com/gabor-boros/hammurabi/pull/12)
 * Pillar will always create lock file in the working directory (https://github.com/gabor-boros/hammurabi/pull/12)
+* Call expandvar and expanduser of configuration files (https://github.com/gabor-boros/hammurabi/pull/12)
+* Hammurabi only works in the current working directory (https://github.com/gabor-boros/hammurabi/pull/12)
+* Read settings (pyproject.toml) path from ``HAMMURABI_SETTINGS_PATH`` environment variable (https://github.com/gabor-boros/hammurabi/pull/12)
 
 Fixed
 ~~~~~
@@ -39,6 +45,12 @@ Fixed
 * Only attempt to create a PR if there is no PR from Hammurabi (https://github.com/gabor-boros/hammurabi/pull/12)
 * Fix double committing issue (https://github.com/gabor-boros/hammurabi/pull/12)
 * Fix committing of laws when nothing changed (https://github.com/gabor-boros/hammurabi/pull/12)
+* Fixed several CLI arguments related issues (https://github.com/gabor-boros/hammurabi/pull/12)
+
+Removed
+~~~~~~~
+
+* Removed target directory setting from config and CLI (https://github.com/gabor-boros/hammurabi/pull/12)
 
 0.1.2_ - 2020-03-18
 --------------------
