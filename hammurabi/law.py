@@ -158,6 +158,11 @@ class Law(GitMixin):
         When the whole execution chain is finished, the changes will be
         committed except the failed ones.
 
+        .. note::
+
+            Failed rules and their chain (excluding prerequisites) will be added
+            to the pull request description.
+
         :raises: ``AbortLawError``
         """
 

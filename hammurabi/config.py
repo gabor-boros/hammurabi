@@ -66,6 +66,13 @@ class Config:
     Simple configuration object which used across Hammurabi.
     The :class:`Config` loads the given ``pyproject.toml`` according
     to PEP-518.
+
+    .. warning::
+
+        When trying to use GitHub based laws without an initialized GitHub
+        client (or invalid token), a warning will be thrown at the beginning
+        of the execution. In case a PR open is attempted, a ``RuntimeError``
+        will be raised
     """
 
     def __init__(self) -> None:
@@ -177,7 +184,13 @@ class Config:
 
         return Settings(**merge_result)
 
-    def __get_fallback_repository(self):
+    def __get_fallback_repository(self) -> str:
+        """
+        Figure out the fallback owner/repository based on the remote url of the git repo.
+        :return: Returns the owner/repository pair
+        :rtype: str
+        """
+
         repo_url: str = self.repo.remote().url
 
         if re.match(r"^http(s)?://", repo_url):
@@ -203,7 +216,9 @@ class Config:
             by default, so there is no need to set if no 3rd party rules are used
             or those rules are not loading config.
 
-        :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment variable is not set.
+        :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment variable is not
+                 set or an invalid git repository was given.
+
         """
 
         if not self.repo:

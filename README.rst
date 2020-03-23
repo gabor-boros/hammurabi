@@ -94,8 +94,6 @@ Command line options
     Options:
     -c, --config PATH               Set the configuration file.  [default:
                                     pyproject.toml]
-    --target PATH                   Set target path. If target is a git repo,
-                                    commits will be created.
     --repository TEXT               Set the remote repository. Required format:
                                     owner/repository
     --github-token TEXT             Set github access token
@@ -113,7 +111,8 @@ Usage examples
 ==============
 
 In every case, make sure that you clone the target repository prior using Hammurabi.
-It will not clone the target repository.
+After cloning the repository, always set the current working directory to the target's
+path. Hammurabi will not clone the target repository or change its execution directory.
 
 Enforce registered laws
 -----------------------
