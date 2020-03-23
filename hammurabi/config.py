@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any, Dict, Optional
 
-from git import Repo
+from git import InvalidGitRepositoryError, Repo
 from github3 import GitHub, login
 from pydantic import BaseSettings
 import toml
@@ -69,7 +69,11 @@ class Config:
     """
 
     def __init__(self) -> None:
-        self.repo: Repo = Repo(Path(".").absolute())
+        try:
+            self.repo: Repo = Repo(Path(".").absolute())
+        except InvalidGitRepositoryError as exc:
+            logging.error('"%s" is not a git repository', str(exc))
+
         self.github: Optional[GitHub] = None
         self.settings: Settings = Settings()
 
@@ -187,8 +191,7 @@ class Config:
             by default, so there is no need to set if no 3rd party rules are used
             or those rules are not loading config.
 
-        :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment
-        variable is not set.
+        :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment variable is not set.
         """
 
         settings_path = Path(

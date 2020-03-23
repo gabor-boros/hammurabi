@@ -30,6 +30,18 @@ def test_no_settings_path():
 
 
 @pytest.mark.integration
+def test_not_a_git_repository_path(temporary_dir, caplog):
+    os.chdir(temporary_dir)
+
+    Config()
+    record = caplog.records[0]
+
+    assert len(caplog.records)
+    assert record.levelname == "ERROR"
+    assert record.message == f'"{os.getcwd()}" is not a git repository'
+
+
+@pytest.mark.integration
 def test_configuration_loading(temporary_file_generator, temporary_dir):
     toml_file = temporary_file_generator()
     config_file = temporary_file_generator(".py")
