@@ -12,12 +12,20 @@ class ExamplePrecondition(Precondition):
 class ExampleRule(Rule):
     """ExampleRule docstring"""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.made_changes = True
+
     def task(self) -> Any:
         """ExampleRule task docstring"""
         return self.param
 
 
 class ExampleExceptionRule(Rule):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.made_changes = False
+
     def task(self) -> Any:
         raise Exception(self.param)
 
@@ -34,8 +42,8 @@ PASSING_PRECONDITION = ExamplePrecondition(name="Passing", param=True)
 FAILING_PRECONDITION = ExamplePrecondition(name="Failing", param=False)
 
 
-def get_passing_rule():
-    return ExampleRule(name="Passing", param="passing rule")
+def get_passing_rule(name: str = "Passing"):
+    return ExampleRule(name=name, param="passing rule")
 
 
 def get_failing_rule():
