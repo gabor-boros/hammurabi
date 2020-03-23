@@ -46,6 +46,7 @@ Fixed
 * Fix double committing issue (https://github.com/gabor-boros/hammurabi/pull/12)
 * Fix committing of laws when nothing changed (https://github.com/gabor-boros/hammurabi/pull/12)
 * Fixed several CLI arguments related issues (https://github.com/gabor-boros/hammurabi/pull/12)
+* Fixed a typo in the Bug issue template of GitHub (https://github.com/gabor-boros/hammurabi/pull/12)
 
 Removed
 ~~~~~~~
