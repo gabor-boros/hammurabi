@@ -6,23 +6,16 @@ from hammurabi import Pillar
 from tests.helpers import get_passing_rule
 
 
-@patch("hammurabi.pillar.config")
-def test_register(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_register():
     expected_law = Mock()
     pillar = Pillar()
     pillar.register(expected_law)
 
     assert expected_law in pillar.laws
+    assert len(pillar.laws) == 1
 
 
-@patch("hammurabi.pillar.config")
-def test_return_laws(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_return_laws():
     expected_law = Mock()
     pillar = Pillar()
     pillar.register(expected_law)
@@ -30,11 +23,7 @@ def test_return_laws(mocked_config):
     assert list(pillar.laws) == [expected_law]
 
 
-@patch("hammurabi.pillar.config")
-def test_return_rules(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_return_rules():
     expected_law = Mock(rules=(get_passing_rule(),))
     pillar = Pillar()
     pillar.register(expected_law)
@@ -42,11 +31,7 @@ def test_return_rules(mocked_config):
     assert list(pillar.rules) == list(expected_law.rules)
 
 
-@patch("hammurabi.pillar.config")
-def test_get_law(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_get_law():
     expected_law = Mock(name="Mocked law")
     pillar = Pillar()
     pillar.register(expected_law)
@@ -56,11 +41,7 @@ def test_get_law(mocked_config):
     assert result == expected_law
 
 
-@patch("hammurabi.pillar.config")
-def test_get_law_not_registered(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_get_law_not_registered():
     expected_law = Mock(name="Mocked law")
     pillar = Pillar()
     pillar.register(expected_law)
@@ -69,11 +50,7 @@ def test_get_law_not_registered(mocked_config):
         pillar.get_law("no law with this name")
 
 
-@patch("hammurabi.pillar.config")
-def test_get_rule(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_get_rule():
     rule = get_passing_rule()
     expected_law = Mock(name="Mocked law", rules=(rule,))
     pillar = Pillar()
@@ -84,11 +61,7 @@ def test_get_rule(mocked_config):
     assert result == rule
 
 
-@patch("hammurabi.pillar.config")
-def test_get_rule_not_registered(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_get_rule_not_registered():
     expected_law = Mock(name="Mocked law", rules=(get_passing_rule(),))
     pillar = Pillar()
     pillar.register(expected_law)
@@ -97,69 +70,50 @@ def test_get_rule_not_registered(mocked_config):
         pillar.get_rule("no rule with this name")
 
 
-@patch("hammurabi.pillar.config")
 @patch("hammurabi.pillar.Path")
-def test_create_lock_file(mocked_path, mocked_config):
+def test_create_lock_file(mocked_path):
     expected_path = Mock()
     mocked_path.return_value = expected_path
-    mocked_config.settings.working_dir = "pwd"
-    mocked_config.settings.dry_run = False
     expected_path.exists.return_value = False
     pillar = Pillar()
 
     pillar.create_lock_file()
 
-    mocked_path.assert_called_once_with(
-        mocked_config.settings.working_dir, "hammurabi.lock"
-    )
+    mocked_path.assert_called_once_with("hammurabi.lock")
     expected_path.exists.assert_called_once_with()
     expected_path.touch.assert_called_once_with()
 
 
-@patch("hammurabi.pillar.config")
 @patch("hammurabi.pillar.Path")
-def test_double_create_lock_file(mocked_path, mocked_config):
+def test_double_create_lock_file(mocked_path):
     expected_path = Mock()
     mocked_path.return_value = expected_path
-    mocked_config.settings.working_dir = "pwd"
-    mocked_config.settings.dry_run = False
     expected_path.exists.return_value = True
     pillar = Pillar()
 
     with pytest.raises(RuntimeError):
         pillar.create_lock_file()
 
-    mocked_path.assert_called_once_with(
-        mocked_config.settings.working_dir, "hammurabi.lock"
-    )
+    mocked_path.assert_called_once_with("hammurabi.lock")
     expected_path.exists.assert_called_once_with()
     assert expected_path.touch.called is False
 
 
-@patch("hammurabi.pillar.config")
 @patch("hammurabi.pillar.Path")
-def test_release_lock_file(mocked_path, mocked_config):
+def test_release_lock_file(mocked_path):
     expected_path = Mock()
     mocked_path.return_value = expected_path
-    mocked_config.settings.working_dir = "pwd"
-    mocked_config.settings.dry_run = False
     expected_path.exists.return_value = True
     pillar = Pillar()
 
     pillar.release_lock_file()
 
-    mocked_path.assert_called_once_with(
-        mocked_config.settings.working_dir, "hammurabi.lock"
-    )
+    mocked_path.assert_called_once_with("hammurabi.lock")
     expected_path.exists.assert_called_once_with()
     expected_path.unlink.assert_called_once_with()
 
 
-@patch("hammurabi.pillar.config")
-def test_enforce(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_enforce():
     expected_law = Mock()
     pillar = Pillar()
     pillar.register(expected_law)
@@ -179,11 +133,7 @@ def test_enforce(mocked_config):
     pillar.create_pull_request.assert_called_once_with()
 
 
-@patch("hammurabi.pillar.config")
-def test_enforce_failed(mocked_config):
-    mocked_config.settings.working_dir = "."
-    mocked_config.settings.dry_run = False
-
+def test_enforce_failed():
     expected_law = Mock()
     expected_law.enforce.side_effect = Exception()
 

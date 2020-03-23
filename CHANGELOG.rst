@@ -30,6 +30,7 @@ Changed
 * Extended CONTRIBUTING guidelines to include a notice for adding ``Rules`` and ``Preconditions`` (https://github.com/gabor-boros/hammurabi/pull/11)
 * Refactor package structure and extract preconditions to separate submodule (https://github.com/gabor-boros/hammurabi/pull/11)
 * Pull request body generation moved to the common ``GitMixin`` class (https://github.com/gabor-boros/hammurabi/pull/12)
+* Pillar will always create lock file in the working directory (https://github.com/gabor-boros/hammurabi/pull/12)
 
 Fixed
 ~~~~~
