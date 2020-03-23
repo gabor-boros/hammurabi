@@ -10,7 +10,8 @@ from tests.helpers import (
     get_git_mixin_consumer,
     get_github_mixin_consumer,
     get_passing_rule,
-    get_pull_request_helper_mixin_consumer)
+    get_pull_request_helper_mixin_consumer,
+)
 
 
 @patch("hammurabi.mixins.config")

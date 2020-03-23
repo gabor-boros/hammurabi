@@ -6,11 +6,12 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import List, Iterable
+from typing import Iterable, List, Union
 
 from github3.repos.repo import Repository  # type: ignore
 
 from hammurabi.config import config
+from hammurabi.preconditions.base import Precondition
 from hammurabi.rules.base import Rule
 
 
@@ -131,13 +132,15 @@ class GitMixin:
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
 
-class PullRequestHelperMixin:
+class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
     """
     Give helper classes for pull request related operations
     """
 
     @staticmethod
-    def __get_chained_rules(target: Rule, chain: Iterable[Rule]) -> Iterable[Rule]:
+    def __get_chained_rules(
+        target: Rule, chain: List[Union[Rule, Precondition]]
+    ) -> Iterable[Rule]:
         """
         Return all the chained rules excluding the root rule.
 
@@ -152,7 +155,7 @@ class PullRequestHelperMixin:
         """
 
         rules = filter(lambda i: isinstance(i, Rule), chain)
-        return filter(lambda r: r != target, rules)
+        return filter(lambda r: r != target, rules)  # type: ignore
 
     def __get_rules_body(self, rules: Iterable[Rule]) -> List[str]:
         """
@@ -209,9 +212,7 @@ class PullRequestHelperMixin:
 
             if law.failed_rules:
                 body.append("\n#### Failed rules (manual fix is needed)")
-                body.extend(
-                    self.__get_rules_body(law.failed_rules)
-                )
+                body.extend(self.__get_rules_body(law.failed_rules))
 
         return "\n".join(body)
 
