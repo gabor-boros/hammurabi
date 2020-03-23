@@ -13,15 +13,20 @@ assert temporary_file_generator
 assert temporary_dir
 
 
+@pytest.fixture()
+def clear_hammurabi_env():
+    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", "")
+
+
 @pytest.mark.integration
-def test_config_not_loaded():
+def test_config_not_loaded(clear_hammurabi_env):
     assert initialized_config.github is None
     assert initialized_config.repo == Repo(Path(".").absolute())
     assert initialized_config.settings.dict() == Settings().dict()
 
 
 @pytest.mark.integration
-def test_no_settings_path():
+def test_no_settings_path(clear_hammurabi_env):
     os.environ["HAMMURABI_SETTINGS_PATH"] = "fake path"
     config = Config()
 
@@ -30,19 +35,27 @@ def test_no_settings_path():
 
 
 @pytest.mark.integration
-def test_not_a_git_repository_path(temporary_dir, caplog):
+def test_not_a_git_repository_path(
+    clear_hammurabi_env, temporary_dir, temporary_file_generator, caplog
+):
     os.chdir(temporary_dir)
 
-    Config()
-    record = caplog.records[0]
+    toml_file = temporary_file_generator()
+    os.environ["HAMMURABI_SETTINGS_PATH"] = toml_file.name
 
+    with pytest.raises(RuntimeError):
+        Config().load()
+
+    record = caplog.records[0]
     assert len(caplog.records)
     assert record.levelname == "ERROR"
     assert record.message == f'"{os.getcwd()}" is not a git repository'
 
 
 @pytest.mark.integration
-def test_configuration_loading(temporary_file_generator, temporary_dir):
+def test_configuration_loading(
+    clear_hammurabi_env, temporary_file_generator, temporary_dir
+):
     toml_file = temporary_file_generator()
     config_file = temporary_file_generator(".py")
 
@@ -91,7 +104,7 @@ pillar = Mock()
 
 @pytest.mark.integration
 def test_configuration_loading_no_fallback_repo(
-    temporary_file_generator, temporary_dir
+    clear_hammurabi_env, temporary_file_generator, temporary_dir
 ):
     toml_file = temporary_file_generator()
     config_file = temporary_file_generator(".py")
@@ -138,7 +151,9 @@ pillar = Mock()
 
 
 @pytest.mark.integration
-def test_configuration_loading_https_repo_url(temporary_file_generator, temporary_dir):
+def test_configuration_loading_https_repo_url(
+    clear_hammurabi_env, temporary_file_generator, temporary_dir
+):
     """
     Load only the necessary configs and check for default settings
     """

@@ -70,12 +70,24 @@ class Config:
 
     def __init__(self) -> None:
         try:
-            self.repo: Repo = Repo(Path(".").absolute())
+            repo = Repo(self.__get_repo_path())
         except InvalidGitRepositoryError as exc:
             logging.error('"%s" is not a git repository', str(exc))
+            repo = None
 
+        self.repo: Repo = repo
         self.github: Optional[GitHub] = None
         self.settings: Settings = Settings()
+
+    @staticmethod
+    def __get_repo_path() -> Path:
+        """
+        Get repository path which is the current working directory.
+        :return: Current working directory where Hammurabi is executed
+        :rtype: Path
+        """
+
+        return Path(".").absolute()
 
     @staticmethod
     def __load_pyproject_toml(config_file: Path) -> TOMLSettings:
@@ -193,6 +205,9 @@ class Config:
 
         :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment variable is not set.
         """
+
+        if not self.repo:
+            raise RuntimeError(f'"{self.__get_repo_path()}" is not a git repository.')
 
         settings_path = Path(
             os.path.expandvars(
