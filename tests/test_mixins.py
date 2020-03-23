@@ -1,6 +1,8 @@
 from pathlib import Path
 from unittest.mock import Mock, PropertyMock, patch
 
+import pytest
+
 from hammurabi import Law
 from tests.helpers import (
     PASSING_PRECONDITION,
@@ -293,7 +295,10 @@ def test_generate_pull_request_body_with_chained_rules():
         description="Test description 1",
         rules=[
             ExampleRule(
-                name="Test rule 1", param=Mock(), preconditions=[PASSING_PRECONDITION]
+                name="Test rule 1",
+                param=Mock(),
+                preconditions=[PASSING_PRECONDITION],
+                children=[get_passing_rule("Passing child rule")],
             )
         ],
     )
@@ -333,6 +338,7 @@ Test description 1
 
 #### Passed rules
 * Test rule 1
+** Passing child rule
 
 #### Failed rules (manual fix is needed)
 * Test failed rule 1
@@ -393,6 +399,22 @@ def test_github_pull_request(mocked_config):
         head=expected_branch_name,
         body=expected_pull_request_body,
     )
+
+
+@patch("hammurabi.mixins.config")
+def test_pull_request_no_github_client_configured(mocked_config):
+    github = get_github_mixin_consumer()
+    mocked_repository = Mock()
+
+    mocked_config.settings.dry_run = True
+    mocked_config.github = None
+
+    with pytest.raises(RuntimeError):
+        github.create_pull_request()
+
+    assert mocked_config.repository.called is False
+    assert mocked_repository.pull_requests.called is False
+    assert mocked_repository.create_pull.called is False
 
 
 @patch("hammurabi.mixins.config")
