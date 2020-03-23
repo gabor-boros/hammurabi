@@ -68,6 +68,14 @@ hammurabi.pillar module
    :undoc-members:
    :show-inheritance:
 
+hammurabi.py module
+-------------------
+
+.. automodule:: hammurabi.py
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------

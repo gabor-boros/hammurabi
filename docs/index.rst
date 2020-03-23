@@ -12,7 +12,6 @@ Documentation of Hammurabi
    config
    rules_and_preconditions
    modules
-   stubs
    contributing
    vulnerabilities
    authors

@@ -67,14 +67,6 @@ format: ## run formatters on the package
 	isort --apply -rc hammurabi tests
 	black hammurabi tests
 
-stubs: ## generate stubs for the package
-	@rm -rf .stubs
-	@stubgen --include-private -q -o .stubs hammurabi
-	@black -q .stubs
-	@echo "Generated!"
-	@echo 'Do not forget to update stubs with "# type: ignore pytype: disable=" where needed"!'
-	@echo "Run unit tests of typeshed before opening a PR for them."
-
 lint: format ## run linters against the package
 	mypy hammurabi
 	bandit -q -r hammurabi

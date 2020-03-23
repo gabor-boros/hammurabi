@@ -318,8 +318,6 @@ Useful make Commands
 +------------------+-------------------------------------+
 | format           | Run several formatters              |
 +------------------+-------------------------------------+
-| stubs            | Generate stub files                 |
-+------------------+-------------------------------------+
 | lint             | Run several linters after format    |
 +------------------+-------------------------------------+
 | test             | Run all tests with coverage         |

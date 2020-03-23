@@ -11,6 +11,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Apply PEP-561 (https://github.com/gabor-boros/hammurabi/pull/19)
+
 0.2.0_ - 2020-03-23
 --------------------
 
