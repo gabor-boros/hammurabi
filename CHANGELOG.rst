@@ -18,6 +18,12 @@ Added
 * Add new ``Precondition`` base class (https://github.com/gabor-boros/hammurabi/pull/9)
 * Add Code of Conduct to meet community requirements (https://github.com/gabor-boros/hammurabi/pull/10)
 * New section in the documentations for ``Rules`` and ``Preconditions`` (https://github.com/gabor-boros/hammurabi/pull/11)
+* Collect failed rules for every law (``Law.failed_rules``) (https://github.com/gabor-boros/hammurabi/pull/13)
+* Add chained rules to PR body (https://github.com/gabor-boros/hammurabi/pull/13)
+* Add failed rules to PR body (https://github.com/gabor-boros/hammurabi/pull/13)
+* Throw a warning when no GitHub client is initialized (https://github.com/gabor-boros/hammurabi/pull/13)
+* Raise runtime error when no GitHub client is initialized, but PR creation called (https://github.com/gabor-boros/hammurabi/pull/13)
+* Guess owner/repository based on the origin url of the working directory (https://github.com/gabor-boros/hammurabi/pull/13)
 
 Changed
 ~~~~~~~
@@ -26,11 +32,26 @@ Changed
 * Extract common methods of ``Precondition`` and ``Rule`` to a new ``AbstractRule`` class (https://github.com/gabor-boros/hammurabi/pull/9)
 * Extended CONTRIBUTING guidelines to include a notice for adding ``Rules`` and ``Preconditions`` (https://github.com/gabor-boros/hammurabi/pull/11)
 * Refactor package structure and extract preconditions to separate submodule (https://github.com/gabor-boros/hammurabi/pull/11)
+* Pull request body generation moved to the common ``GitMixin`` class (https://github.com/gabor-boros/hammurabi/pull/13)
+* Pillar will always create lock file in the working directory (https://github.com/gabor-boros/hammurabi/pull/13)
+* Call expandvar and expanduser of configuration files (https://github.com/gabor-boros/hammurabi/pull/13)
+* Hammurabi only works in the current working directory (https://github.com/gabor-boros/hammurabi/pull/13)
+* Read settings (pyproject.toml) path from ``HAMMURABI_SETTINGS_PATH`` environment variable (https://github.com/gabor-boros/hammurabi/pull/13)
 
 Fixed
 ~~~~~
 
-* Remove faulty author of git committing (https://github.com/gabor-boros/hammurabi/pull/12)
+* Remove faulty author of git committing (https://github.com/gabor-boros/hammurabi/pull/13)
+* Only attempt to create a PR if there is no PR from Hammurabi (https://github.com/gabor-boros/hammurabi/pull/13)
+* Fix double committing issue (https://github.com/gabor-boros/hammurabi/pull/13)
+* Fix committing of laws when nothing changed (https://github.com/gabor-boros/hammurabi/pull/13)
+* Fixed several CLI arguments related issues (https://github.com/gabor-boros/hammurabi/pull/13)
+* Fixed a typo in the Bug issue template of GitHub (https://github.com/gabor-boros/hammurabi/pull/13)
+
+Removed
+~~~~~~~
+
+* Removed target directory setting from config and CLI (https://github.com/gabor-boros/hammurabi/pull/13)
 
 0.1.2_ - 2020-03-18
 --------------------

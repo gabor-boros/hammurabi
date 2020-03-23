@@ -4,9 +4,10 @@ from importlib.util import module_from_spec, spec_from_file_location
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+import re
+from typing import Any, Dict, Optional
 
-from git import Repo
+from git import InvalidGitRepositoryError, Repo
 from github3 import GitHub, login
 from pydantic import BaseSettings
 import toml
@@ -47,9 +48,8 @@ class TOMLSettings(CommonSettings):
 
     github_token: str = ""
     log_level: str = "INFO"
-    pillar_config: Path
+    pillar_config: Path = Path("pillar.conf.py")
     pillar_name: str = "pillar"
-    target: Path
 
 
 class Settings(CommonSettings):
@@ -59,7 +59,6 @@ class Settings(CommonSettings):
     """
 
     pillar: object = None
-    working_dir: Path = Path(".")
 
 
 class Config:
@@ -67,32 +66,35 @@ class Config:
     Simple configuration object which used across Hammurabi.
     The :class:`Config` loads the given ``pyproject.toml`` according
     to PEP-518.
+
+    .. warning::
+
+        When trying to use GitHub based laws without an initialized GitHub
+        client (or invalid token), a warning will be thrown at the beginning
+        of the execution. In case a PR open is attempted, a ``RuntimeError``
+        will be raised
     """
 
     def __init__(self) -> None:
-        self.__repo: Repo = None
+        try:
+            repo = Repo(self.__get_repo_path())
+        except InvalidGitRepositoryError as exc:
+            logging.error('"%s" is not a git repository', str(exc))
+            repo = None
+
+        self.repo: Repo = repo
         self.github: Optional[GitHub] = None
         self.settings: Settings = Settings()
 
-    @property
-    def repo(self) -> Union[Repo, None]:
+    @staticmethod
+    def __get_repo_path() -> Path:
         """
-        Get the target directory.
-        """
-
-        return self.__repo
-
-    @repo.setter
-    def repo(self, repository):
-        """
-        Set the target and change the working directory. If the target is a git
-        repository.
+        Get repository path which is the current working directory.
+        :return: Current working directory where Hammurabi is executed
+        :rtype: Path
         """
 
-        self.settings.working_dir = repository.absolute()
-        os.chdir(str(self.settings.working_dir))
-
-        self.__repo = Repo(self.settings.working_dir)
+        return Path(".").absolute()
 
     @staticmethod
     def __load_pyproject_toml(config_file: Path) -> TOMLSettings:
@@ -124,11 +126,11 @@ class Config:
         """
 
         # Pillar configuration file
-        pillar_config = Path(project_config.pillar_config).expanduser()
+        pillar_config = project_config.pillar_config.expanduser()
 
         # Load the configuration from pillar config module to runtime
         spec = spec_from_file_location(
-            pillar_config.name.replace(".py", ""), pillar_config
+            pillar_config.name.replace(".py", ""), os.path.expandvars(pillar_config)
         )
 
         module = module_from_spec(spec)
@@ -166,10 +168,10 @@ class Config:
 
         Config priority:
 
-            1. CLI arguments
-            2. ENV Variables
-            3. Config from file
-            4. Default config
+            1. CLI arguments (set by the CLI)
+            2. ENV Variables (handled by pydantic settings)
+            3. Config from file (handled by ``Config`` object)
+            4. Default config (handled by pydantic settings)
 
         :param loaded_settings:
         :type loaded_settings: Dict[str, Any]
@@ -182,19 +184,62 @@ class Config:
 
         return Settings(**merge_result)
 
-    def load(self, file: Union[str, Path]):
+    def __get_fallback_repository(self) -> str:
+        """
+        Figure out the fallback owner/repository based on the remote url of the git repo.
+        :return: Returns the owner/repository pair
+        :rtype: str
+        """
+
+        repo_url: str = self.repo.remote().url
+
+        if re.match(r"^http(s)?://", repo_url):
+            repo = "/".join(repo_url.split("/")[-2:])
+        else:
+            repo = repo_url.split(":")[-1]
+
+        return repo.replace(".git", "")
+
+    def load(self):
         """
         Handle configuration loading from project toml file and make sure
         the configuration are initialized and merged. Also, make sure that
-        logging is set properly.
+        logging is set properly. Before loading the configuration, it is a
+        requirement to set the ``HAMMURABI_SETTINGS_PATH`` as it will contain
+        the path to the ``toml`` file what Hammurabi expects. This is needed
+        for cases when the 3rd party rules would like to read the configuration
+        of Hammurabi.
 
-        :param file: Path of the ``pyproject.toml`` file
-        :type file:  Union[str, Path]
+        ... note:
+
+            The ``HAMMURABI_SETTINGS_PATH`` environment variable is set by the CLI
+            by default, so there is no need to set if no 3rd party rules are used
+            or those rules are not loading config.
+
+        :raises: Runtime error if ``HAMMURABI_SETTINGS_PATH`` environment variable is not
+                 set or an invalid git repository was given.
+
         """
 
+        if not self.repo:
+            raise RuntimeError(f'"{self.__get_repo_path()}" is not a git repository.')
+
+        settings_path = Path(
+            os.path.expandvars(
+                os.environ.get("HAMMURABI_SETTINGS_PATH", "pyproject.toml")
+            )
+        ).expanduser()
+
+        if not settings_path.exists():
+            raise RuntimeError(
+                f'Environment variable "HAMMURABI_SETTINGS_PATH" ({settings_path}) '
+                "does not exists. Please make sure that you set the environment variable "
+                "or CLI ``-c/--config`` flag properly. You must either define the"
+                "environment variable or use hammurabi as a CLI tool."
+            )
+
         # Hammurabi CLI configuration file
-        toml_file = Path(file).expanduser()
-        project_config = self.__load_pyproject_toml(toml_file)
+        project_config = self.__load_pyproject_toml(settings_path)
 
         # Merge settings and make sure we keep config priority
         # Override the default settings by the merged ones
@@ -205,22 +250,28 @@ class Config:
                 "git_branch_name": project_config.git_branch_name,
                 "dry_run": project_config.dry_run,
                 "rule_can_abort": project_config.rule_can_abort,
-                "repository": project_config.repository,
             }
         )
+
+        if not project_config.repository:
+            self.settings.repository = self.__get_fallback_repository()
 
         # Set after self.settings is set since the following
         # may depend on settings read from environment or config file
         self.github = login(token=project_config.github_token)
-        self.repo = project_config.target
 
         # Set logging
         logging.root.setLevel(project_config.log_level)
 
-        logging.debug('Successfully loaded "%s"', toml_file)
+        logging.debug('Successfully loaded "%s"', settings_path)
         logging.debug(
-            'Successfully loaded "%s"', project_config.pillar_config.absolute()
+            'Successfully loaded "%s"', project_config.pillar_config.expanduser()
         )
+
+        if not self.github:
+            logging.warning(
+                "GitHub client is not initialized. Missing or invalid token."
+            )
 
 
 config = Config()  # pylint: disable=invalid-name

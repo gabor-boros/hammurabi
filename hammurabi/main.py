@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 import click
@@ -14,16 +15,10 @@ from hammurabi.config import config
     "-c",
     "--config",
     "cfg",
-    type=click.Path(exists=True),
+    type=click.STRING,
     default="pyproject.toml",
     show_default=True,
     help="Set the configuration file.",
-)
-@click.option(
-    "--target",
-    type=click.Path(exists=True),
-    default=None,
-    help="Set target path. If target is a git repo, commits will be created.",
 )
 @click.option(
     "--repository",
@@ -41,12 +36,7 @@ from hammurabi.config import config
     help="Set logging level.",
 )
 def cli(
-    ctx: click.Context,
-    cfg: click.Path,
-    target: click.Path,
-    repository: str,
-    github_token: str,
-    log_level: str,
+    ctx: click.Context, cfg: str, repository: str, github_token: str, log_level: str
 ):
     """
     Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules on a git
@@ -55,19 +45,19 @@ def cli(
     Find more information at: https://hammurabi.readthedocs.io/latest/
     """
 
+    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", str(Path(cfg).expanduser()))
+
     try:
-        config.load(str(cfg))
-    except KeyError as exc:
+        # Reload the configuration
+        config.load()
+    except Exception as exc:
         raise click.ClickException(str(exc))
 
-    if target:
-        config.repo = Path(str(target))
-
     if repository:
-        config.repo = repository
+        config.settings.repository = repository
 
     if github_token:
-        config.github = login(github_token)
+        config.github = login(token=github_token)
 
     if log_level:
         # Override log level

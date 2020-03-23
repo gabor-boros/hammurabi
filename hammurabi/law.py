@@ -63,6 +63,7 @@ class Law(GitMixin):
         self.name = name.strip()
         self.description = full_strip(description)
         self.rules: Iterable[Rule] = tuple()
+        self.failed_rules: Iterable[Rule] = tuple()
 
         for rule in rules:
             self.rules += (rule,)
@@ -115,7 +116,7 @@ class Law(GitMixin):
         """
 
         order = self.get_execution_order()
-        rules = [f"* {r.name}" for r in order if r.made_changes]
+        rules = [f"* {rule.name}" for rule in order if rule.made_changes]
         rules_commit_message = "\n".join(rules)
 
         if not rules:
@@ -157,6 +158,11 @@ class Law(GitMixin):
         When the whole execution chain is finished, the changes will be
         committed except the failed ones.
 
+        .. note::
+
+            Failed rules and their chain (excluding prerequisites) will be added
+            to the pull request description.
+
         :raises: ``AbortLawError``
         """
 
@@ -166,6 +172,9 @@ class Law(GitMixin):
             try:
                 self.__execute_rule(rule)
             except AbortLawError as exc:
+                logging.error(str(exc))
+                self.failed_rules += (rule,)
+
                 if config.settings.rule_can_abort:
                     raise exc
 
@@ -173,6 +182,5 @@ class Law(GitMixin):
         # scenarios when the rules will be populated later. Hence we need to
         # make sure we are not wasting time on trying to commit if the law did
         # not get any rule at the end.
-        # TODO: Not call commit when all the rules are failing
         if self.rules:
             self.commit()

@@ -91,4 +91,9 @@ class Precondition(AbstractRule, ABC):
         """
 
         logging.info('Running task for "%s"', self.name)
-        return self.task()
+
+        self.pre_task_hook()
+        result = self.task()
+        self.post_task_hook()
+
+        return result

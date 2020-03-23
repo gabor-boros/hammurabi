@@ -6,11 +6,13 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import List
+from typing import Iterable, List, Union
 
 from github3.repos.repo import Repository  # type: ignore
 
 from hammurabi.config import config
+from hammurabi.preconditions.base import Precondition
+from hammurabi.rules.base import Rule
 
 
 class GitMixin:
@@ -22,7 +24,20 @@ class GitMixin:
     """
 
     @staticmethod
-    def checkout_branch():
+    def __can_proceed() -> bool:
+        """
+        Determine if the next change can be done or not. For git related
+        operations it is extremely important to abort or skip an execution
+        if not needed.
+
+        :return: Returns True if the next changes should be done
+        :rtype: bool
+        """
+
+        return config.repo and not config.settings.dry_run and config.repo.is_dirty()
+
+    @staticmethod
+    def checkout_branch() -> None:
         """
         Perform a simple git checkout, to not pollute the default branch and
         use that branch for the pull request later. The branch name can be
@@ -40,7 +55,7 @@ class GitMixin:
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
-    def git_add(self, param: Path):
+    def git_add(self, param: Path) -> None:
         """
         Add file contents to the index.
 
@@ -54,12 +69,12 @@ class GitMixin:
             git add <path>
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug('Git add "%s"', str(param))
             config.repo.git.add(str(param))  # pylint: disable=no-member
             self.made_changes = True
 
-    def git_remove(self, param: Path):
+    def git_remove(self, param: Path) -> None:
         """
         Remove files from the working tree and from the index.
 
@@ -73,15 +88,14 @@ class GitMixin:
             git rm <path>
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug('Git remove "%s"', str(param))
             config.repo.index.remove(
                 (str(param),), ignore_unmatch=True
             )  # pylint: disable=no-member
             self.made_changes = True
 
-    @staticmethod
-    def git_commit(message: str):
+    def git_commit(self, message: str) -> None:
         """
         Commit the changes on the checked out branch.
 
@@ -95,12 +109,12 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if config.repo and not config.settings.dry_run:
+        if self.__can_proceed():
             logging.debug("Creating git commit for the changes")
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
-    def push_changes():
+    def push_changes() -> None:
         """
         Push the changes with the given branch set by ``git_branch_name``
         config option to the remote origin.
@@ -118,14 +132,54 @@ class GitMixin:
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
 
-class GitHubMixin(GitMixin):
+class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
     """
-    Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
-    on GitHub after changes are pushed to remote.
+    Give helper classes for pull request related operations
     """
 
     @staticmethod
-    def generate_pull_request_body(pillar) -> str:
+    def __get_chained_rules(
+        target: Rule, chain: List[Union[Rule, Precondition]]
+    ) -> Iterable[Rule]:
+        """
+        Return all the chained rules excluding the root rule.
+
+        :param target: The root Rule
+        :type target: Rule
+
+        :param chain: The whole chain
+        :type chain: Iterable[Rule]
+
+        :return: The filtered list of chained rules
+        :rtype: Iterable[Rule]
+        """
+
+        rules = filter(lambda i: isinstance(i, Rule), chain)
+        return filter(lambda r: r != target, rules)  # type: ignore
+
+    def __get_rules_body(self, rules: Iterable[Rule]) -> List[str]:
+        """
+        Generate the PR body's executed rules section for the root
+        and chained rules excluding their preconditions.
+
+        :param rules: List of passing of failed rules
+        :type rules: Iterable[Rule]
+
+        :return: Body of the PR section in a list format
+        :rtype: List[str]
+        """
+
+        body: List[str] = list()
+
+        for rule in rules:
+            body.append(f"* {rule.name}")
+
+            for chain in self.__get_chained_rules(rule, rule.get_rule_chain(rule)):
+                body.append(f"** {chain.name}")
+
+        return body
+
+    def generate_pull_request_body(self, pillar) -> str:
         """
         Generate the body of the pull request based on the registered laws and rules.
         The pull request body is markdown formatted.
@@ -150,12 +204,24 @@ class GitHubMixin(GitMixin):
         for law in pillar.laws:
             body.append(f"\n### {law.name}")
             body.append(law.description)
-            body.append("\n#### Rules")
 
-            for rule in law.rules:
-                body.append(f"* {rule.name}")
+            body.append("\n#### Passed rules")
+            body.extend(
+                self.__get_rules_body([rule for rule in law.rules if rule.made_changes])
+            )
+
+            if law.failed_rules:
+                body.append("\n#### Failed rules (manual fix is needed)")
+                body.extend(self.__get_rules_body(law.failed_rules))
 
         return "\n".join(body)
+
+
+class GitHubMixin(GitMixin, PullRequestHelperMixin):
+    """
+    Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
+    on GitHub after changes are pushed to remote.
+    """
 
     def create_pull_request(self):
         """
@@ -174,6 +240,12 @@ class GitHubMixin(GitMixin):
         +------------+--------------------------------------+
         """
 
+        if not config.github:
+            raise RuntimeError(
+                "The GitHub client is not initialized properly. Make sure that "
+                "you set the GITHUB_TOKEN or HAMMURABI_GITHUB_TOKEN before execution. "
+            )
+
         if config.repo and not config.settings.dry_run:
             owner, repository = config.settings.repository.split("/")
             github_repo: Repository = config.github.repository(owner, repository)
@@ -183,7 +255,7 @@ class GitHubMixin(GitMixin):
                 state="open", head=config.settings.git_branch_name, base="master"
             )
 
-            if not opened_pull_request:
+            if opened_pull_request.count == -1:
                 description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")

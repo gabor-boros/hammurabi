@@ -1,8 +1,17 @@
 from pathlib import Path
 from unittest.mock import Mock, PropertyMock, patch
 
+import pytest
+
 from hammurabi import Law
-from tests.helpers import ExampleRule, get_git_mixin_consumer, get_github_mixin_consumer
+from tests.helpers import (
+    PASSING_PRECONDITION,
+    ExampleRule,
+    get_git_mixin_consumer,
+    get_github_mixin_consumer,
+    get_passing_rule,
+    get_pull_request_helper_mixin_consumer,
+)
 
 
 @patch("hammurabi.mixins.config")
@@ -197,25 +206,161 @@ Below you can find the executed laws and information about them.
 ### Test law 1
 Test description 1
 
-#### Rules
+#### Passed rules
 * Test rule 1
 
 ### Test law 2
 Test description 2
 
-#### Rules
+#### Passed rules
 * Test rule 2
 
 ### Test law 3
 Test description 3
 
-#### Rules
+#### Passed rules
 * Test rule 3
 * Test rule 4"""
 
-    github = get_github_mixin_consumer()
+    pr_helper = get_pull_request_helper_mixin_consumer()
 
-    body = github.generate_pull_request_body(mocked_pillar)
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
+
+    assert body == expected_body
+
+
+def test_generate_pull_request_body_with_failed_rules():
+    failed_execution_law = Law(
+        name="Test law 1",
+        description="Test description 1",
+        rules=[ExampleRule(name="Test rule 1", param=Mock())],
+    )
+
+    failed_execution_law.failed_rules = [
+        ExampleRule(name="Test failed rule 1", param=Mock())
+    ]
+
+    mocked_pillar = Mock()
+    mocked_pillar.laws = [
+        failed_execution_law,
+        Law(
+            name="Test law 2",
+            description="Test description 2",
+            rules=[ExampleRule(name="Test rule 2", param=Mock())],
+        ),
+        Law(
+            name="Test law 3",
+            description="Test description 3",
+            rules=[
+                ExampleRule(name="Test rule 3", param=Mock()),
+                ExampleRule(name="Test rule 4", param=Mock()),
+            ],
+        ),
+    ]
+
+    expected_body = """## Description
+Below you can find the executed laws and information about them.
+
+### Test law 1
+Test description 1
+
+#### Passed rules
+* Test rule 1
+
+#### Failed rules (manual fix is needed)
+* Test failed rule 1
+
+### Test law 2
+Test description 2
+
+#### Passed rules
+* Test rule 2
+
+### Test law 3
+Test description 3
+
+#### Passed rules
+* Test rule 3
+* Test rule 4"""
+
+    pr_helper = get_pull_request_helper_mixin_consumer()
+
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
+
+    assert body == expected_body
+
+
+def test_generate_pull_request_body_with_chained_rules():
+    failed_execution_law = Law(
+        name="Test law 1",
+        description="Test description 1",
+        rules=[
+            ExampleRule(
+                name="Test rule 1",
+                param=Mock(),
+                preconditions=[PASSING_PRECONDITION],
+                children=[get_passing_rule("Passing child rule")],
+            )
+        ],
+    )
+
+    failed_execution_law.failed_rules = [
+        ExampleRule(
+            name="Test failed rule 1",
+            param=Mock(),
+            preconditions=[PASSING_PRECONDITION],
+            children=[get_passing_rule("Child rule")],
+        )
+    ]
+
+    mocked_pillar = Mock()
+    mocked_pillar.laws = [
+        failed_execution_law,
+        Law(
+            name="Test law 2",
+            description="Test description 2",
+            rules=[ExampleRule(name="Test rule 2", param=Mock())],
+        ),
+        Law(
+            name="Test law 3",
+            description="Test description 3",
+            rules=[
+                ExampleRule(name="Test rule 3", param=Mock()),
+                ExampleRule(name="Test rule 4", param=Mock()),
+            ],
+        ),
+    ]
+
+    expected_body = """## Description
+Below you can find the executed laws and information about them.
+
+### Test law 1
+Test description 1
+
+#### Passed rules
+* Test rule 1
+** Passing child rule
+
+#### Failed rules (manual fix is needed)
+* Test failed rule 1
+** Child rule
+
+### Test law 2
+Test description 2
+
+#### Passed rules
+* Test rule 2
+
+### Test law 3
+Test description 3
+
+#### Passed rules
+* Test rule 3
+* Test rule 4"""
+
+    pr_helper = get_pull_request_helper_mixin_consumer()
+
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
 
     assert body == expected_body
 
@@ -227,7 +372,7 @@ def test_github_pull_request(mocked_config):
     expected_repo_name = "hammurabi"
     expected_pull_request_body = "test pull body"
     mocked_repository = Mock()
-    mocked_repository.pull_requests.return_value = []
+    mocked_repository.pull_requests.return_value = Mock(count=-1)
 
     github = get_github_mixin_consumer()
     github.generate_pull_request_body = Mock()
@@ -255,6 +400,22 @@ def test_github_pull_request(mocked_config):
         head=expected_branch_name,
         body=expected_pull_request_body,
     )
+
+
+@patch("hammurabi.mixins.config")
+def test_pull_request_no_github_client_configured(mocked_config):
+    github = get_github_mixin_consumer()
+    mocked_repository = Mock()
+
+    mocked_config.settings.dry_run = True
+    mocked_config.github = None
+
+    with pytest.raises(RuntimeError):
+        github.create_pull_request()
+
+    assert mocked_config.repository.called is False
+    assert mocked_repository.pull_requests.called is False
+    assert mocked_repository.create_pull.called is False
 
 
 @patch("hammurabi.mixins.config")

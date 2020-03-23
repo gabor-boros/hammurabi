@@ -10,7 +10,10 @@ Hammurabi configuration
 
 You can set the following options in your ``pyproject.toml``
 config file's `[hammurabi]` section. Config option marked with ``*`` (asterisk)
-is mandatory (set by CLI argument or project config).
+is mandatory (set by CLI argument or project config). Hammurabi can be configured
+through environment variables too. To use an environment variable based config option
+set the ``HAMMURABI_<CONFIG_OPTION>`` where ``<CONFIG_OPTION>`` is in uppercase and
+matches one of the options below.
 
 +-----------------+-----------------------------------------------+-----------------+
 | Config option   | Description                                   | Default value   |
@@ -20,8 +23,6 @@ is mandatory (set by CLI argument or project config).
 | pillar_name     | name of the pillar variable                   | pillar          |
 +-----------------+-----------------------------------------------+-----------------+
 | log_level       | logging level of the program                  | INFO            |
-+-----------------+-----------------------------------------------+-----------------+
-| target          | location of the target directory              | . (current dir) |
 +-----------------+-----------------------------------------------+-----------------+
 | repository      | git repository (owner/repo)                   | None            |
 +-----------------+-----------------------------------------------+-----------------+

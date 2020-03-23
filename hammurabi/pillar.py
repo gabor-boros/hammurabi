@@ -10,7 +10,6 @@ import logging
 from pathlib import Path
 from typing import List
 
-from hammurabi.config import config
 from hammurabi.law import Law
 from hammurabi.mixins import GitHubMixin
 from hammurabi.rules.base import Rule
@@ -30,7 +29,7 @@ class Pillar(GitHubMixin):
 
     def __init__(self) -> None:
         self.__laws: List[Law] = list()
-        self.__lock_file = Path(config.settings.working_dir, "hammurabi.lock")
+        self.__lock_file = Path("hammurabi.lock")
 
     @property
     def laws(self) -> List[Law]:
