@@ -106,7 +106,7 @@ class SectionExists(SingleConfigFileRule):
         add_after: bool = True,
         **kwargs,
     ) -> None:
-        self.target = self.validate(target, required=True)
+        self.target = target
         self.options = options
         self.add_after = add_after
 
@@ -120,29 +120,28 @@ class SectionExists(SingleConfigFileRule):
         the given name, and optionally the specified options.
 
         In case options are set, the config options will be assigned to that config sections.
-        A ``LookupError`` exception will be raised if the target section can not be found.
+        If the target is not found or not provided, the section will be added without any
+        intentional positioning. It means that it may be added to the top, bottom or even to
+        the middle of the config file.
 
-        :raises: ``LookupError`` raised if no target can be found
         :return: Return the input path as an output
         :rtype: Path
         """
 
         sections = self.updater.sections()
 
-        if not sections:
-            logging.debug('adding section "%s"', self.section)
+        if self.updater.has_section(self.section):
+            return self.param
 
+        logging.debug('adding section "%s"', self.section)
+
+        if not self.target or self.target not in sections:
             self.updater.add_section(self.section)
+            section = self.updater[self.section]
 
-            for option, value in self.options:
-                self.updater[self.section][option] = value
-
-        if not self.updater.has_section(self.section):
-
-            if self.target not in sections:
-                raise LookupError(f'No matching section for "{self.target}"')
-
-            logging.debug('adding section "%s"', self.section)
+            if list(self.updater.keys()).index(section) != 0:
+                section.add_before.space(self.space)
+        else:
             target = self.updater[self.target]
 
             if self.add_after:
@@ -150,8 +149,8 @@ class SectionExists(SingleConfigFileRule):
             else:
                 target.add_before.section(self.section)
 
-            for option, value in self.options:
-                self.updater[self.section][option] = value
+        for option, value in self.options:
+            self.updater[self.section][option] = value
 
         with self.param.open("w") as file:
             self.updater.write(file)

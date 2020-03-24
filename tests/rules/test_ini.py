@@ -133,8 +133,10 @@ def test_section_exists_no_sections(mocked_updater_class):
     expected_target = Mock()
 
     mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
     mocked_updater.sections.return_value = []
-    mocked_updater.has_section.return_value = True
+    mocked_updater.has_section.return_value = False
 
     mocked_updater_class.return_value = mocked_updater
 
@@ -163,6 +165,8 @@ def test_section_exists_no_target(mocked_updater_class):
     expected_target = Mock()
 
     mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
     mocked_updater.sections.return_value = [Mock(), Mock()]
     mocked_updater.has_section.return_value = False
 
@@ -175,11 +179,39 @@ def test_section_exists_no_target(mocked_updater_class):
         target=expected_target,
     )
 
-    with pytest.raises(LookupError):
-        rule.task()
+    rule.task()
 
     mocked_updater.sections.assert_called_once_with()
     mocked_updater.has_section.assert_called_once_with(expected_section)
+    mocked_updater.add_section.assert_called_once_with(expected_section)
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_exists_missing_target(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock()
+
+    mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
+    mocked_updater.sections.return_value = [Mock(), Mock()]
+    mocked_updater.has_section.return_value = False
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionExists(
+        name="Section exists rule", path=expected_path, section=expected_section
+    )
+
+    rule.task()
+
+    mocked_updater.sections.assert_called_once_with()
+    mocked_updater.has_section.assert_called_once_with(expected_section)
+    mocked_updater.add_section.assert_called_once_with(expected_section)
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")

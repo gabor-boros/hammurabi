@@ -14,6 +14,7 @@ Unreleased_
 Changed
 ~~~~~~~
 
+* Make sure ``SectionExists`` adds the section even if no target given (https://github.com/gabor-boros/hammurabi/pull/21)
 * Apply PEP-561 (https://github.com/gabor-boros/hammurabi/pull/19)
 
 0.2.0_ - 2020-03-23
