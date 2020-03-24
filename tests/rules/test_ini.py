@@ -198,9 +198,7 @@ def test_section_exists_missing_target(mocked_updater_class):
     mocked_updater_class.return_value = mocked_updater
 
     rule = SectionExists(
-        name="Section exists rule",
-        path=expected_path,
-        section=expected_section,
+        name="Section exists rule", path=expected_path, section=expected_section
     )
 
     rule.task()
