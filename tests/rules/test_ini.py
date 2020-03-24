@@ -133,6 +133,8 @@ def test_section_exists_no_sections(mocked_updater_class):
     expected_target = Mock()
 
     mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
     mocked_updater.sections.return_value = []
     mocked_updater.has_section.return_value = False
 
@@ -163,6 +165,8 @@ def test_section_exists_no_target(mocked_updater_class):
     expected_target = Mock()
 
     mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
     mocked_updater.sections.return_value = [Mock(), Mock()]
     mocked_updater.has_section.return_value = False
 
@@ -192,6 +196,8 @@ def test_section_exists_missing_target(mocked_updater_class):
     expected_section = Mock()
 
     mocked_updater = MagicMock()
+    mocked_updater.__getitem__.return_value = expected_section
+    mocked_updater.keys.return_value = {expected_section}
     mocked_updater.sections.return_value = [Mock(), Mock()]
     mocked_updater.has_section.return_value = False
 

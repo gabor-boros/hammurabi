@@ -137,6 +137,10 @@ class SectionExists(SingleConfigFileRule):
 
         if not self.target or self.target not in sections:
             self.updater.add_section(self.section)
+            section = self.updater[self.section]
+
+            if list(self.updater.keys()).index(section) != 0:
+                section.add_before.space(self.space)
         else:
             target = self.updater[self.target]
 

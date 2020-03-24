@@ -32,6 +32,28 @@ def test_section_exists(temporary_file):
 
 
 @pytest.mark.integration
+def test_section_exists_no_target(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("[main]")
+
+    rule = SectionExists(
+        name="Ensure section exists",
+        path=expected_file,
+        section="test_section",
+        options=(("option_1", "some value"), ("option_2", True)),
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert (
+        expected_file.read_text()
+        == "[main]\n[test_section]\noption_1 = some value\noption_2 = True\n"
+    )
+    expected_file.unlink()
+
+
+@pytest.mark.integration
 def test_section_exists_keeping_comment(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text(";commenting some thing\n[main]")
