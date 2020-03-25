@@ -119,8 +119,5 @@ Please follow this checklist for the release:
 2. Make sure that linters are not complaining (``make lint`` returns 0)
 3. Update CHANGELOG.rst - do not forget to update the unreleased link comparison
 4. Update version in ``pyproject.toml``, ``CHANGELOG.rst``, ``docs/conf.py`` and ``hammurabi/__init__.py``
-5. Generate stubs and open a PR for typeshed_ to update stubs
-6. Create a new Release on GitHub with a detailed release description based on
+5. Create a new Release on GitHub with a detailed release description based on
    the previous releases.
-
-.. _typeshed: https://github.com/python/typeshed

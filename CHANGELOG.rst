@@ -8,8 +8,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
-Unreleased_
------------
+Unreleased
+----------
+
+0.3.0_ - 2020-03-25
+-------------------
 
 Added
 ~~~~~
@@ -26,6 +29,11 @@ Fixed
 ~~~~~
 
 * Fixed an ini section rename issue (https://github.com/gabor-boros/hammurabi/pull/24)
+
+Removed
+~~~~~~~
+
+* Updated CONTRIBUTING.rst to remove the outdated stub generation
 
 0.2.0_ - 2020-03-23
 --------------------
@@ -144,11 +152,12 @@ Added
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.2.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.3.0...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
 .. _0.2.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.2.0
+.. _0.3.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.0
 
 .. EXAMPLE CHANGELOG ENTRY
 
