@@ -11,11 +11,21 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Add Yaml file support (https://github.com/gabor-boros/hammurabi/pull/24)
+
 Changed
 ~~~~~~~
 
 * Make sure ``SectionExists`` adds the section even if no target given (https://github.com/gabor-boros/hammurabi/pull/21)
 * Apply PEP-561 (https://github.com/gabor-boros/hammurabi/pull/19)
+
+Fixed
+~~~~~
+
+* Fixed an ini section rename issue (https://github.com/gabor-boros/hammurabi/pull/24)
 
 0.2.0_ - 2020-03-23
 --------------------
