@@ -163,5 +163,39 @@ LineReplaced
 .. autoclass:: hammurabi.rules.text.LineReplaced
    :noindex:
 
+YAML files
+~~~~~~~~~~
+
+YAMLKeyExists
+^^^^^^^^^^^^^
+
+.. autoclass:: hammurabi.rules.yaml.YAMLKeyExists
+   :noindex:
+
+YAMLKeyNotExists
+^^^^^^^^^^^^^^^^
+
+.. autoclass:: hammurabi.rules.yaml.YAMLKeyNotExists
+   :noindex:
+
+YAMLKeyRenamed
+^^^^^^^^^^^^^^
+
+.. autoclass:: hammurabi.rules.yaml.YAMLKeyRenamed
+   :noindex:
+
+YAMLValueExists
+^^^^^^^^^^^^^^^
+
+.. autoclass:: hammurabi.rules.yaml.YAMLValueExists
+   :noindex:
+
+YAMLValueNotExists
+^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: hammurabi.rules.yaml.YAMLValueNotExists
+   :noindex:
+
+
 Preconditions
 -------------

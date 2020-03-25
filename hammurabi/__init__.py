@@ -29,5 +29,12 @@ from hammurabi.rules.ini import (
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
+from hammurabi.rules.yaml import (
+    YAMLKeyExists,
+    YAMLKeyNotExists,
+    YAMLKeyRenamed,
+    YAMLValueExists,
+    YAMLValueNotExists,
+)
 
 __version__ = "0.2.0"

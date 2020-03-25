@@ -50,12 +50,16 @@ Hammurabi supports several operations (Rules) by default. These Rules can do
 * file and directory manipulations
 * piped rule execution (output of a rule is the input of the next rule)
 * children rule execution (output of a rule is the input of the upcoming rules)
-* working with ``plain text`` and ``ini`` files
 * creating files from Jinja2 templates
+
+Supported file formats:
+
+* ``plain text``
+* ``ini``
+* ``yaml`` (basic, single document operations)
 
 Upcoming file format support:
 
-* ``yaml``
 * ``toml``
 * ``json``
 * ``hocon``
