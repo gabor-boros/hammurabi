@@ -60,6 +60,14 @@ hammurabi.rules.ini module
    :undoc-members:
    :show-inheritance:
 
+hammurabi.rules.mixins module
+-----------------------------
+
+.. automodule:: hammurabi.rules.mixins
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hammurabi.rules.operations module
 ---------------------------------
 
@@ -80,6 +88,14 @@ hammurabi.rules.text module
 ---------------------------
 
 .. automodule:: hammurabi.rules.text
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+hammurabi.rules.yaml module
+---------------------------
+
+.. automodule:: hammurabi.rules.yaml
    :members:
    :undoc-members:
    :show-inheritance:
