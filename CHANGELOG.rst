@@ -8,8 +8,26 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _Keep a Changelog: https://keepachangelog.com/en/1.0.0/
 .. _Semantic Versioning: https://semver.org/spec/v2.0.0.html
 
+.. Hyperlinks for releases
+
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.3.1...master
+.. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
+.. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
+.. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
+.. _0.2.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.2.0
+.. _0.3.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.0
+.. _0.3.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.1
+
 Unreleased
 ----------
+
+0.3.1_ - 2020-03-26
+-------------------
+
+Fixed
+~~~~~
+
+* Make sure the lost ini file fix is back lost by merge conflict resolution
 
 0.3.0_ - 2020-03-25
 -------------------
@@ -149,15 +167,6 @@ Added
 * Miscellaneous
     * Initial documentation
     * CI/CD integration
-
-.. Hyperlinks for releases
-
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.3.0...master
-.. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
-.. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
-.. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
-.. _0.2.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.2.0
-.. _0.3.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.0
 
 .. EXAMPLE CHANGELOG ENTRY
 
