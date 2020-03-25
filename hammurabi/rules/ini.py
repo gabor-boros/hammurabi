@@ -119,10 +119,6 @@ class SectionExists(SingleConfigFileRule):
         Ensure that the given config section exists. If needed, create a config section with
         the given name, and optionally the specified options.
 
-        In case options are set, the config options will be assigned to that config sections.
-        A ``LookupError`` exception will be raised if the target section can not be found.
-
-        :raises: ``LookupError`` raised if no target can be found
         :return: Return the input path as an output
         :rtype: Path
         """
@@ -246,16 +242,26 @@ class SectionRenamed(SingleConfigFileRule):
         Rename the given section to a new name. None of its options will be
         changed. In case a section can not be found, a ``LookupError`` exception
         will be raised to stop the execution. The execution must be stopped at
-        this point, because if other rules depending on the rename will fail
+        this point, because if other rules depending on the rename they will fail
         otherwise.
 
-        :raises: ``LookupError`` raised if no section can be renamed
+        :raises: ``LookupError`` raised if no section can be renamed or both the
+                 new and old sections are in the config file
         :return: Return the input path as an output
         :rtype: Path
         """
 
-        if not self.updater.has_section(self.section):
+        has_old_section = self.updater.has_section(self.section)
+        has_new_section = self.updater.has_section(self.new_name)
+
+        if not has_old_section:
             raise LookupError(f'No matching section for "{self.section}"')
+
+        if has_old_section and has_new_section:
+            raise LookupError(f'Both "{self.section}" and "{self.new_name}" set')
+
+        if has_new_section:
+            return self.param
 
         logging.debug('Renaming "%s" to "%s"', self.section, self.new_name)
         self.updater[self.section].name = self.new_name

@@ -1,5 +1,5 @@
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, PropertyMock, patch
+from unittest.mock import MagicMock, Mock, PropertyMock, call, patch
 
 import pytest
 
@@ -286,7 +286,7 @@ def test_section_renamed(mocked_updater_class):
     mocked_updater = MagicMock()
     mocked_updater.__getitem__.return_value = expected_section
     mocked_updater.sections.return_value = [expected_section]
-    mocked_updater.has_section.return_value = True
+    mocked_updater.has_section.side_effect = [True, False]
 
     mocked_updater_class.return_value = mocked_updater
 
@@ -299,7 +299,7 @@ def test_section_renamed(mocked_updater_class):
 
     result = rule.task()
 
-    mocked_updater.has_section.assert_called_once_with(expected_section)
+    mocked_updater.has_section.has_halls(call(expected_section), call(new_section_name))
     assert expected_section.name == new_section_name
     assert result == expected_path
 
@@ -316,7 +316,7 @@ def test_section_renamed_no_section(mocked_updater_class):
     new_section_name = "apple"
 
     mocked_updater = MagicMock()
-    mocked_updater.has_section.return_value = False
+    mocked_updater.has_section.side_effect = [False, False]
 
     mocked_updater_class.return_value = mocked_updater
 
@@ -330,5 +330,35 @@ def test_section_renamed_no_section(mocked_updater_class):
     with pytest.raises(LookupError):
         rule.task()
 
-    mocked_updater.has_section.assert_called_once_with(expected_section)
+    mocked_updater.has_section.has_halls(call(expected_section), call(new_section_name))
+    assert expected_section.name == original_section_name
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_renamed_already_has_new_name(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock(name="banana")
+    original_section_name = expected_section.name
+    new_section_name = "apple"
+
+    mocked_updater = MagicMock()
+    mocked_updater.has_section.side_effect = [False, True]
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionRenamed(
+        name="Section exists rule",
+        path=expected_path,
+        section=expected_section,
+        new_name=new_section_name,
+    )
+
+    with pytest.raises(LookupError):
+        rule.task()
+
+    mocked_updater.has_section.has_halls(call(expected_section), call(new_section_name))
     assert expected_section.name == original_section_name
