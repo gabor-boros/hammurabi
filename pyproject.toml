@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hammurabi"
-version = "0.2.0"
+version = "0.3.0"
 license = "Apache-2.0"
 description = "Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules on a git repository."
 documentation = "https://readthedocs.org/projects/hammurabi/badge/"
