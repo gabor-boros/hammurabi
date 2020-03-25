@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Iterable, Optional, Tuple
 
 from configupdater import ConfigUpdater  # type: ignore
+from configupdater.configupdater import Section  # type: ignore
 
 from hammurabi.rules.common import SinglePathRule
 
@@ -106,13 +107,24 @@ class SectionExists(SingleConfigFileRule):
         add_after: bool = True,
         **kwargs,
     ) -> None:
-        self.target = self.validate(target, required=True)
+        self.target = target
         self.options = options
         self.add_after = add_after
 
         self.space = 1
 
         super().__init__(name, path, **kwargs)
+
+    def __get_target(self) -> Section:
+        """
+        Get the target of the insert. If the target is not
+        specified directly add as the last section.
+        """
+
+        if self.updater.has_section(self.target):
+            return self.updater[self.target]
+
+        return self.updater.sections_blocks()[-1]
 
     def task(self) -> Path:
         """
@@ -134,12 +146,9 @@ class SectionExists(SingleConfigFileRule):
                 self.updater[self.section][option] = value
 
         if not self.updater.has_section(self.section):
-
-            if self.target not in sections:
-                raise LookupError(f'No matching section for "{self.target}"')
-
             logging.debug('adding section "%s"', self.section)
-            target = self.updater[self.target]
+
+            target = self.__get_target()
 
             if self.add_after:
                 target.add_after.space(self.space).section(self.section)
