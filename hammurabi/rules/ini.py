@@ -127,7 +127,6 @@ class SectionExists(SingleConfigFileRule):
 
         if not sections:
             logging.debug('adding section "%s"', self.section)
-
             self.updater.add_section(self.section)
 
             for option, value in self.options:
