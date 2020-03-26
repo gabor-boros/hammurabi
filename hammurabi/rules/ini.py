@@ -263,14 +263,14 @@ class SectionRenamed(SingleConfigFileRule):
         has_old_section = self.updater.has_section(self.section)
         has_new_section = self.updater.has_section(self.new_name)
 
-        if not has_old_section:
-            raise LookupError(f'No matching section for "{self.section}"')
-
         if has_old_section and has_new_section:
             raise LookupError(f'Both "{self.section}" and "{self.new_name}" set')
 
         if has_new_section:
             return self.param
+
+        if not has_old_section:
+            raise LookupError(f'No matching section for "{self.section}"')
 
         logging.debug('Renaming "%s" to "%s"', self.section, self.new_name)
         self.updater[self.section].name = self.new_name
