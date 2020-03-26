@@ -21,6 +21,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Changed
+~~~~~~~
+
+* Make sure children and pipe can be set at the same time
+
 0.3.1_ - 2020-03-26
 -------------------
 
