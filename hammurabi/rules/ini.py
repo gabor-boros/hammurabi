@@ -254,8 +254,7 @@ class SectionRenamed(SingleConfigFileRule):
         this point, because if other rules depending on the rename they will fail
         otherwise.
 
-        :raises: ``LookupError`` raised if no section can be renamed or both the
-                 new and old sections are in the config file
+        :raises: ``LookupError`` if we can not decide or can not find what should be renamed
         :return: Return the input path as an output
         :rtype: Path
         """

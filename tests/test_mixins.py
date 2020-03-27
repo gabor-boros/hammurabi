@@ -289,7 +289,7 @@ def test_generate_pull_request_body_no_changes_no_passing_law():
         name="Test law 3", description="Test description 3", rules=[failing_rule]
     )
 
-    law_3.rules[0].made_changes = True
+    law_3.rules[0].made_changes = False
     law_3.failed_rules = [failing_rule]
 
     mocked_pillar = Mock()
