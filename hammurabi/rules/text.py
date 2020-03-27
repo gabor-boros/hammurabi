@@ -303,7 +303,8 @@ class LineReplaced(SinglePathRule):
         :param lines: Content of the given file
         :type lines: List[str]
 
-        :raises: ``LookupError``
+        :raises: ``LookupError`` if both ``target_match`` and ``text`` are set
+                 or nothing can be renamed
 
         :return: List of the matching line
         :rtype: List[str]
