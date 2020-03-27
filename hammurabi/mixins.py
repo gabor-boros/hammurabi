@@ -179,6 +179,53 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
 
         return body
 
+    def __get_passed_rules(self, law) -> List[str]:
+        """
+        Get the passed rules for law if there is any.
+
+        :param law: Target Law which will be checked
+        :type law: Law
+
+        :return: Body of the PR section in a list format
+        :rtype: List[str]
+        """
+
+        #  NOTE: The parameter type can not be hinted, because of circular import,
+        #  we must fix this in the future releases.
+
+        body: List[str] = list()
+
+        has_passing_rules = len(law.failed_rules) != len(law.rules)
+        rules_with_changes = [rule for rule in law.rules if rule.made_changes]
+
+        if has_passing_rules and rules_with_changes:
+            body.append("\n#### Passed rules")
+            body.extend(self.__get_rules_body(rules_with_changes))
+
+        return body
+
+    def __get_failed_rules(self, law) -> List[str]:
+        """
+        Get the failed rules for law if there is any.
+
+        :param law: Target Law which will be checked
+        :type law: Law
+
+        :return: Body of the PR section in a list format
+        :rtype: List[str]
+        """
+
+        #  NOTE: The parameter type can not be hinted, because of circular import,
+        #  we must fix this in the future releases.
+
+        body: List[str] = list()
+
+        if law.failed_rules:
+            body.append("\n#### Failed rules (manual fix needed)")
+            body.extend(self.__get_rules_body(law.failed_rules))
+
+        return body
+
     def generate_pull_request_body(self, pillar) -> str:
         """
         Generate the body of the pull request based on the registered laws and rules.
@@ -202,22 +249,14 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
         ]
 
         for law in pillar.laws:
-            has_passing_rules = len(law.failed_rules) != len(law.rules)
-            rules_with_changes = [rule for rule in law.rules if rule.made_changes]
-
-            if not rules_with_changes:
+            if not [rule for rule in law.rules if rule.made_changes]:
                 continue
 
             body.append(f"\n### {law.name}")
             body.append(law.description)
 
-            if has_passing_rules and rules_with_changes:
-                body.append("\n#### Passed rules")
-                body.extend(self.__get_rules_body(rules_with_changes))
-
-            if law.failed_rules:
-                body.append("\n#### Failed rules (manual fix needed)")
-                body.extend(self.__get_rules_body(law.failed_rules))
+            body.extend(self.__get_passed_rules(law))
+            body.extend(self.__get_failed_rules(law))
 
         return "\n".join(body)
 
