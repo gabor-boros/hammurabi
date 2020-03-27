@@ -6,7 +6,7 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import Iterable, List, Union
+from typing import Any, Iterable, List, Union
 
 from github3.repos.repo import Repository  # type: ignore
 
@@ -226,6 +226,14 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
 
         return body
 
+    @staticmethod
+    def __filter_laws_with_modifications(pillar) -> Iterable[Any]:
+        """
+        Return only those laws which has rules which made modifications.
+        """
+
+        return filter(lambda l: [r for r in l.rules if r.made_changes], pillar.laws)
+
     def generate_pull_request_body(self, pillar) -> str:
         """
         Generate the body of the pull request based on the registered laws and rules.
@@ -248,10 +256,7 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
             "Below you can find the executed laws and information about them.",
         ]
 
-        for law in pillar.laws:
-            if not [rule for rule in law.rules if rule.made_changes]:
-                continue
-
+        for law in self.__filter_laws_with_modifications(pillar):
             body.append(f"\n### {law.name}")
             body.append(law.description)
 
