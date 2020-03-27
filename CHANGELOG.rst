@@ -21,6 +21,23 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Changed
+~~~~~~~
+
+* Make sure children and pipe can be set at the same time
+* Simplify yaml key rename logic
+* ``SectionRenamed`` not raises error if old section name is not represented but the new one
+* ``OptionRenamed`` not raises error if old option name is not represented but the new one
+* ``LineReplaced`` not raises error if old line is not represented but the new one
+
+Fixed
+~~~~~
+
+* Fixed a dictionary traversal issue regarding yaml file support
+* Fixed "Filed Rules" formatting of PR description by removing ``\xa0`` character
+* Fixed no Rule name in PR description if the Law did not change anything issue
+* Fixed an issue with ``LineReplaced``, if the input file is empty, raise an exception
+
 0.3.1_ - 2020-03-26
 -------------------
 

@@ -229,16 +229,99 @@ Test description 3
     assert body == expected_body
 
 
-def test_generate_pull_request_body_with_failed_rules():
-    failed_execution_law = Law(
+# https://github.com/gabor-boros/hammurabi/issues/14
+def test_generate_pull_request_body_no_changes_no_law():
+    failing_rule = ExampleRule(name="Test failed rule 1", param=Mock())
+    failing_rule.made_changes = False
+
+    law_1 = Law(
         name="Test law 1",
         description="Test description 1",
         rules=[ExampleRule(name="Test rule 1", param=Mock())],
     )
 
-    failed_execution_law.failed_rules = [
-        ExampleRule(name="Test failed rule 1", param=Mock())
-    ]
+    law_2 = Law(
+        name="Test law 2",
+        description="Test description 2",
+        rules=[ExampleRule(name="Test rule 2", param=Mock())],
+    )
+
+    law_3 = Law(
+        name="Test law 3",
+        description="Test description 3",
+        rules=[ExampleRule(name="Test rule 3", param=Mock()), failing_rule],
+    )
+
+    law_1.rules[0].made_changes = False
+    law_2.rules[0].made_changes = False
+
+    law_3.rules[0].made_changes = True
+    law_3.failed_rules = [failing_rule]
+
+    mocked_pillar = Mock()
+    mocked_pillar.laws = [law_1, law_2, law_3]
+
+    expected_body = """## Description
+Below you can find the executed laws and information about them.
+
+### Test law 3
+Test description 3
+
+#### Passed rules
+* Test rule 3
+
+#### Failed rules (manual fix needed)
+* Test failed rule 1"""
+
+    pr_helper = get_pull_request_helper_mixin_consumer()
+
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
+
+    assert body == expected_body
+
+
+# https://github.com/gabor-boros/hammurabi/issues/14
+def test_generate_pull_request_body_no_changes_no_passing_law():
+    failing_rule = ExampleRule(name="Test failed rule 1", param=Mock())
+    failing_rule.made_changes = False
+
+    law_3 = Law(
+        name="Test law 3", description="Test description 3", rules=[failing_rule]
+    )
+
+    law_3.rules[0].made_changes = False
+    law_3.failed_rules = [failing_rule]
+
+    mocked_pillar = Mock()
+    mocked_pillar.laws = [law_3]
+
+    expected_body = """## Description
+Below you can find the executed laws and information about them.
+
+### Test law 3
+Test description 3
+
+#### Failed rules (manual fix needed)
+* Test failed rule 1"""
+
+    pr_helper = get_pull_request_helper_mixin_consumer()
+
+    body = pr_helper.generate_pull_request_body(mocked_pillar)
+
+    assert body == expected_body
+
+
+def test_generate_pull_request_body_with_failed_rules():
+    failed_rule = ExampleRule(name="Test failed rule 1", param=Mock())
+    failed_rule.made_changes = False
+
+    failed_execution_law = Law(
+        name="Test law 1",
+        description="Test description 1",
+        rules=[ExampleRule(name="Test rule 1", param=Mock()), failed_rule],
+    )
+
+    failed_execution_law.failed_rules = [failed_rule]
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [
@@ -267,7 +350,7 @@ Test description 1
 #### Passed rules
 * Test rule 1
 
-#### Failed rules (manual fix is needed)
+#### Failed rules (manual fix needed)
 * Test failed rule 1
 
 ### Test law 2
@@ -291,27 +374,29 @@ Test description 3
 
 
 def test_generate_pull_request_body_with_chained_rules():
+    failed_rule = ExampleRule(
+        name="Test failed rule 1",
+        param=Mock(),
+        preconditions=[PASSING_PRECONDITION],
+        children=[get_passing_rule("Child rule")],
+    )
+
+    failed_rule.made_changes = False
+
+    passing_rule = ExampleRule(
+        name="Test rule 1",
+        param=Mock(),
+        preconditions=[PASSING_PRECONDITION],
+        children=[get_passing_rule("Passing child rule")],
+    )
+
     failed_execution_law = Law(
         name="Test law 1",
         description="Test description 1",
-        rules=[
-            ExampleRule(
-                name="Test rule 1",
-                param=Mock(),
-                preconditions=[PASSING_PRECONDITION],
-                children=[get_passing_rule("Passing child rule")],
-            )
-        ],
+        rules=[passing_rule, failed_rule],
     )
 
-    failed_execution_law.failed_rules = [
-        ExampleRule(
-            name="Test failed rule 1",
-            param=Mock(),
-            preconditions=[PASSING_PRECONDITION],
-            children=[get_passing_rule("Child rule")],
-        )
-    ]
+    failed_execution_law.failed_rules = [failed_rule]
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [
@@ -341,7 +426,7 @@ Test description 1
 * Test rule 1
 ** Passing child rule
 
-#### Failed rules (manual fix is needed)
+#### Failed rules (manual fix needed)
 * Test failed rule 1
 ** Child rule
 

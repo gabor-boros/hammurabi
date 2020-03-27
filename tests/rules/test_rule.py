@@ -118,21 +118,6 @@ def test_cannot_proceed_precondition(mocked_config):
     assert not rule.post_task_hook.called
 
 
-def test_cannot_proceed_pipe_and_children():
-    piped_rule = ExampleRule(name="Test", param=None)
-    piped_rule.execute = Mock()
-
-    child_rule = ExampleRule(name="Test", param=None)
-    child_rule.execute = Mock()
-
-    with pytest.raises(ValueError) as exc:
-        ExampleRule(name="Test", param="Rule", pipe=piped_rule, children=[child_rule])
-
-    assert str(exc.value) == "pipe and children cannot be set at the same time"
-    assert not piped_rule.execute.called
-    assert not child_rule.execute.called
-
-
 @patch("hammurabi.rules.base.config")
 def test_execute_pipe(mocked_config):
     mocked_config.settings.dry_run = False

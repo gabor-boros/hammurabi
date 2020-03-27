@@ -268,6 +268,24 @@ def test_value_exists_no_key(temporary_file):
 
 
 @pytest.mark.integration
+def test_value_exists_no_value(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("stack: scala")
+
+    rule = YAMLValueExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="stack",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "stack:\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
 def test_value_exists_list(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("stack: python\ndependencies: []")
@@ -291,6 +309,26 @@ def test_value_exists_list(temporary_file):
 
 
 @pytest.mark.integration
+def test_value_exists_list_single_item(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("stack: python\ndependencies: []")
+
+    rule = YAMLValueExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="dependencies",
+        value="service1",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    # Because of the default flow style False, the result will be block-styled
+    assert expected_file.read_text() == "stack: python\ndependencies:\n- service1\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
 def test_value_exists_list_already_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("stack: python\ndependencies: [service3]")
@@ -308,6 +346,28 @@ def test_value_exists_list_already_exists(temporary_file):
     assert (
         expected_file.read_text()
         == "stack: python\ndependencies: [service3, service1, service2]\n"
+    )
+    expected_file.unlink()
+
+
+@pytest.mark.integration
+def test_value_exists_list_already_exists_single_item(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("stack: python\ndependencies: [service2]")
+
+    rule = YAMLValueExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="dependencies",
+        value="service1",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert (
+        expected_file.read_text()
+        == "stack: python\ndependencies: [service2, service1]\n"
     )
     expected_file.unlink()
 

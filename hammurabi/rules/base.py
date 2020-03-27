@@ -85,9 +85,6 @@ class Rule(AbstractRule, ABC):
         self.children = children
         self.preconditions = preconditions
 
-        if self.pipe and self.children:
-            raise ValueError("pipe and children cannot be set at the same time")
-
         super().__init__(name, param)
 
     @property

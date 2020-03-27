@@ -386,6 +386,36 @@ def test_section_renamed_no_section(mocked_updater_class):
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")
+def test_section_renamed_has_old_and_new_name(mocked_updater_class):
+    mock_file = Mock()
+    expected_path = Mock()
+    expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
+    expected_path.open.return_value.__exit__ = Mock()
+
+    expected_section = Mock(name="banana")
+    original_section_name = expected_section.name
+    new_section_name = "apple"
+
+    mocked_updater = MagicMock()
+    mocked_updater.has_section.side_effect = [True, True]
+
+    mocked_updater_class.return_value = mocked_updater
+
+    rule = SectionRenamed(
+        name="Section exists rule",
+        path=expected_path,
+        section=expected_section,
+        new_name=new_section_name,
+    )
+
+    with pytest.raises(LookupError):
+        rule.task()
+
+    mocked_updater.has_section.has_calls(call(expected_section), call(new_section_name))
+    assert expected_section.name == original_section_name
+
+
+@patch("hammurabi.rules.ini.ConfigUpdater")
 def test_section_renamed_already_has_new_name(mocked_updater_class):
     mock_file = Mock()
     expected_path = Mock()
@@ -408,8 +438,7 @@ def test_section_renamed_already_has_new_name(mocked_updater_class):
         new_name=new_section_name,
     )
 
-    with pytest.raises(LookupError):
-        rule.task()
+    rule.task()
 
     mocked_updater.has_section.has_calls(call(expected_section), call(new_section_name))
     assert expected_section.name == original_section_name

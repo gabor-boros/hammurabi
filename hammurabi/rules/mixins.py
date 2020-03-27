@@ -22,12 +22,9 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         """
 
         if isinstance(key_path, str):
-            if key_path.startswith("."):
-                key_path = key_path[1:]
-
             key_path = key_path.split(".")
 
-        return key_path
+        return list(filter(lambda key: key, key_path))
 
     def _get_by_selector(
         self, data: Any, key_path: Union[str, List[str]]
@@ -48,6 +45,11 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
 
         key_path = self.__normalize_key_path(key_path)
 
+        # Traversed and no remaining key
+        if not isinstance(data, dict) and not key_path:
+            return data
+
+        # Traversed or no remaining key
         if not data or not key_path:
             return None
 
