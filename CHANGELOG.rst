@@ -27,6 +27,11 @@ Changed
 * Make sure children and pipe can be set at the same time
 * ``SectionRenamed`` not raises error if old section name is not represented but the new one
 
+Fixed
+~~~~~
+
+* Fixed a dictionary traversal issue regarding yaml file support
+
 0.3.1_ - 2020-03-26
 -------------------
 
