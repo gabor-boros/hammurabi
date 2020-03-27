@@ -257,7 +257,6 @@ def test_line_replaced_empty_file():
 
 def test_line_replaced_no_match():
     expected_path = Mock()
-    target = "target"
 
     rule, mock_file = get_line_replaced_rule(path=expected_path, lines=["no", "match"])
 
@@ -265,4 +264,57 @@ def test_line_replaced_no_match():
         rule.task()
 
     assert str(exc.value).startswith("No matching line for")
+    assert mock_file.writelines.called is False
+
+
+def test_line_replaced_no_match_but_text():
+    expected_path = Mock()
+    replacement = "apple tree"
+
+    rule, mock_file = get_line_replaced_rule(
+        path=expected_path,
+        lines=["no", "match", replacement],
+        text=replacement
+    )
+
+    result = rule.task()
+
+    write_args = list(mock_file.writelines.call_args[0][0])
+    assert write_args == ["no\n", "match\n", f"{replacement}\n"]
+    assert result == expected_path
+
+
+def test_line_replaced_no_match_no_text():
+    expected_path = Mock()
+
+    rule, mock_file = get_line_replaced_rule(
+        path=expected_path,
+        lines=["no", "match"],
+        text="apple tree"
+    )
+
+    with pytest.raises(LookupError) as exc:
+        rule.task()
+
+    assert str(exc.value).startswith("No matching line for")
+    assert mock_file.writelines.called is False
+
+
+def test_line_replaced_both_target_and_text():
+    expected_path = Mock()
+    target = "target"
+    text = "apple tree"
+
+    rule, mock_file = get_line_replaced_rule(
+        path=expected_path,
+        lines=["no", target, text],
+        target=target,
+        text=text
+    )
+
+    with pytest.raises(LookupError) as exc:
+        rule.task()
+
+    # Use rule.target because of transformations on it
+    assert str(exc.value) == f'Both "{rule.target}" and "{rule.text}" exists'
     assert mock_file.writelines.called is False

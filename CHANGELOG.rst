@@ -28,6 +28,7 @@ Changed
 * Simplify yaml key rename logic
 * ``SectionRenamed`` not raises error if old section name is not represented but the new one
 * ``OptionRenamed`` not raises error if old option name is not represented but the new one
+* ``LineReplaced`` not raises error if old line is not represented but the new one
 
 Fixed
 ~~~~~

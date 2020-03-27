@@ -310,9 +310,16 @@ class LineReplaced(SinglePathRule):
         """
 
         target_match = list(filter(self.target.match, lines))
+        text = list(filter(lambda l: l.strip() == self.text, lines))
 
-        if not any(target_match):
-            raise LookupError(f'No matching line for "{self.target}"')
+        if target_match and text:
+            raise LookupError(f'Both "{str(self.target)}" and "{self.text}" exists')
+
+        if text:
+            return []
+
+        if not target_match:
+            raise LookupError(f'No matching line for "{str(self.target)}"')
 
         return target_match
 
