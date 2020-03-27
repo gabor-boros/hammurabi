@@ -272,9 +272,7 @@ def test_line_replaced_no_match_but_text():
     replacement = "apple tree"
 
     rule, mock_file = get_line_replaced_rule(
-        path=expected_path,
-        lines=["no", "match", replacement],
-        text=replacement
+        path=expected_path, lines=["no", "match", replacement], text=replacement
     )
 
     result = rule.task()
@@ -288,9 +286,7 @@ def test_line_replaced_no_match_no_text():
     expected_path = Mock()
 
     rule, mock_file = get_line_replaced_rule(
-        path=expected_path,
-        lines=["no", "match"],
-        text="apple tree"
+        path=expected_path, lines=["no", "match"], text="apple tree"
     )
 
     with pytest.raises(LookupError) as exc:
@@ -306,10 +302,7 @@ def test_line_replaced_both_target_and_text():
     text = "apple tree"
 
     rule, mock_file = get_line_replaced_rule(
-        path=expected_path,
-        lines=["no", target, text],
-        target=target,
-        text=text
+        path=expected_path, lines=["no", target, text], target=target, text=text
     )
 
     with pytest.raises(LookupError) as exc:

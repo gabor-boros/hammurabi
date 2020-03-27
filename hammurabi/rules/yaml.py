@@ -30,7 +30,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         self.yaml.default_flow_style = False
 
         self.selector = self.validate(key, required=True)
-        self.split_key = self.selector.split('.')
+        self.split_key = self.selector.split(".")
         self.key_name: str = self.split_key[-1]
         self.loaded_yaml = Union[Dict[Hashable, Any], List[Any], None]
 
@@ -46,9 +46,8 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
 
         # Get the parent for modifications. If there is no parent,
         # then the parent is the document root
-        return (
-            self._get_by_selector(self.loaded_yaml, self.split_key[:-1]) or self.loaded_yaml or {}
-        )
+        parent = self._get_by_selector(self.loaded_yaml, self.split_key[:-1])
+        return parent or self.loaded_yaml or {}
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
         """
@@ -61,7 +60,9 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         :type delete: bool
         """
 
-        updated_data = self._set_by_selector(self.loaded_yaml, self.split_key, data, delete)
+        updated_data = self._set_by_selector(
+            self.loaded_yaml, self.split_key, data, delete
+        )
         self.yaml.dump(updated_data, self.param)
 
     def pre_task_hook(self) -> None:
