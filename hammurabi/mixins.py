@@ -202,16 +202,21 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
         ]
 
         for law in pillar.laws:
+            has_passing_rules = len(law.failed_rules) != len(law.rules)
+            rules_with_changes = [rule for rule in law.rules if rule.made_changes]
+
+            if not rules_with_changes:
+                continue
+
             body.append(f"\n### {law.name}")
             body.append(law.description)
 
-            body.append("\n#### Passed rules")
-            body.extend(
-                self.__get_rules_body([rule for rule in law.rules if rule.made_changes])
-            )
+            if has_passing_rules and rules_with_changes:
+                body.append("\n#### Passed rules")
+                body.extend(self.__get_rules_body(rules_with_changes))
 
             if law.failed_rules:
-                body.append("\n#### Failed rules (manual fix is needed)")
+                body.append("\n#### Failed rules (manual fix needed)")
                 body.extend(self.__get_rules_body(law.failed_rules))
 
         return "\n".join(body)

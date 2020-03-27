@@ -34,6 +34,8 @@ Fixed
 ~~~~~
 
 * Fixed a dictionary traversal issue regarding yaml file support
+* Fixed "Filed Rules" formatting of PR description by removing ``\xa0`` character
+* Fixed no Rule name in PR description if the Law did not change anything issue
 
 0.3.1_ - 2020-03-26
 -------------------
