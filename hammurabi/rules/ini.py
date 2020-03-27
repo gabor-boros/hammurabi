@@ -470,7 +470,8 @@ class OptionRenamed(SingleConfigFileRule):
         The execution must be stopped at this point, because if dependant rules
         will fail otherwise.
 
-        :raises: ``LookupError`` raised if no section can be renamed
+        :raises: ``LookupError`` raised if no section found or both the old and new
+                 option names are found
         :return: Return the input path as an output
         :rtype: Path
         """
@@ -478,8 +479,17 @@ class OptionRenamed(SingleConfigFileRule):
         if not self.updater.has_section(self.section):
             raise LookupError(f'No matching section for "{self.section}"')
 
-        if not self.updater.has_option(self.section, self.option):
-            raise LookupError(f'No matching option for "{self.option}"')
+        has_old_option = self.updater[self.section].get(self.option)
+        has_new_option = self.updater[self.section].get(self.new_name)
+
+        if has_old_option and has_new_option:
+            raise LookupError(f'Both "{self.option}" and "{self.new_name}" set')
+
+        if has_new_option:
+            return self.param
+
+        if not has_old_option:
+            raise LookupError(f'No matching option for "{self.section}"')
 
         logging.debug(
             'Replacing option "%s" with "%s"', str(self.option), self.new_name

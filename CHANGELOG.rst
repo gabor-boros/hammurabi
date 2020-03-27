@@ -26,6 +26,7 @@ Changed
 
 * Make sure children and pipe can be set at the same time
 * ``SectionRenamed`` not raises error if old section name is not represented but the new one
+* ``OptionRenamed`` not raises error if old option name is not represented but the new one
 
 Fixed
 ~~~~~
