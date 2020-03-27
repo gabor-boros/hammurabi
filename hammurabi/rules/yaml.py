@@ -248,14 +248,14 @@ class YAMLKeyRenamed(SingleDocumentYAMLFileRule):
         has_old_key = self.key_name in parent
         has_new_key = self.new_name in parent
 
-        if not has_old_key and not has_new_key:
-            raise LookupError(f'No matching key for "{self.selector}"')
-
         if has_old_key and has_new_key:
             raise LookupError(f'Both "{self.key_name}" and "{self.new_name}" set')
 
         if has_new_key:
             return self.param
+
+        if not has_old_key:
+            raise LookupError(f'No matching key for "{self.selector}"')
 
         parent[self.new_name] = deepcopy(parent[self.key_name])
         parent.pop(self.key_name)
