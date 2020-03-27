@@ -286,9 +286,7 @@ def test_generate_pull_request_body_no_changes_no_passing_law():
     failing_rule.made_changes = False
 
     law_3 = Law(
-        name="Test law 3",
-        description="Test description 3",
-        rules=[failing_rule],
+        name="Test law 3", description="Test description 3", rules=[failing_rule]
     )
 
     law_3.rules[0].made_changes = True
