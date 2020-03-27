@@ -29,7 +29,9 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         self.yaml = YAML()
         self.yaml.default_flow_style = False
 
-        self.key = self.validate(key, required=True)
+        self.selector = self.validate(key, required=True)
+        self.split_key = self.selector.split('.')
+        self.key_name: str = self.split_key[-1]
         self.loaded_yaml = Union[Dict[Hashable, Any], List[Any], None]
 
         super().__init__(name, path, **kwargs)
@@ -45,7 +47,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         # Get the parent for modifications. If there is no parent,
         # then the parent is the document root
         return (
-            self._get_by_selector(self.loaded_yaml, self.key) or self.loaded_yaml or {}
+            self._get_by_selector(self.loaded_yaml, self.split_key[:-1]) or self.loaded_yaml or {}
         )
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
@@ -59,7 +61,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         :type delete: bool
         """
 
-        updated_data = self._set_by_selector(self.loaded_yaml, self.key, data, delete)
+        updated_data = self._set_by_selector(self.loaded_yaml, self.split_key, data, delete)
         self.yaml.dump(updated_data, self.param)
 
     def pre_task_hook(self) -> None:
@@ -136,13 +138,11 @@ class YAMLKeyExists(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
-
-        key_name: str = self.key.split(".")[-1]
-        inserted = parent.setdefault(key_name, self.value)
+        inserted = parent.setdefault(self.key_name, self.value)
 
         # Only write the changes if we did any change
-        if inserted == parent[key_name]:
-            self._write_dump(parent[key_name])
+        if inserted == parent[self.key_name]:
+            self._write_dump(inserted)
 
         return self.param
 
@@ -182,10 +182,9 @@ class YAMLKeyNotExists(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
-        key_name: str = self.key.split(".")[-1]
 
-        if key_name in parent.keys():
-            parent.pop(key_name)
+        if self.key_name in parent.keys():
+            parent.pop(self.key_name)
             self._write_dump(parent, delete=True)
 
         return self.param
@@ -245,22 +244,21 @@ class YAMLKeyRenamed(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
-        key_name: str = self.key.split(".")[-1]
 
-        has_old_key = key_name in parent
+        has_old_key = self.key_name in parent
         has_new_key = self.new_name in parent
 
         if not has_old_key and not has_new_key:
-            raise LookupError(f'No matching section for "{key_name}"')
+            raise LookupError(f'No matching key for "{self.selector}"')
 
         if has_old_key and has_new_key:
-            raise LookupError(f'Both "{key_name}" and "{self.new_name}" set')
+            raise LookupError(f'Both "{self.key_name}" and "{self.new_name}" set')
 
         if has_new_key:
             return self.param
 
-        parent[self.new_name] = deepcopy(parent[key_name])
-        parent.pop(key_name)
+        parent[self.new_name] = deepcopy(parent[self.key_name])
+        parent.pop(self.key_name)
 
         # Delete is True since we need to delete the old key
         self._write_dump(parent, delete=True)
@@ -366,24 +364,23 @@ class YAMLValueExists(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
-        key_name: str = self.key.split(".")[-1]
 
-        if key_name not in parent:
-            raise LookupError(f'No matching key for selector "{self.key}"')
+        if self.key_name not in parent:
+            raise LookupError(f'No matching key for selector "{self.selector}"')
 
         if self.value is None:
-            parent[key_name] = self.value
-        if isinstance(parent.get(key_name), list):
+            parent[self.key_name] = self.value
+        if isinstance(parent.get(self.key_name), list):
             if isinstance(self.value, list):
-                parent[key_name].extend(self.value)
+                parent[self.key_name].extend(self.value)
             else:
-                parent[key_name].append(self.value)
-        elif isinstance(parent.get(key_name), dict):
-            parent[key_name].update(self.value)
+                parent[self.key_name].append(self.value)
+        elif isinstance(parent.get(self.key_name), dict):
+            parent[self.key_name].update(self.value)
         else:
-            parent[key_name] = self.value
+            parent[self.key_name] = self.value
 
-        self._write_dump(parent[key_name])
+        self._write_dump(parent[self.key_name])
         return self.param
 
 
@@ -452,28 +449,27 @@ class YAMLValueNotExists(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
-        key_name: str = self.key.split(".")[-1]
         write_needed = False
 
-        if key_name not in parent:
+        if self.key_name not in parent:
             return self.param
 
-        current_value = parent.get(key_name)
+        current_value = parent.get(self.key_name)
 
         if isinstance(current_value, list):
             if self.value in current_value:
-                parent[key_name].remove(self.value)
+                parent[self.key_name].remove(self.value)
                 write_needed = True
         elif isinstance(current_value, dict):
             if self.value in current_value:
-                del parent[key_name][self.value]
+                del parent[self.key_name][self.value]
                 write_needed = True
         else:
             if current_value == self.value:
-                parent[key_name] = None
+                parent[self.key_name] = None
                 write_needed = True
 
         if write_needed:
-            self._write_dump(parent[key_name])
+            self._write_dump(parent[self.key_name])
 
         return self.param
