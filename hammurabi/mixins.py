@@ -232,7 +232,13 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
         Return only those laws which has rules which made modifications.
         """
 
-        return filter(lambda l: [r for r in l.rules if r.made_changes], pillar.laws)
+        def filter_rules(law):
+            rules = list()
+            rules.extend([r for r in law.rules if r.made_changes])
+            rules.extend(law.failed_rules)
+            return rules
+
+        return filter(filter_rules, pillar.laws)
 
     def generate_pull_request_body(self, pillar) -> str:
         """
