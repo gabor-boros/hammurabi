@@ -295,35 +295,6 @@ class LineReplaced(SinglePathRule):
 
         super().__init__(name, path, **kwargs)
 
-    def __get_target_match(self, lines: List[str]) -> List[str]:
-        """
-        Get the matching target lines from the content of the given file.
-        In case no match found, an exception will be raised accordingly.
-
-        :param lines: Content of the given file
-        :type lines: List[str]
-
-        :raises: ``LookupError`` if both ``target_match`` and ``text`` are set
-                 or nothing can be renamed
-
-        :return: List of the matching line
-        :rtype: List[str]
-        """
-
-        target_match = list(filter(self.target.match, lines))
-        text = list(filter(lambda l: l.strip() == self.text, lines))
-
-        if target_match and text:
-            raise LookupError(f'Both "{str(self.target)}" and "{self.text}" exists')
-
-        if text:
-            return []
-
-        if not target_match:
-            raise LookupError(f'No matching line for "{str(self.target)}"')
-
-        return target_match
-
     def __get_lines_from_file(self) -> Tuple[List[str], bool]:
         """
         Get the lines from the given file.
@@ -373,18 +344,28 @@ class LineReplaced(SinglePathRule):
         """
         Make sure that the given text is replaced in the given file.
 
-        :raises: ``LookupError``
-
+        :raises: ``LookupError`` if we can not decide or can not find what should be replaced
         :return: Returns the path of the modified file
         :rtype: Path
         """
 
-        lines, file_was_empty = self.__get_lines_from_file()
+        lines, _ = self.__get_lines_from_file()
 
-        if not file_was_empty:
-            for target in self.__get_target_match(lines):
-                self.__replace_line(lines, target)
+        target_match = list(filter(self.target.match, lines))
+        text = list(filter(lambda l: l.strip() == self.text, lines))
 
-            self.__write_content_to_file(lines)
+        if target_match and text:
+            raise LookupError(f'Both "{self.target}" and "{self.text}" exists')
+
+        if text:
+            return self.param
+
+        if not target_match:
+            raise LookupError(f'No matching line for "{self.target}"')
+
+        for target in target_match:
+            self.__replace_line(lines, target)
+
+        self.__write_content_to_file(lines)
 
         return self.param

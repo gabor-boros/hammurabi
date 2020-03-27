@@ -36,6 +36,7 @@ Fixed
 * Fixed a dictionary traversal issue regarding yaml file support
 * Fixed "Filed Rules" formatting of PR description by removing ``\xa0`` character
 * Fixed no Rule name in PR description if the Law did not change anything issue
+* Fixed an issue with ``LineReplaced``, if the input file is empty, raise an exception
 
 0.3.1_ - 2020-03-26
 -------------------

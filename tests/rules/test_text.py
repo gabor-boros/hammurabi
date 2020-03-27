@@ -250,7 +250,8 @@ def test_line_replaced_empty_file():
         path=expected_path, text=replacement, lines=[]
     )
 
-    rule.task()
+    with pytest.raises(LookupError):
+        rule.task()
 
     assert mock_file.writelines.called is False
 
@@ -277,8 +278,7 @@ def test_line_replaced_no_match_but_text():
 
     result = rule.task()
 
-    write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == ["no\n", "match\n", f"{replacement}\n"]
+    assert mock_file.writelines.called is False
     assert result == expected_path
 
 
