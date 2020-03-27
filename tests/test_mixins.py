@@ -256,7 +256,7 @@ def test_generate_pull_request_body_no_changes_no_law():
     law_2.rules[0].made_changes = False
 
     law_3.rules[0].made_changes = True
-    law_3.failed_rules = [failing_rule]
+    law_3._failed_rules = (failing_rule,)
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [law_1, law_2, law_3]
@@ -290,7 +290,7 @@ def test_generate_pull_request_body_no_changes_no_passing_law():
     )
 
     law_3.rules[0].made_changes = False
-    law_3.failed_rules = [failing_rule]
+    law_3._failed_rules = (failing_rule,)
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [law_3]
@@ -321,7 +321,7 @@ def test_generate_pull_request_body_with_failed_rules():
         rules=[ExampleRule(name="Test rule 1", param=Mock()), failed_rule],
     )
 
-    failed_execution_law.failed_rules = [failed_rule]
+    failed_execution_law._failed_rules = (failed_rule,)
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [
@@ -396,7 +396,7 @@ def test_generate_pull_request_body_with_chained_rules():
         rules=[passing_rule, failed_rule],
     )
 
-    failed_execution_law.failed_rules = [failed_rule]
+    failed_execution_law._failed_rules = (failed_rule,)
 
     mocked_pillar = Mock()
     mocked_pillar.laws = [

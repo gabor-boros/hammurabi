@@ -10,7 +10,7 @@ will be aborted and the original exception will be re-raised.
 """
 
 import logging
-from typing import Iterable, List, Union
+from typing import Iterable, List, Tuple, Union
 
 from hammurabi.config import config
 from hammurabi.exceptions import AbortLawError
@@ -63,10 +63,27 @@ class Law(GitMixin):
         self.name = name.strip()
         self.description = full_strip(description)
         self.rules: Iterable[Rule] = tuple()
-        self.failed_rules: Iterable[Rule] = tuple()
+        self._failed_rules: Union[Tuple[()], Tuple[Rule]] = ()
 
         for rule in rules:
             self.rules += (rule,)
+
+    @property
+    def passed_rules(self) -> Tuple[Rule, ...]:
+        return tuple(r for r in self.rules if r.made_changes)
+
+    @property
+    def failed_rules(self) -> Union[Tuple[()], Tuple[Rule]]:
+        return self._failed_rules
+
+    @property
+    def skipped_rules(self) -> Tuple[Rule, ...]:
+        def is_skipped(rule) -> bool:
+            not_passed = rule not in self.passed_rules
+            not_failed = rule not in self.failed_rules
+            return not_passed and not_failed
+
+        return tuple(r for r in self.rules if not is_skipped(r))
 
     @property
     def documentation(self) -> str:
@@ -100,8 +117,8 @@ class Law(GitMixin):
 
     def commit(self):
         """
-        Commit the changes made by registered rules
-        and add a meaningful commit message.
+        Commit the changes made by registered rules and add a
+        meaningful commit message.
 
         Example commit message:
 
@@ -173,7 +190,7 @@ class Law(GitMixin):
                 self.__execute_rule(rule)
             except AbortLawError as exc:
                 logging.error(str(exc))
-                self.failed_rules += (rule,)
+                self._failed_rules += (rule,)
 
                 if config.settings.rule_can_abort:
                     raise exc
