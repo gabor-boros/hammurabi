@@ -456,8 +456,10 @@ def test_github_pull_request(mocked_config):
     expected_owner = "gabor-boros"
     expected_repo_name = "hammurabi"
     expected_pull_request_body = "test pull body"
+    expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
     mocked_repository.pull_requests.return_value = Mock(count=-1)
+    mocked_repository.create_pull.return_value = Mock(url=expected_url)
 
     github = get_github_mixin_consumer()
     github.generate_pull_request_body = Mock()
@@ -469,7 +471,9 @@ def test_github_pull_request(mocked_config):
     mocked_config.settings.repository = f"{expected_owner}/{expected_repo_name}"
     mocked_config.github.repository.return_value = mocked_repository
 
-    github.create_pull_request()
+    pull_request_url = github.create_pull_request()
+
+    assert pull_request_url == expected_url
 
     mocked_config.github.repository.assert_called_once_with(
         expected_owner, expected_repo_name
@@ -511,8 +515,9 @@ def test_github_pull_request_dry_run(mocked_config):
     mocked_config.settings.dry_run = True
     mocked_config.github.repository.return_value = mocked_repository
 
-    github.create_pull_request()
+    pull_request_url = github.create_pull_request()
 
+    assert pull_request_url is None
     assert mocked_config.repository.called is False
     assert mocked_config.github.repository.called is False
     assert mocked_repository.pull_requests.called is False
@@ -529,8 +534,9 @@ def test_github_pull_request_no_repo(mocked_config):
     type(mocked_config).repo = mocked_repo_prop
     mocked_config.github.repository.return_value = mocked_repository
 
-    github.create_pull_request()
+    pull_request_url = github.create_pull_request()
 
+    assert pull_request_url is None
     assert mocked_repo_prop.called is True
     assert mocked_config.settings.repository.called is False
     assert mocked_config.github.repository.called is False
@@ -542,25 +548,29 @@ def test_github_pull_request_no_repo(mocked_config):
 def test_github_pull_request_has_opened_pr(mocked_config):
     github = get_github_mixin_consumer()
 
-    expected_branch_name = "awesome_branch"
+    expected_base_name = "happiness"
+    expected_branch_name = "awesome branch"
     expected_owner = "gabor-boros"
     expected_repo_name = "hammurabi"
+    expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
-    mocked_repository.pull_requests.return_value = [Mock()]
+    mocked_repository.pull_requests.return_value = Mock(count=1, last_url=expected_url)
 
     mocked_config.settings.dry_run = False
+    mocked_config.settings.git_base_name = expected_base_name
     mocked_config.settings.git_branch_name = expected_branch_name
     mocked_config.settings.repository = f"{expected_owner}/{expected_repo_name}"
     mocked_config.github.repository.return_value = mocked_repository
 
-    github.create_pull_request()
+    pull_request_url = github.create_pull_request()
 
+    assert pull_request_url == expected_url
     mocked_config.github.repository.assert_called_once_with(
         expected_owner, expected_repo_name
     )
 
     mocked_repository.pull_requests.assert_called_once_with(
-        state="open", head=expected_branch_name, base="master"
+        state="open", head=expected_branch_name, base=expected_base_name
     )
 
     assert mocked_repository.create_pull.called is False
