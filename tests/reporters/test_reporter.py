@@ -38,27 +38,18 @@ def test_reporter():
             {
                 "name": mocked_passed_rule.name,
                 "law": expected_law,
-                "passed": True,
-                "failed": False,
-                "skipped": False,
             }
         ],
         "failed": [
             {
                 "name": mocked_failed_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": True,
-                "skipped": False,
             }
         ],
         "skipped": [
             {
                 "name": mocked_skipped_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": False,
-                "skipped": True,
             }
         ],
         "additional_data": {
@@ -108,18 +99,12 @@ def test_no_passed():
             {
                 "name": mocked_failed_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": True,
-                "skipped": False,
             }
         ],
         "skipped": [
             {
                 "name": mocked_skipped_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": False,
-                "skipped": True,
             }
         ],
         "additional_data": {
@@ -161,9 +146,6 @@ def test_no_failed():
             {
                 "name": mocked_passed_rule.name,
                 "law": expected_law,
-                "passed": True,
-                "failed": False,
-                "skipped": False,
             }
         ],
         "failed": [],
@@ -171,9 +153,6 @@ def test_no_failed():
             {
                 "name": mocked_skipped_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": False,
-                "skipped": True,
             }
         ],
         "additional_data": {
@@ -215,18 +194,12 @@ def test_no_skipped():
             {
                 "name": mocked_passed_rule.name,
                 "law": expected_law,
-                "passed": True,
-                "failed": False,
-                "skipped": False,
             }
         ],
         "failed": [
             {
                 "name": mocked_failed_rule.name,
                 "law": expected_law,
-                "passed": False,
-                "failed": True,
-                "skipped": False,
             }
         ],
         "skipped": [],

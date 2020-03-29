@@ -40,20 +40,14 @@ def test_reporter(mocked_datetime):
     expected_report = {
         "passed": [
             {
-                "failed": False,
                 "law": expected_law,
                 "name": passing_rule.name,
-                "passed": True,
-                "skipped": False,
             }
         ],
         "failed": [
             {
-                "failed": True,
                 "law": expected_law,
                 "name": failing_rule.name,
-                "passed": False,
-                "skipped": False,
             }
         ],
         "skipped": [],
@@ -68,6 +62,7 @@ def test_reporter(mocked_datetime):
     pillar.push_changes = Mock()
     pillar.create_pull_request = Mock()
     pillar.create_pull_request.return_value = expected_pr_url
+    pillar.git_commit = Mock()
 
     # Register the law
     pillar.register(law)
