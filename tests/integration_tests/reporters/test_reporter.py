@@ -51,6 +51,7 @@ def test_reporter(mocked_datetime):
     }
 
     # Actually do not push anything
+    pillar.checkout_branch = Mock()
     pillar.push_changes = Mock()
     pillar.create_pull_request = Mock()
     pillar.create_pull_request.return_value = expected_pr_url
