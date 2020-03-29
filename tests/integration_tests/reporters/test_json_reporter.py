@@ -43,18 +43,8 @@ def test_reporter(mocked_datetime, temporary_file):
     }
 
     expected_report = {
-        "passed": [
-            {
-                "law": expected_law,
-                "name": passing_rule.name,
-            }
-        ],
-        "failed": [
-            {
-                "law": expected_law,
-                "name": failing_rule.name,
-            }
-        ],
+        "passed": [{"law": expected_law, "name": passing_rule.name}],
+        "failed": [{"law": expected_law, "name": failing_rule.name}],
         "skipped": [],
         "additional_data": {
             "pull_request_url": expected_pr_url,

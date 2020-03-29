@@ -34,24 +34,9 @@ def test_reporter():
     expected_law = {"name": mocked_law.name, "description": mocked_law.description}
 
     expected_report = {
-        "passed": [
-            {
-                "name": mocked_passed_rule.name,
-                "law": expected_law,
-            }
-        ],
-        "failed": [
-            {
-                "name": mocked_failed_rule.name,
-                "law": expected_law,
-            }
-        ],
-        "skipped": [
-            {
-                "name": mocked_skipped_rule.name,
-                "law": expected_law,
-            }
-        ],
+        "passed": [{"name": mocked_passed_rule.name, "law": expected_law}],
+        "failed": [{"name": mocked_failed_rule.name, "law": expected_law}],
+        "skipped": [{"name": mocked_skipped_rule.name, "law": expected_law}],
         "additional_data": {
             "pull_request_url": "",
             "started": datetime.min.isoformat(),
@@ -95,18 +80,8 @@ def test_no_passed():
 
     expected_report = {
         "passed": [],
-        "failed": [
-            {
-                "name": mocked_failed_rule.name,
-                "law": expected_law,
-            }
-        ],
-        "skipped": [
-            {
-                "name": mocked_skipped_rule.name,
-                "law": expected_law,
-            }
-        ],
+        "failed": [{"name": mocked_failed_rule.name, "law": expected_law}],
+        "skipped": [{"name": mocked_skipped_rule.name, "law": expected_law}],
         "additional_data": {
             "pull_request_url": "",
             "started": datetime.min.isoformat(),
@@ -142,19 +117,9 @@ def test_no_failed():
     expected_law = {"name": mocked_law.name, "description": mocked_law.description}
 
     expected_report = {
-        "passed": [
-            {
-                "name": mocked_passed_rule.name,
-                "law": expected_law,
-            }
-        ],
+        "passed": [{"name": mocked_passed_rule.name, "law": expected_law}],
         "failed": [],
-        "skipped": [
-            {
-                "name": mocked_skipped_rule.name,
-                "law": expected_law,
-            }
-        ],
+        "skipped": [{"name": mocked_skipped_rule.name, "law": expected_law}],
         "additional_data": {
             "pull_request_url": "",
             "started": datetime.min.isoformat(),
@@ -190,18 +155,8 @@ def test_no_skipped():
     expected_law = {"name": mocked_law.name, "description": mocked_law.description}
 
     expected_report = {
-        "passed": [
-            {
-                "name": mocked_passed_rule.name,
-                "law": expected_law,
-            }
-        ],
-        "failed": [
-            {
-                "name": mocked_failed_rule.name,
-                "law": expected_law,
-            }
-        ],
+        "passed": [{"name": mocked_passed_rule.name, "law": expected_law}],
+        "failed": [{"name": mocked_failed_rule.name, "law": expected_law}],
         "skipped": [],
         "additional_data": {
             "pull_request_url": "",
