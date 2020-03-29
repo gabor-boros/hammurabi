@@ -10,7 +10,9 @@ Documentation of Hammurabi
    readme
    installation
    config
-   rules_and_preconditions
+   rules
+   preconditions
+   reporters
    modules
    contributing
    vulnerabilities
