@@ -70,20 +70,47 @@ class Law(GitMixin):
 
     @property
     def passed_rules(self) -> Tuple[Rule, ...]:
+        """
+        Return the rules which did modifications and not failed.
+
+        :return: Return the passed rules
+        :rtype: Tuple[Rule, ...]
+        """
+
         return tuple(r for r in self.rules if r.made_changes)
 
     @property
     def failed_rules(self) -> Union[Tuple[()], Tuple[Rule]]:
+        """
+        Return the rules which did modifications and failed.
+
+        :return: Return the failed rules
+        :rtype: Union[Tuple[()], Tuple[Rule]]
+        """
+
         return self._failed_rules
 
     @property
     def skipped_rules(self) -> Tuple[Rule, ...]:
+        """
+        Return the rules which neither modified the code nor failed.
+
+        :return: Return the skipped rules
+        :rtype: Tuple[Rule, ...]
+        """
+
         def is_skipped(rule) -> bool:
+            """
+            Return the evaluation if the rule is skipped or not.
+
+            :return: Evaluation if the rule is skipped
+            :rtype: bool
+            """
             not_passed = rule not in self.passed_rules
             not_failed = rule not in self.failed_rules
             return not_passed and not_failed
 
-        return tuple(r for r in self.rules if not is_skipped(r))
+        return tuple(r for r in self.rules if is_skipped(r))
 
     @property
     def documentation(self) -> str:

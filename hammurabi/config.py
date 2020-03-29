@@ -28,8 +28,9 @@ class CommonSettings(BaseSettings):
     git_branch_name: str = "hammurabi"
     git_base_name: str = "master"
     repository: str = ""
+    report_name: Path = Path("hammurabi_report.json")
 
-    class Config:  # pylint: disable=too-few-public-methods
+    class Config:
         """
         BaseSettings' config describing how the settings will be handled.
         The given ``env_prefix`` will make sure that settings can be read from
@@ -250,6 +251,7 @@ class Config:
                 "git_branch_name": project_config.git_branch_name,
                 "dry_run": project_config.dry_run,
                 "rule_can_abort": project_config.rule_can_abort,
+                "report_name": project_config.report_name,
             }
         )
 

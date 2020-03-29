@@ -99,6 +99,7 @@ pillar = Mock()
         "pillar": config.settings.pillar,
         "repository": "gabor-boros/hammurabi",
         "rule_can_abort": False,
+        "report_name": Path("hammurabi_report.json"),
     }
 
 
@@ -147,6 +148,7 @@ pillar = Mock()
         "pillar": config.settings.pillar,
         "repository": "",
         "rule_can_abort": False,
+        "report_name": Path("hammurabi_report.json"),
     }
 
 
@@ -201,4 +203,5 @@ pillar = Mock()
         "pillar": config.settings.pillar,
         "repository": "gabor-boros/hammurabi",
         "rule_can_abort": False,
+        "report_name": Path("hammurabi_report.json"),
     }

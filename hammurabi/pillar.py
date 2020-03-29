@@ -6,12 +6,15 @@ will be executed in the order of the registration.
 """
 
 
+from datetime import datetime
 import logging
 from pathlib import Path
-from typing import List
+from typing import List, Type
 
 from hammurabi.law import Law
 from hammurabi.mixins import GitHubMixin
+from hammurabi.reporters.base import Reporter
+from hammurabi.reporters.json import JSONReporter
 from hammurabi.rules.base import Rule
 
 
@@ -25,11 +28,20 @@ class Pillar(GitHubMixin):
     ``rules`` properties, or if necessary single laws and rules can be accessed
     using the resource's name as a parameter for ``get_law`` or ``get_rule``
     methods.
+
+    As a final step, pillar will prepare its ``reporter`` for report generation.
+    For more information about reporters, check :class:`hammurabi.reporters.base.Reporter`
+    and :class:`hammurabi.reporters.json.JSONReporter`.
+
+    :param reporter_class: The reporter class used for generating the reports
+    :type reporter_class: Type[Reporter]
     """
 
-    def __init__(self) -> None:
+    def __init__(self, reporter_class: Type[Reporter] = JSONReporter) -> None:
         self.__laws: List[Law] = list()
         self.__lock_file = Path("hammurabi.lock")
+
+        self.reporter: Reporter = reporter_class(list())
 
     @property
     def laws(self) -> List[Law]:
@@ -139,6 +151,7 @@ class Pillar(GitHubMixin):
         """
 
         self.__laws.append(law)
+        self.reporter.laws = self.__laws
 
     def enforce(self):
         """
@@ -151,6 +164,7 @@ class Pillar(GitHubMixin):
         for a target.
         """
 
+        self.reporter.additional_data.started = datetime.now().isoformat()
         self.create_lock_file()
         self.checkout_branch()
 
@@ -161,4 +175,7 @@ class Pillar(GitHubMixin):
             self.release_lock_file()
 
         self.push_changes()
-        self.create_pull_request()
+        pull_request_url = self.create_pull_request()
+
+        self.reporter.additional_data.finished = datetime.now().isoformat()
+        self.reporter.additional_data.pull_request_url = pull_request_url
