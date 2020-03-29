@@ -32,6 +32,8 @@ def test_reporter(mocked_datetime):
         rules=(passing_rule, failing_rule),
     )
 
+    law.commit = Mock()
+
     expected_law = {
         "name": "Integration test law",
         "description": "Integration test law description",
@@ -62,7 +64,6 @@ def test_reporter(mocked_datetime):
     pillar.push_changes = Mock()
     pillar.create_pull_request = Mock()
     pillar.create_pull_request.return_value = expected_pr_url
-    pillar.git_commit = Mock()
 
     # Register the law
     pillar.register(law)
