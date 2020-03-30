@@ -44,6 +44,7 @@ Changed
 * "No changes made by" messages now info logs instead of warnings
 * Commit changes only if the Law has passing rules
 * If ``PreconditionFailedError`` raised, do not log error messages, log a warning instead
+* ``LineExists`` will not raise an exception if multiple targets found, instead it will select the last match as target
 
 Fixed
 ~~~~~

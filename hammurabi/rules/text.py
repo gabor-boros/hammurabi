@@ -87,7 +87,7 @@ class LineExists(SinglePathRule):
         :param lines: Content of the given file
         :type lines: List[str]
 
-        :raises: ``LookupError``
+        :raises: ``LookupError`` if no matching line can be found for target
 
         :return: List of the matching line
         :rtype: str
@@ -95,11 +95,8 @@ class LineExists(SinglePathRule):
 
         target_match = list(filter(self.target.match, lines))
 
-        if not any(target_match):
+        if not target_match:
             raise LookupError(f'No matching line for "{self.target}"')
-
-        if len(target_match) > 1:
-            raise LookupError(f'Multiple matching lines for "{self.target}"')
 
         return target_match.pop()
 
@@ -155,7 +152,9 @@ class LineExists(SinglePathRule):
 
         if not file_was_empty and no_criteria_match:
             target_match = self.__get_target_match(lines)
-            target_match_index = lines.index(target_match)
+
+            # Get the index of the element from the right
+            target_match_index = len(lines) - lines[::-1].index(target_match) - 1
 
             insert_position = target_match_index + self.position
 
