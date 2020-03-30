@@ -10,16 +10,20 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.3.1...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.4.0...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
 .. _0.2.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.2.0
 .. _0.3.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.0
 .. _0.3.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.3.1
+.. _0.4.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.4.0
 
 Unreleased
 ----------
+
+0.4.0_ - 2020-03-26
+-------------------
 
 Added
 ~~~~~
