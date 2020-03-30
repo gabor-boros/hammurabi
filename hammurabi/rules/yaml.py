@@ -36,7 +36,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
 
         super().__init__(name, path, **kwargs)
 
-    def _get_parent(self) -> Any:
+    def _get_parent(self) -> Dict[str, Any]:
         """
         Get the parent of the given key by its selector.
 
@@ -46,8 +46,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
 
         # Get the parent for modifications. If there is no parent,
         # then the parent is the document root
-        parent = self._get_by_selector(self.loaded_yaml, self.split_key[:-1])
-        return parent or self.loaded_yaml or {}
+        return self._get_by_selector(self.loaded_yaml, self.split_key[:-1])
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
         """
@@ -366,12 +365,9 @@ class YAMLValueExists(SingleDocumentYAMLFileRule):
 
         parent = self._get_parent()
 
-        if self.key_name not in parent:
-            raise LookupError(f'No matching key for selector "{self.selector}"')
-
         if self.value is None:
             parent[self.key_name] = self.value
-        if isinstance(parent.get(self.key_name), list):
+        elif isinstance(parent.get(self.key_name), list):
             if isinstance(self.value, list):
                 parent[self.key_name].extend(self.value)
             else:

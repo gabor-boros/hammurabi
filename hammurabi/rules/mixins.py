@@ -28,7 +28,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
 
     def _get_by_selector(
         self, data: Any, key_path: Union[str, List[str]]
-    ) -> Union[None, Any]:
+    ) -> Dict[str, Any]:
         """
         Get a key's value by a selector and traverse the path.
 
@@ -43,20 +43,18 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         :rtype: :class:``hammurabi.rules.mixins.Any`
         """
 
+        if not data:
+            return dict()
+
         key_path = self.__normalize_key_path(key_path)
+        entry = data or dict()
 
-        # Traversed and no remaining key
-        if not isinstance(data, dict) and not key_path:
-            return data
+        for item in key_path:
+            entry = entry.get(item, None)
+            if not entry:
+                return dict()
 
-        # Traversed or no remaining key
-        if not data or not key_path:
-            return None
-
-        key = key_path.pop()
-        remaining_data = data.get(key, None)
-
-        return self._get_by_selector(remaining_data, key_path)
+        return entry
 
     def _set_by_selector(
         self,

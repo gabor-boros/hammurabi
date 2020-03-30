@@ -424,11 +424,11 @@ Test description 1
 
 #### Passed rules
 * Test rule 1
-** Passing child rule
+  * Passing child rule
 
 #### Failed rules (manual fix needed)
 * Test failed rule 1
-** Child rule
+  * Child rule
 
 ### Test law 2
 Test description 2
