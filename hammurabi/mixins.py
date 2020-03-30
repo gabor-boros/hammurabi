@@ -211,16 +211,21 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
             body.append(law.description)
 
             if law.passed_rules:
-                body.append("\n#### Passed rules")
+                body.append("\n<details>")
+                body.append("<summary>Passed rules</summary>\n")
                 body.extend(self.__get_rules_body(law.passed_rules))
+                body.append("</details>")
 
             if law.failed_rules:
-                body.append("\n#### Failed rules (manual fix needed)")
+                body.append("\n<details open>")
+                body.append("<summary>Failed rules (manual fix needed)</summary>\n")
                 body.extend(self.__get_rules_body(law.failed_rules))
+                body.append("</details>")
 
         return "\n".join(body)
 
 
+# TODO: Move to a separate file as part of a new package if other VCS is supported
 class GitHubMixin(GitMixin, PullRequestHelperMixin):
     """
     Extending :class:`hammurabi.mixins.GitMixin` to be able to open pull requests
