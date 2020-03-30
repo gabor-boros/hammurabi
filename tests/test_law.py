@@ -5,7 +5,12 @@ from hypothesis import strategies as st
 import pytest
 
 from hammurabi import Law
-from tests.helpers import ExampleRule, get_failing_rule, get_passing_rule, ExamplePrecondition
+from tests.helpers import (
+    ExamplePrecondition,
+    ExampleRule,
+    get_failing_rule,
+    get_passing_rule,
+)
 
 
 @given(name=st.text(), description=st.text())
@@ -73,9 +78,7 @@ def test_rule_execution_failed_precondition_no_abort(mocked_config, mocked_loggi
     rule = get_passing_rule()
     rule.made_changes = False
 
-    rule.preconditions = [
-        ExamplePrecondition(param=False)
-    ]
+    rule.preconditions = [ExamplePrecondition(param=False)]
 
     rule.param = expected_exception
     rule.get_rule_chain = Mock(return_value=[get_passing_rule()])
