@@ -138,11 +138,11 @@ def test_line_exists_multiple_matches():
         path=expected_path, target=target, lines=["target", "target_match"]
     )
 
-    with pytest.raises(LookupError) as exc:
-        rule.task()
+    result = rule.task()
 
-    assert str(exc.value).startswith("Multiple matching lines for")
-    assert mock_file.writelines.called is False
+    write_args = list(mock_file.writelines.call_args[0][0])
+    assert write_args == [f"{target}\n", "target_match\n", f"{rule.text}\n"]
+    assert result == expected_path
 
 
 def test_line_exists_failed_criteria():

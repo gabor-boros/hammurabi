@@ -13,7 +13,7 @@ import logging
 from typing import Iterable, List, Tuple, Union
 
 from hammurabi.config import config
-from hammurabi.exceptions import AbortLawError
+from hammurabi.exceptions import AbortLawError, PreconditionFailedError
 from hammurabi.helpers import full_strip
 from hammurabi.mixins import GitMixin
 from hammurabi.rules.base import Precondition, Rule
@@ -164,7 +164,7 @@ class Law(GitMixin):
         rules_commit_message = "\n".join(rules)
 
         if not rules:
-            logging.warning('No changes made by "%s"', self.name)
+            logging.info('No changes made by "%s"', self.name)
             return
 
         logging.debug('Committing changes made by "%s"', self.name)
@@ -185,11 +185,19 @@ class Law(GitMixin):
 
         try:
             rule.execute()
+        except PreconditionFailedError:
+            logging.warning(
+                'Cancelling execution of "%s", the prerequisites are not fulfilled',
+                rule.name,
+            )
         except Exception as exc:  # pylint: disable=broad-except
             logging.error('Execution of "%s" is aborted: %s', rule.name, str(exc))
 
-            for chain in rule.get_rule_chain(rule):
-                logging.warning('Due to errors "%s" is aborted', chain.name)
+            chained_rules = filter(
+                lambda r: isinstance(r, Rule), rule.get_rule_chain(rule)
+            )
+            for chain in chained_rules:
+                logging.error('Due to errors "%s" is aborted', chain.name)
 
             raise AbortLawError(str(exc)) from exc
 
@@ -226,5 +234,5 @@ class Law(GitMixin):
         # scenarios when the rules will be populated later. Hence we need to
         # make sure we are not wasting time on trying to commit if the law did
         # not get any rule at the end.
-        if self.rules:
+        if self.passed_rules:
             self.commit()

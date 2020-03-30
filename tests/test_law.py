@@ -5,7 +5,12 @@ from hypothesis import strategies as st
 import pytest
 
 from hammurabi import Law
-from tests.helpers import ExampleRule, get_failing_rule, get_passing_rule
+from tests.helpers import (
+    ExamplePrecondition,
+    ExampleRule,
+    get_failing_rule,
+    get_passing_rule,
+)
 
 
 @given(name=st.text(), description=st.text())
@@ -46,22 +51,45 @@ def test_executes_task():
 def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
     mocked_config.settings.rule_can_abort = False
     mocked_logging.error = Mock()
-    mocked_logging.warning = Mock()
     expected_exception = "failed"
 
     rule = get_failing_rule()
+    rule.made_changes = False
     rule.param = expected_exception
     rule.get_rule_chain = Mock(return_value=[get_passing_rule()])
 
-    law = Law(name="Passing", description="passing law", rules=(rule,))
+    law = Law(name="Failing", description="failing law", rules=(rule,))
     law.commit = Mock()
 
     law.enforce()
 
     assert mocked_logging.error.called
     rule.get_rule_chain.assert_called_once_with(rule)
+    assert law.commit.called is False
+
+
+@patch("hammurabi.law.logging")
+@patch("hammurabi.law.config")
+def test_rule_execution_failed_precondition_no_abort(mocked_config, mocked_logging):
+    mocked_config.settings.rule_can_abort = False
+    mocked_logging.warning = Mock()
+    expected_exception = "failed"
+
+    rule = get_passing_rule()
+    rule.made_changes = False
+
+    rule.preconditions = [ExamplePrecondition(param=False)]
+
+    rule.param = expected_exception
+    rule.get_rule_chain = Mock(return_value=[get_passing_rule()])
+
+    law = Law(name="Failing", description="failing law", rules=(rule,))
+    law.commit = Mock()
+
+    law.enforce()
+
     assert mocked_logging.warning.called
-    law.commit.assert_called_once_with()
+    assert law.commit.called is False
 
 
 @patch("hammurabi.rules.base.config")
@@ -71,7 +99,6 @@ def test_rule_execution_aborted(mocked_logging, law_config, base_rule_config):
     law_config.settings.rule_can_abort = True
     base_rule_config.settings.dry_run = False
     mocked_logging.error = Mock()
-    mocked_logging.warning = Mock()
     expected_exception = "failed"
 
     rule = get_failing_rule()
@@ -87,7 +114,6 @@ def test_rule_execution_aborted(mocked_logging, law_config, base_rule_config):
     assert mocked_logging.error.called
     assert str(exc.value) == expected_exception
     rule.get_rule_chain.assert_called_once_with(rule)
-    assert mocked_logging.warning.called
     assert law.commit.called is False
 
 
@@ -138,5 +164,4 @@ def test_commit_no_changes():
     law.enforce()
 
     rule.execute.assert_called_once_with()
-    law.get_execution_order.assert_called_once_with()
     assert law.git_commit.called is False

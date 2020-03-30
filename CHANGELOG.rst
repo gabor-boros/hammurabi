@@ -26,6 +26,7 @@ Added
 
 * Added ``Reporter`` and ``JSONReporter`` classes to be able to expose execution results
 * Add new config option ``report_name`` to the available settings
+* New exception type ``PreconditionFailedError`` indicating that the precondition failed and no need to raise an error
 
 Changed
 ~~~~~~~
@@ -40,13 +41,18 @@ Changed
 * Pillar prepare its Reporter for report generation
 * Pillar has a new argument to set the pillar's reporter easily
 * CLI's enforce command now calls the Pillar's prepared Reporter to do the report
+* "No changes made by" messages now info logs instead of warnings
+* Commit changes only if the Law has passing rules
+* If ``PreconditionFailedError`` raised, do not log error messages, log a warning instead
+* ``LineExists`` will not raise an exception if multiple targets found, instead it will select the last match as target
 
 Fixed
 ~~~~~
 
 * Fixed a dictionary traversal issue regarding yaml file support
-* Fixed "Filed Rules" formatting of PR description by removing ``\xa0`` character
+* Fixed "Failed Rules" formatting of PR description by removing ``\xa0`` character
 * Fixed no Rule name in PR description if the Law did not change anything issue
+* Fixed nested rule indentation PR description markup
 * Fixed an issue with ``LineReplaced``, if the input file is empty, raise an exception
 
 0.3.1_ - 2020-03-26

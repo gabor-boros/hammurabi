@@ -36,7 +36,28 @@ def test_key_nested_exists(temporary_file):
     rule = YAMLKeyExists(
         name="Ensure key exists",
         path=expected_file,
-        key="development.supported.enabled",
+        key="development.supported",
+        value=True,
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "development:\n  supported: true\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
+def test_key_nested_already_exists(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text(
+        "apple: banana\ndict:\n  value: exists\ndevelopment:\n  supported: true\n"
+    )
+
+    rule = YAMLKeyExists(
+        name="Ensure key exists",
+        path=expected_file,
+        key="development.supported",
         value=True,
     )
 
@@ -44,7 +65,8 @@ def test_key_nested_exists(temporary_file):
     rule.task()
 
     assert (
-        expected_file.read_text() == "development:\n  supported:\n    enabled: true\n"
+        expected_file.read_text()
+        == "apple: banana\ndict:\n  value: exists\ndevelopment:\n  supported: true\n"
     )
     expected_file.unlink()
 
@@ -247,23 +269,42 @@ def test_value_exists(temporary_file):
 
 
 @pytest.mark.integration
-def test_value_exists_no_key(temporary_file):
+def test_value_nested_exists(temporary_file):
     expected_file = Path(temporary_file.name)
-    expected_file.write_text("dependencies: []")
+    expected_file.write_text("development:\n  apple: true\n")
 
     rule = YAMLValueExists(
-        name="Ensure service descriptor has dependencies",
+        name="Ensure local development is supported",
         path=expected_file,
-        key="stack",
-        value="python",
+        key="development.supported",
+        value=True,
     )
 
     rule.pre_task_hook()
+    rule.task()
 
-    with pytest.raises(LookupError):
-        rule.task()
+    assert (
+        expected_file.read_text() == "development:\n  apple: true\n  supported: true\n"
+    )
+    expected_file.unlink()
 
-    assert expected_file.read_text() == "dependencies: []"
+
+@pytest.mark.integration
+def test_value_nested_already_exists(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("development:\n  supported: true\n")
+
+    rule = YAMLValueExists(
+        name="Ensure local development is supported",
+        path=expected_file,
+        key="development.supported",
+        value=True,
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "development:\n  supported: true\n"
     expected_file.unlink()
 
 
@@ -325,6 +366,29 @@ def test_value_exists_list_single_item(temporary_file):
 
     # Because of the default flow style False, the result will be block-styled
     assert expected_file.read_text() == "stack: python\ndependencies:\n- service1\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
+def test_value_exists_nested_list_single_item(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("stack: python\nnested:\n  dependencies: []")
+
+    rule = YAMLValueExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="nested.dependencies",
+        value="service1",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    # Because of the default flow style False, the result will be block-styled
+    assert (
+        expected_file.read_text()
+        == "stack: python\nnested:\n  dependencies:\n  - service1\n"
+    )
     expected_file.unlink()
 
 
@@ -436,6 +500,25 @@ def test_value_not_exists(temporary_file):
 
 
 @pytest.mark.integration
+def test_value_not_exists_nested(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("development:\n  stack: python\n")
+
+    rule = YAMLValueNotExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="development.stack",
+        value="python",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "development:\n  stack:\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
 def test_value_not_exists_not_changed(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("stack: scala")
@@ -455,6 +538,25 @@ def test_value_not_exists_not_changed(temporary_file):
 
 
 @pytest.mark.integration
+def test_value_not_exists_nested_not_changed(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("development:\n  stack: scala\n")
+
+    rule = YAMLValueNotExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="development.stack",
+        value="python",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "development:\n  stack: scala\n"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
 def test_value_not_exists_no_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("dependencies: []")
@@ -470,6 +572,25 @@ def test_value_not_exists_no_key(temporary_file):
     rule.task()
 
     assert expected_file.read_text() == "dependencies: []"
+    expected_file.unlink()
+
+
+@pytest.mark.integration
+def test_value_not_exists_nested_no_key(temporary_file):
+    expected_file = Path(temporary_file.name)
+    expected_file.write_text("dependencies:\n  supported:\n  apple: banana\n")
+
+    rule = YAMLValueNotExists(
+        name="Ensure service descriptor has dependencies",
+        path=expected_file,
+        key="dependencies.supported.stack",
+        value="python",
+    )
+
+    rule.pre_task_hook()
+    rule.task()
+
+    assert expected_file.read_text() == "dependencies:\n  supported:\n  apple: banana\n"
     expected_file.unlink()
 
 
