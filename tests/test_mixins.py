@@ -206,21 +206,30 @@ Below you can find the executed laws and information about them.
 ### Test law 1
 Test description 1
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 1
+</details>
 
 ### Test law 2
 Test description 2
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 2
+</details>
 
 ### Test law 3
 Test description 3
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 3
-* Test rule 4"""
+* Test rule 4
+</details>"""
 
     pr_helper = get_pull_request_helper_mixin_consumer()
 
@@ -267,11 +276,17 @@ Below you can find the executed laws and information about them.
 ### Test law 3
 Test description 3
 
-#### Passed rules
-* Test rule 3
+<details>
+<summary>Passed rules</summary>
 
-#### Failed rules (manual fix needed)
-* Test failed rule 1"""
+* Test rule 3
+</details>
+
+<details open>
+<summary>Failed rules (manual fix needed)</summary>
+
+* Test failed rule 1
+</details>"""
 
     pr_helper = get_pull_request_helper_mixin_consumer()
 
@@ -301,8 +316,11 @@ Below you can find the executed laws and information about them.
 ### Test law 3
 Test description 3
 
-#### Failed rules (manual fix needed)
-* Test failed rule 1"""
+<details open>
+<summary>Failed rules (manual fix needed)</summary>
+
+* Test failed rule 1
+</details>"""
 
     pr_helper = get_pull_request_helper_mixin_consumer()
 
@@ -347,24 +365,36 @@ Below you can find the executed laws and information about them.
 ### Test law 1
 Test description 1
 
-#### Passed rules
-* Test rule 1
+<details>
+<summary>Passed rules</summary>
 
-#### Failed rules (manual fix needed)
+* Test rule 1
+</details>
+
+<details open>
+<summary>Failed rules (manual fix needed)</summary>
+
 * Test failed rule 1
+</details>
 
 ### Test law 2
 Test description 2
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 2
+</details>
 
 ### Test law 3
 Test description 3
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 3
-* Test rule 4"""
+* Test rule 4
+</details>"""
 
     pr_helper = get_pull_request_helper_mixin_consumer()
 
@@ -422,26 +452,38 @@ Below you can find the executed laws and information about them.
 ### Test law 1
 Test description 1
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 1
   * Passing child rule
+</details>
 
-#### Failed rules (manual fix needed)
+<details open>
+<summary>Failed rules (manual fix needed)</summary>
+
 * Test failed rule 1
   * Child rule
+</details>
 
 ### Test law 2
 Test description 2
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 2
+</details>
 
 ### Test law 3
 Test description 3
 
-#### Passed rules
+<details>
+<summary>Passed rules</summary>
+
 * Test rule 3
-* Test rule 4"""
+* Test rule 4
+</details>"""
 
     pr_helper = get_pull_request_helper_mixin_consumer()
 

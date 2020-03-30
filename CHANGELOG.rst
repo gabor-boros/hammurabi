@@ -45,6 +45,7 @@ Changed
 * Commit changes only if the Law has passing rules
 * If ``PreconditionFailedError`` raised, do not log error messages, log a warning instead
 * ``LineExists`` will not raise an exception if multiple targets found, instead it will select the last match as target
+* Have better PR description formatting
 
 Fixed
 ~~~~~
