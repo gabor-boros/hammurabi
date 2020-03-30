@@ -177,7 +177,7 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
             body.append(f"* {rule.name}")
 
             for chain in self.__get_chained_rules(rule, rule.get_rule_chain(rule)):
-                body.append(f"** {chain.name}")
+                body.append(f"  * {chain.name}")
 
         return body
 
