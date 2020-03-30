@@ -16,6 +16,7 @@ import logging
 from typing import Any, Iterable, List, Optional, Union
 
 from hammurabi.config import config
+from hammurabi.exceptions import PreconditionFailedError
 from hammurabi.preconditions.base import Precondition
 from hammurabi.rules.abstract import AbstractRule
 
@@ -197,11 +198,10 @@ class Rule(AbstractRule, ABC):
         self.param = param or self.param
 
         if not self.can_proceed:
-            logging.warning(
-                'Skipping execution of "%s", the prerequisites are not fulfilled',
-                self.name,
-            )
-            raise AssertionError(f'"{self.name}" cannot proceed')
+            if config.settings.dry_run:
+                raise AssertionError(f'"{self.name}" cannot proceed because of dry run')
+
+            raise PreconditionFailedError(f'"{self.name}" cannot proceed')
 
         logging.debug('Running pre task hook for "%s"', self.name)
         self.pre_task_hook()

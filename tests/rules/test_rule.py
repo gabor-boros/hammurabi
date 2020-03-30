@@ -6,6 +6,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 import pytest
 
+from hammurabi.exceptions import PreconditionFailedError
 from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
 
 
@@ -89,7 +90,7 @@ def test_cannot_proceed_dry_run(config):
     with pytest.raises(AssertionError) as exc:
         rule.execute("Rule")
 
-    assert str(exc.value) == '"Test" cannot proceed'
+    assert str(exc.value) == '"Test" cannot proceed because of dry run'
     assert not rule.pre_task_hook.called
     assert not rule.post_task_hook.called
 
@@ -110,7 +111,7 @@ def test_cannot_proceed_precondition(mocked_config):
     rule.pre_task_hook = Mock()
     rule.post_task_hook = Mock()
 
-    with pytest.raises(AssertionError) as exc:
+    with pytest.raises(PreconditionFailedError) as exc:
         rule.execute("Rule")
 
     assert str(exc.value) == '"Test" cannot proceed'
