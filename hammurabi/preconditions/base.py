@@ -1,12 +1,14 @@
 """
-This module contains the definition of Rule which describes what to do with
-the received parameter and does the necessary changes.
+This module contains the definition of Preconditions which describes what to do with
+the received parameter and does the necessary changes. The preconditions are used to
+enable developers skipping or enabling rules based on a set of conditions.
 
-The Rule is an abstract class which describes all the required methods and
-parameters, but it can be extended and customized easily by inheriting from
-it. A good example for this kind of customization is :class:`hammurabi.rules.text.LineExists`
-which adds more parameters to :class:`hammurabi.rules.files.SingleFileRule` which
-inherits from :class:`hammurabi.rules.base.Rule`.
+.. warning::
+
+    The precondition is for checking that a rule should or shouldn't run, not for
+    breaking/aborting the execution. To indicate a precondition failure as an error
+    in the logs, create a precondition which raises an exception if the requirements
+    doesn't match.
 """
 
 from __future__ import annotations
