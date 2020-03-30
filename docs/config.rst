@@ -32,6 +32,8 @@ matches one of the options below.
 +-----------------+-----------------------------------------------+-----------------+
 | rule_can_abort  | if a rule fails it aborts the whole execution | False           |
 +-----------------+-----------------------------------------------+-----------------+
+| report_name     | report file's name to generate                | False           |
++-----------------+-----------------------------------------------+-----------------+
 
 For HTTPS git remotes do not forget to set the ``GIT_USERNAME`` and ``GIT_PASSWORD``
 environment variables. For SSH git remotes please add your ssh key before using
@@ -51,6 +53,7 @@ Example content of the ``pyproject.toml`` file.
     git_branch_name = "custom-branch-name"
     log_level = "WARNING"
     rule_can_abort = true
+    report_name = "hammurabi_report.json"
 
 Pillar configuration
 ====================

@@ -6,9 +6,11 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import Any, Iterable, List, Union
+from typing import Iterable, List, Optional, Union
 
+from github3.pulls import ShortPullRequest  # type: ignore
 from github3.repos.repo import Repository  # type: ignore
+from github3.structs import GitHubIterator  # type: ignore
 
 from hammurabi.config import config
 from hammurabi.preconditions.base import Precondition
@@ -179,67 +181,6 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
 
         return body
 
-    def __get_passed_rules(self, law) -> List[str]:
-        """
-        Get the passed rules for law if there is any.
-
-        :param law: Target Law which will be checked
-        :type law: Law
-
-        :return: Body of the PR section in a list format
-        :rtype: List[str]
-        """
-
-        #  NOTE: The parameter type can not be hinted, because of circular import,
-        #  we must fix this in the future releases.
-
-        body: List[str] = list()
-
-        has_passing_rules = len(law.failed_rules) != len(law.rules)
-        rules_with_changes = [rule for rule in law.rules if rule.made_changes]
-
-        if has_passing_rules and rules_with_changes:
-            body.append("\n#### Passed rules")
-            body.extend(self.__get_rules_body(rules_with_changes))
-
-        return body
-
-    def __get_failed_rules(self, law) -> List[str]:
-        """
-        Get the failed rules for law if there is any.
-
-        :param law: Target Law which will be checked
-        :type law: Law
-
-        :return: Body of the PR section in a list format
-        :rtype: List[str]
-        """
-
-        #  NOTE: The parameter type can not be hinted, because of circular import,
-        #  we must fix this in the future releases.
-
-        body: List[str] = list()
-
-        if law.failed_rules:
-            body.append("\n#### Failed rules (manual fix needed)")
-            body.extend(self.__get_rules_body(law.failed_rules))
-
-        return body
-
-    @staticmethod
-    def __filter_laws_with_modifications(pillar) -> Iterable[Any]:
-        """
-        Return only those laws which has rules which made modifications.
-        """
-
-        def filter_rules(law):
-            rules = list()
-            rules.extend([r for r in law.rules if r.made_changes])
-            rules.extend(law.failed_rules)
-            return rules
-
-        return filter(filter_rules, pillar.laws)
-
     def generate_pull_request_body(self, pillar) -> str:
         """
         Generate the body of the pull request based on the registered laws and rules.
@@ -262,12 +203,20 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
             "Below you can find the executed laws and information about them.",
         ]
 
-        for law in self.__filter_laws_with_modifications(pillar):
+        # Filter only those laws which has other rules than skipped ones.
+        actionable_laws = filter(lambda l: l.passed_rules + l.failed_rules, pillar.laws)
+
+        for law in actionable_laws:
             body.append(f"\n### {law.name}")
             body.append(law.description)
 
-            body.extend(self.__get_passed_rules(law))
-            body.extend(self.__get_failed_rules(law))
+            if law.passed_rules:
+                body.append("\n#### Passed rules")
+                body.extend(self.__get_rules_body(law.passed_rules))
+
+            if law.failed_rules:
+                body.append("\n#### Failed rules (manual fix needed)")
+                body.extend(self.__get_rules_body(law.failed_rules))
 
         return "\n".join(body)
 
@@ -278,7 +227,7 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
     on GitHub after changes are pushed to remote.
     """
 
-    def create_pull_request(self):
+    def create_pull_request(self) -> Optional[str]:
         """
         Create a PR on GitHub after the changes are pushed to remote. The pull
         request details (repository, branch) are set by the project
@@ -293,6 +242,9 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
         +------------+--------------------------------------+
         | branch     | git_branch_name                      |
         +------------+--------------------------------------+
+
+        :return: Return the open (and updated) or opened PR's url
+        :rtype: Optional[str]
         """
 
         if not config.github:
@@ -306,17 +258,31 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
             github_repo: Repository = config.github.repository(owner, repository)
 
             logging.info("Checking for opened pull request")
-            opened_pull_request = github_repo.pull_requests(
-                state="open", head=config.settings.git_branch_name, base="master"
+            opened_pull_requests: GitHubIterator[
+                ShortPullRequest
+            ] = github_repo.pull_requests(
+                state="open",
+                head=config.settings.git_branch_name,
+                base=config.settings.git_base_name,
             )
 
-            if opened_pull_request.count == -1:
+            if opened_pull_requests.count == -1:
                 description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")
-                github_repo.create_pull(
+                response: ShortPullRequest = github_repo.create_pull(
                     title="[hammurabi] Update to match the latest baseline",
                     base=config.settings.git_base_name,
                     head=config.settings.git_branch_name,
                     body=description,
                 )
+
+                return response.url
+
+            # Return the last known PR url, it should be one
+            # anyways, so it is not an issue
+            return opened_pull_requests.last_url
+
+        # Although this return could be skipped, it is more
+        # explicit to have it here
+        return None

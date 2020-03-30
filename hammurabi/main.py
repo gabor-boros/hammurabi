@@ -107,6 +107,9 @@ def enforce(ctx: click.Context, rule_can_abort: bool, dry_run: bool):
     pillar: Pillar = ctx.obj["config"].settings.pillar
     pillar.enforce()
 
+    # Generate report for the execution
+    pillar.reporter.report()
+
 
 @cli.group()
 def get():

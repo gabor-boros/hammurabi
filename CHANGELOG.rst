@@ -21,6 +21,12 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Added
+~~~~~
+
+* Added ``Reporter`` and ``JSONReporter`` classes to be able to expose execution results
+* Add new config option ``report_name`` to the available settings
+
 Changed
 ~~~~~~~
 
@@ -29,6 +35,11 @@ Changed
 * ``SectionRenamed`` not raises error if old section name is not represented but the new one
 * ``OptionRenamed`` not raises error if old option name is not represented but the new one
 * ``LineReplaced`` not raises error if old line is not represented but the new one
+* Remove redundant way of getting rules of a law (https://github.com/gabor-boros/hammurabi/issues/45)
+* GitHub mixin now returns the URL of the open PR's URL; if an existing PR found, that PR's URL will be returned
+* Pillar prepare its Reporter for report generation
+* Pillar has a new argument to set the pillar's reporter easily
+* CLI's enforce command now calls the Pillar's prepared Reporter to do the report
 
 Fixed
 ~~~~~
