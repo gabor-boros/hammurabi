@@ -22,6 +22,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Removed
+~~~~~~~
+
+* Remove lock file creation since it is useless
+
 0.4.0_ - 2020-03-26
 -------------------
 

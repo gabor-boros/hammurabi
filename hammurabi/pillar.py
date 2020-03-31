@@ -59,27 +59,6 @@ class Pillar(GitHubMixin):
 
         return [rule for law in self.laws for rule in law.rules]
 
-    def create_lock_file(self):
-        """
-        Create a lock file. If the lock file presents, the execution for
-        the same target will be prevented.
-        """
-
-        if self.__lock_file.exists():
-            raise RuntimeError(f"{self.__lock_file} already exists")
-
-        logging.debug("Creating lock file")
-        self.__lock_file.touch()
-
-    def release_lock_file(self):
-        """
-        Releasing the previously created lock file if exists.
-        """
-
-        if self.__lock_file.exists():
-            logging.debug("Releasing lock file")
-            self.__lock_file.unlink()
-
     def get_law(self, name: str) -> Law:
         """
         Get a law by its name. In case of no Laws are registered or
@@ -165,14 +144,10 @@ class Pillar(GitHubMixin):
         """
 
         self.reporter.additional_data.started = datetime.now().isoformat()
-        self.create_lock_file()
         self.checkout_branch()
 
-        try:
-            for law in self.laws:
-                law.enforce()
-        finally:
-            self.release_lock_file()
+        for law in self.laws:
+            law.enforce()
 
         self.push_changes()
         pull_request_url = self.create_pull_request()

@@ -88,52 +88,6 @@ def test_get_rule_not_registered(_):
         pillar.get_rule("no rule with this name")
 
 
-@patch("hammurabi.pillar.JSONReporter")
-@patch("hammurabi.pillar.Path")
-def test_create_lock_file(mocked_path, _):
-    expected_path = Mock()
-    mocked_path.return_value = expected_path
-    expected_path.exists.return_value = False
-    pillar = Pillar()
-
-    pillar.create_lock_file()
-
-    mocked_path.assert_called_once_with("hammurabi.lock")
-    expected_path.exists.assert_called_once_with()
-    expected_path.touch.assert_called_once_with()
-
-
-@patch("hammurabi.pillar.JSONReporter")
-@patch("hammurabi.pillar.Path")
-def test_double_create_lock_file(mocked_path, _):
-    expected_path = Mock()
-    mocked_path.return_value = expected_path
-    expected_path.exists.return_value = True
-    pillar = Pillar()
-
-    with pytest.raises(RuntimeError):
-        pillar.create_lock_file()
-
-    mocked_path.assert_called_once_with("hammurabi.lock")
-    expected_path.exists.assert_called_once_with()
-    assert expected_path.touch.called is False
-
-
-@patch("hammurabi.pillar.JSONReporter")
-@patch("hammurabi.pillar.Path")
-def test_release_lock_file(mocked_path, _):
-    expected_path = Mock()
-    mocked_path.return_value = expected_path
-    expected_path.exists.return_value = True
-    pillar = Pillar()
-
-    pillar.release_lock_file()
-
-    mocked_path.assert_called_once_with("hammurabi.lock")
-    expected_path.exists.assert_called_once_with()
-    expected_path.unlink.assert_called_once_with()
-
-
 @patch("hammurabi.pillar.datetime")
 @patch("hammurabi.pillar.JSONReporter")
 def test_enforce(mocked_reporter, mocked_datetime):
@@ -149,8 +103,6 @@ def test_enforce(mocked_reporter, mocked_datetime):
     expected_pr_url = "expected_pr_url"
     pillar = Pillar(mocked_reporter)
     pillar.register(expected_law)
-    pillar.create_lock_file = Mock()
-    pillar.release_lock_file = Mock()
     pillar.checkout_branch = Mock()
     pillar.push_changes = Mock()
     pillar.create_pull_request = Mock()
@@ -159,8 +111,6 @@ def test_enforce(mocked_reporter, mocked_datetime):
     pillar.enforce()
 
     expected_law.enforce.assert_called_once_with()
-    pillar.create_lock_file.assert_called_once_with()
-    pillar.release_lock_file.assert_called_once_with()
     pillar.checkout_branch.assert_called_once_with()
     pillar.push_changes.assert_called_once_with()
     pillar.create_pull_request.assert_called_once_with()
@@ -187,8 +137,6 @@ def test_enforce_failed(_):
         pillar.enforce()
 
     expected_law.enforce.assert_called_once_with()
-    pillar.create_lock_file.assert_called_once_with()
-    pillar.release_lock_file.assert_called_once_with()
     pillar.checkout_branch.assert_called_once_with()
     assert pillar.push_changes.called is False
     assert pillar.create_pull_request.called is False
