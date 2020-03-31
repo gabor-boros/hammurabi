@@ -58,6 +58,7 @@ def test_git_add(mocked_config):
 
     git_mixin.git_add(expected_path)
 
+    mocked_config.repo.is_dirty.assert_called_once_with(untracked_files=True)
     mocked_config.repo.git.add.assert_called_once_with(str(expected_path))
 
 
