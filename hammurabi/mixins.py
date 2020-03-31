@@ -36,7 +36,8 @@ class GitMixin:
         :rtype: bool
         """
 
-        return config.repo and not config.settings.dry_run and config.repo.is_dirty()
+        is_dirty = config.repo and config.repo.is_dirty(untracked_files=True)
+        return is_dirty and not config.settings.dry_run
 
     @staticmethod
     def checkout_branch() -> None:
