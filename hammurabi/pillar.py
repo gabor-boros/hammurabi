@@ -7,7 +7,6 @@ order of the registration.
 
 
 from datetime import datetime
-from pathlib import Path
 from typing import List, Type
 
 from hammurabi.law import Law
