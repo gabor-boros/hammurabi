@@ -22,6 +22,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Fixed
+~~~~~
+
+* Add untracked files as well to the index
+
 Removed
 ~~~~~~~
 
