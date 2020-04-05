@@ -46,7 +46,13 @@ class Law(GitMixin):
         >>> pillar.register(example_law)
     """
 
-    def __init__(self, name: str, description: str, rules: Iterable[Rule]) -> None:
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        rules: Iterable[Rule],
+        preconditions: Iterable[Precondition] = (),
+    ) -> None:
         """
         :param name: Name of the law
         :type name: str
@@ -63,7 +69,8 @@ class Law(GitMixin):
         self.name = name.strip()
         self.description = full_strip(description)
         self.rules: Iterable[Rule] = tuple()
-        self._failed_rules: Union[Tuple[()], Tuple[Rule]] = ()
+        self.preconditions = preconditions
+        self._failed_rules: Tuple[Rule, ...] = tuple()
 
         for rule in rules:
             self.rules += (rule,)
@@ -80,7 +87,7 @@ class Law(GitMixin):
         return tuple(r for r in self.rules if r.made_changes)
 
     @property
-    def failed_rules(self) -> Union[Tuple[()], Tuple[Rule]]:
+    def failed_rules(self) -> Tuple[Rule, ...]:
         """
         Return the rules which did modifications and failed.
 
@@ -123,6 +130,26 @@ class Law(GitMixin):
 
         return f"{self.name}\n{self.description}"
 
+    @property
+    def can_proceed(self) -> bool:
+        """
+        Evaluate if the execution can be continued. If preconditions are set,
+        those will be evaluated by this method.
+
+        :return: Return with the result of evaluation
+        :rtype: bool
+
+        .. warning::
+
+            :func:`hammurabi.rules.base.Rule.can_proceed` checks the result of
+            ``self.preconditions``, which means the preconditions are executed.
+            Make sure that you are not doing any modifications within rules used
+            as preconditions, otherwise take extra attention for those rules.
+        """
+
+        logging.debug('Checking if "%s" can proceed with execution', self.name)
+        return all([condition.execute() for condition in self.preconditions])
+
     def get_execution_order(self) -> List[Union[Rule, Precondition]]:
         """
         Get the execution order of the registered rules. The order will
@@ -142,7 +169,7 @@ class Law(GitMixin):
 
         return order
 
-    def commit(self):
+    def commit(self) -> None:
         """
         Commit the changes made by registered rules and add a
         meaningful commit message.
@@ -163,15 +190,11 @@ class Law(GitMixin):
         rules = [f"* {rule.name}" for rule in order if rule.made_changes]
         rules_commit_message = "\n".join(rules)
 
-        if not rules:
-            logging.info('No changes made by "%s"', self.name)
-            return
-
         logging.debug('Committing changes made by "%s"', self.name)
         self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
     @staticmethod
-    def __execute_rule(rule: Rule):
+    def __execute_rule(rule: Rule) -> None:
         """
         Execute the given rule. In case of an exception, the execution of rules
         will continue except the failing one. The failed rule's pipe and children
@@ -187,7 +210,7 @@ class Law(GitMixin):
             rule.execute()
         except PreconditionFailedError:
             logging.warning(
-                'Cancelling execution of "%s", the prerequisites are not fulfilled',
+                'Cancelling execution of "%s", the preconditions are not fulfilled',
                 rule.name,
             )
         except Exception as exc:  # pylint: disable=broad-except
@@ -201,7 +224,7 @@ class Law(GitMixin):
 
             raise AbortLawError(str(exc)) from exc
 
-    def enforce(self):
+    def enforce(self) -> None:
         """
         Execute all registered rule. If ``rule_can_abort`` config option
         is set to ``True``, all the rules will be aborted and an exception
@@ -217,6 +240,13 @@ class Law(GitMixin):
 
         :raises: ``AbortLawError``
         """
+
+        if not self.can_proceed:
+            logging.warning(
+                'Cancelling execution of "%s", the preconditions are not fulfilled',
+                self.name,
+            )
+            return
 
         logging.info('Executing law "%s"', self.name)
 

@@ -23,6 +23,12 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Added
+~~~~~
+
+* Add preconditions for ``Law`` class
+
+
 0.5.0_ - 2020-03-31
 -------------------
 
