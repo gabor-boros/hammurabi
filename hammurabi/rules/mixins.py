@@ -14,7 +14,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         representation of it.
 
         :param key_path: Path to the key in a selector format
-        (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
+            (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
         :type key_path: Union[str, List[str]]
 
         :return: List representation of key type
@@ -26,7 +26,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
 
         return list(filter(lambda key: key, key_path))
 
-    def _get_by_selector(
+    def get_by_selector(
         self, data: Any, key_path: Union[str, List[str]]
     ) -> Dict[str, Any]:
         """
@@ -36,11 +36,11 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         :type data: :class:`hammurabi.rules.mixins.Any`
 
         :param key_path: Path to the key in a selector format
-        (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
+            (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
         :type key_path: Union[str, List[str]]
 
         :return: Return the value belonging to the selector
-        :rtype: :class:``hammurabi.rules.mixins.Any`
+        :rtype: :class:`hammurabi.rules.mixins.Any`
         """
 
         if not data:
@@ -56,7 +56,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
 
         return entry
 
-    def _set_by_selector(
+    def set_by_selector(
         self,
         loaded_data: Any,
         key_path: Union[str, List[str]],
@@ -67,10 +67,10 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         Set a value by the key selector and traverse the path.
 
         :param loaded_data: The loaded YAML data into dict
-        :type loaded_data: :class:``hammurabi.rules.mixins.Any`
+        :type loaded_data: :class:`hammurabi.rules.mixins.Any`
 
         :param key_path: Path to the key in a selector format
-        (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
+            (``.path.to.the.key`` or ``["path", "to", "the", "key"]``)
         :type key_path: Union[str, List[str]]
 
         :param value: The value set for the key
@@ -80,7 +80,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         :type delete: bool
 
         :return: The modified YAML data
-        :rtype: :class:``hammurabi.rules.mixins.Any`
+        :rtype: :class:`hammurabi.rules.mixins.Any`
         """
 
         key_path = self.__normalize_key_path(key_path)

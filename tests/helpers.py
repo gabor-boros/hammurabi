@@ -12,7 +12,7 @@ class ExamplePrecondition(Precondition):
 class ExampleRule(Rule):
     """ExampleRule docstring"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.made_changes = True
 
@@ -22,7 +22,7 @@ class ExampleRule(Rule):
 
 
 class ExampleExceptionRule(Rule):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.made_changes = False
 
