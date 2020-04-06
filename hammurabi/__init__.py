@@ -37,6 +37,13 @@ from hammurabi.rules.ini import (
     SectionNotExists,
     SectionRenamed,
 )
+from hammurabi.rules.json import (
+    JSONKeyExists,
+    JSONKeyNotExists,
+    JSONKeyRenamed,
+    JSONValueExists,
+    JSONValueNotExists,
+)
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
@@ -48,4 +55,4 @@ from hammurabi.rules.yaml import (
     YAMLValueNotExists,
 )
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
