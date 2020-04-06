@@ -116,6 +116,39 @@ OptionRenamed
 .. autoclass:: hammurabi.rules.ini.OptionRenamed
    :noindex:
 
+JSON files
+----------
+
+JSONKeyExists
+~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.json.JSONKeyExists
+   :noindex:
+
+JSONKeyNotExists
+~~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.json.JSONKeyNotExists
+   :noindex:
+
+JSONKeyRenamed
+~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.json.JSONKeyRenamed
+   :noindex:
+
+JSONValueExists
+~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.json.JSONValueExists
+   :noindex:
+
+JSONValueNotExists
+~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.json.JSONValueNotExists
+   :noindex:
+
 Operations
 ----------
 

@@ -32,6 +32,7 @@ Added
 * New precondition ``IsFileExists`` / ``IsFileNotExists``
 * New precondition ``IsLineExists`` / ``IsLineNotExists``
 * Add preconditions for ``Law`` class
+* Add JSON file support
 
 Changed
 ~~~~~~~
