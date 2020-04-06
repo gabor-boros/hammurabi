@@ -31,6 +31,7 @@ Added
 * New precondition ``IsDirectoryExists`` / ``IsDirectoryNotExists``
 * New precondition ``IsFileExists`` / ``IsFileNotExists``
 * New precondition ``IsLineExists`` / ``IsLineNotExists``
+* Add preconditions for ``Law`` class
 
 Changed
 ~~~~~~~

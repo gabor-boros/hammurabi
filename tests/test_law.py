@@ -46,6 +46,42 @@ def test_executes_task():
     law.commit.assert_called_once_with()
 
 
+def test_executes_task_preconditions():
+    rule = get_passing_rule()
+    rule.execute = Mock()
+
+    law = Law(
+        name="Passing",
+        description="passing law",
+        rules=(rule,),
+        preconditions=[ExamplePrecondition(param=True)],
+    )
+    law.commit = Mock()
+
+    law.enforce()
+
+    rule.execute.assert_called_once_with()
+    law.commit.assert_called_once_with()
+
+
+def test_executes_task_failed_preconditions():
+    rule = get_passing_rule()
+    rule.execute = Mock()
+
+    law = Law(
+        name="Passing",
+        description="passing law",
+        rules=(rule,),
+        preconditions=[ExamplePrecondition(param=False)],
+    )
+    law.commit = Mock()
+
+    law.enforce()
+
+    assert rule.execute.called is False
+    assert law.commit.called is False
+
+
 @patch("hammurabi.law.logging")
 @patch("hammurabi.law.config")
 def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
