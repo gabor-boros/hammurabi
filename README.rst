@@ -56,12 +56,12 @@ Supported file formats:
 
 * ``plain text``
 * ``ini``
+* ``json``
 * ``yaml`` (basic, single document operations)
 
 Upcoming file format support:
 
 * ``toml``
-* ``json``
 * ``hocon``
 
 Installation
