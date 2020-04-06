@@ -33,7 +33,7 @@ class SingleConfigFileRule(SinglePathRule):
 
         super().__init__(name, path, **kwargs)
 
-    def pre_task_hook(self):
+    def pre_task_hook(self) -> None:
         """
         Parse the configuration file for later use.
         """

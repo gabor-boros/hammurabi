@@ -112,7 +112,7 @@ class AbstractRule(ABC):
         doc = full_strip(getattr(self, "__doc__", ""))
         return f"{self.name}\n{doc}\n{self.description}"
 
-    def pre_task_hook(self):
+    def pre_task_hook(self) -> None:
         """
         Run code before performing the :func:`hammurabi.rules.base.Rule.task`.
         To access the parameter passed to the rule, always use ``self.param``
