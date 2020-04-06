@@ -26,8 +26,18 @@ Unreleased
 Added
 ~~~~~
 
+* New precondition ``IsOwnedBy`` / ``IsNotOwnedBy``
+* New precondition ``HasMode`` / ``HasNoMode``
+* New precondition ``IsDirectoryExists`` / ``IsDirectoryNotExists``
+* New precondition ``IsFileExists`` / ``IsFileNotExists``
+* New precondition ``IsLineExists`` / ``IsLineNotExists``
 * Add preconditions for ``Law`` class
 
+Changed
+~~~~~~~
+
+* Added return value type hint to ``pre_task_hook``
+* ``_get_by_selector`` / ``_set_by_selector`` became public methods (``get_by_selector`` / ``set_by_selector``)
 
 0.5.0_ - 2020-03-31
 -------------------

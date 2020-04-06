@@ -46,7 +46,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
 
         # Get the parent for modifications. If there is no parent,
         # then the parent is the document root
-        return self._get_by_selector(self.loaded_yaml, self.split_key[:-1])
+        return self.get_by_selector(self.loaded_yaml, self.split_key[:-1])
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
         """
@@ -59,7 +59,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         :type delete: bool
         """
 
-        updated_data = self._set_by_selector(
+        updated_data = self.set_by_selector(
             self.loaded_yaml, self.split_key, data, delete
         )
         self.yaml.dump(updated_data, self.param)
