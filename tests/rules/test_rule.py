@@ -10,6 +10,22 @@ from hammurabi.exceptions import PreconditionFailedError
 from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
 
 
+def test_repr():
+    expected = 'ExampleRule(name="Test", param="Rule", preconditions=(), pipe=None, children=())'
+    rule = ExampleRule(name="Test", param="Rule")
+
+    assert repr(rule) == expected
+    # The repr should be used with eval
+    assert repr(eval(repr(rule))) == expected
+
+
+def test_str():
+    expected = "Test rule"
+    rule = ExampleRule(name="Test", param="Rule")
+
+    assert str(rule) == expected
+
+
 @patch("hammurabi.rules.abstract.full_strip")
 def test_description(mock_full_strip):
     expected_description = "test description"

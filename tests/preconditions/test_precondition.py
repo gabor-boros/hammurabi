@@ -8,6 +8,29 @@ class Example(Precondition):
         return True
 
 
+def test_repr():
+    expected = 'Example(name="Test", param="precondition")'
+    rule = Example(name="Test", param="precondition")
+
+    assert repr(rule) == expected
+    # The repr should be used with eval
+    assert repr(eval(repr(rule))) == expected
+
+
+def test_str():
+    expected = "Example precondition"
+    rule = Example(param="precondition")
+
+    assert str(rule) == expected
+
+
+def test_str_with_name():
+    expected = "Test precondition"
+    rule = Example(name="Test", param="precondition")
+
+    assert str(rule) == expected
+
+
 def test_precondition_with_name():
     expected_name = "Test"
     rule = Example(name=expected_name)

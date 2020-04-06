@@ -33,6 +33,22 @@ def test_executes_no_task():
     assert law.commit.called is False
 
 
+def test_repr():
+    expected = 'Law(name="Empty", description="empty law", rules=(), preconditions=())'
+    law = Law(name="Empty", description="empty law", rules=())
+
+    assert repr(law) == expected
+    # The repr should be used with eval
+    assert repr(eval(repr(law))) == expected
+
+
+def test_str():
+    expected = "Empty law"
+    law = Law(name="Empty", description="empty law", rules=())
+
+    assert str(law) == expected
+
+
 def test_executes_task():
     rule = get_passing_rule()
     rule.execute = Mock()

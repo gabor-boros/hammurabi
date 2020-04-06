@@ -24,6 +24,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased
 ----------
 
+Added
+~~~~~~~
+
+* Implement ``__repr`` and ``__str__`` for ``Law``, ``Rule`` and ``Precondition`` objects
+
 0.6.0_ - 2020-04-06
 -------------------
 

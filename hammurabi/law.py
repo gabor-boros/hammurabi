@@ -75,6 +75,18 @@ class Law(GitMixin):
         for rule in rules:
             self.rules += (rule,)
 
+    def __repr__(self) -> str:
+        return (
+            "Law("
+            f'name="{self.name}", '
+            f'description="{self.description}", '
+            f"rules={self.rules}, "
+            f"preconditions={self.preconditions})"
+        )
+
+    def __str__(self) -> str:
+        return f"{self.name} law"
+
     @property
     def passed_rules(self) -> Tuple[Rule, ...]:
         """
