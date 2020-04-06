@@ -213,7 +213,9 @@ def test_key_renamed_no_old_or_new_key(temporary_file):
 @pytest.mark.integration
 def test_key_renamed_has_old_and_new_key(temporary_file):
     expected_file = Path(temporary_file.name)
-    expected_file.write_text('{"stack": "python", "dependencies": [], "depends_on": []}')
+    expected_file.write_text(
+        '{"stack": "python", "dependencies": [], "depends_on": []}'
+    )
 
     rule = JSONKeyRenamed(
         name="Ensure key renamed",
@@ -228,7 +230,8 @@ def test_key_renamed_has_old_and_new_key(temporary_file):
         rule.task()
 
     assert (
-        expected_file.read_text() == '{"stack": "python", "dependencies": [], "depends_on": []}'
+        expected_file.read_text()
+        == '{"stack": "python", "dependencies": [], "depends_on": []}'
     )
     expected_file.unlink()
 
@@ -268,7 +271,8 @@ def test_value_nested_exists(temporary_file):
     rule.task()
 
     assert (
-        expected_file.read_text() == '{"development": {"apple": true, "supported": true}}'
+        expected_file.read_text()
+        == '{"development": {"apple": true, "supported": true}}'
     )
     expected_file.unlink()
 
@@ -349,7 +353,9 @@ def test_value_exists_list_single_item(temporary_file):
     rule.task()
 
     # Because of the default flow style False, the result will be block-styled
-    assert expected_file.read_text() == '{"stack": "python", "dependencies": ["service1"]}'
+    assert (
+        expected_file.read_text() == '{"stack": "python", "dependencies": ["service1"]}'
+    )
     expected_file.unlink()
 
 
@@ -574,14 +580,19 @@ def test_value_not_exists_nested_no_key(temporary_file):
     rule.pre_task_hook()
     rule.task()
 
-    assert expected_file.read_text() == '{"development": {"supported": {"apple": "banana"}}}'
+    assert (
+        expected_file.read_text()
+        == '{"development": {"supported": {"apple": "banana"}}}'
+    )
     expected_file.unlink()
 
 
 @pytest.mark.integration
 def test_value_not_exists_list(temporary_file):
     expected_file = Path(temporary_file.name)
-    expected_file.write_text('{"stack": "python", "dependencies": ["service1", "service2"]}')
+    expected_file.write_text(
+        '{"stack": "python", "dependencies": ["service1", "service2"]}'
+    )
 
     rule = JSONValueNotExists(
         name="Ensure service descriptor has dependencies",
@@ -594,7 +605,9 @@ def test_value_not_exists_list(temporary_file):
     rule.task()
 
     # Because of the default flow style False, the result will be block-styled
-    assert expected_file.read_text() == '{"stack": "python", "dependencies": ["service2"]}'
+    assert (
+        expected_file.read_text() == '{"stack": "python", "dependencies": ["service2"]}'
+    )
     expected_file.unlink()
 
 
@@ -613,7 +626,9 @@ def test_value_not_exists_list_no_item(temporary_file):
     rule.pre_task_hook()
     rule.task()
 
-    assert expected_file.read_text() == '{"stack": "python", "dependencies": ["service3"]}'
+    assert (
+        expected_file.read_text() == '{"stack": "python", "dependencies": ["service3"]}'
+    )
     expected_file.unlink()
 
 
@@ -651,5 +666,8 @@ def test_value_not_exists_dict_no_key(temporary_file):
     rule.pre_task_hook()
     rule.task()
 
-    assert expected_file.read_text() == '{"stack": "python", "dependencies": {"service3": true}}'
+    assert (
+        expected_file.read_text()
+        == '{"stack": "python", "dependencies": {"service3": true}}'
+    )
     expected_file.unlink()

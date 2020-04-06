@@ -70,6 +70,15 @@ class Precondition(AbstractRule, ABC):
         name = name or f"{self.__class__.__name__} precondition"
         super().__init__(name, param)
 
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(name="{self.name}", param="{self.param}")'
+
+    def __str__(self) -> str:
+        if self.name.endswith("precondition"):
+            return self.name
+
+        return f"{self.name} precondition"
+
     @abstractmethod
     def task(self) -> bool:
         """

@@ -88,6 +88,19 @@ class Rule(AbstractRule, ABC):
 
         super().__init__(name, param)
 
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f'name="{self.name}", '
+            f'param="{self.param}", '
+            f"preconditions={self.preconditions}, "
+            f"pipe={self.pipe}, "
+            f"children={self.children})"
+        )
+
+    def __str__(self) -> str:
+        return f"{self.name} rule"
+
     @property
     def can_proceed(self) -> bool:
         """
