@@ -39,7 +39,7 @@ class Rule(AbstractRule, ABC):
         >>> from hammurabi.mixins import GitMixin
         >>>
         >>> class SingleFileRule(Rule, GitMixin):
-        >>>     def __init__(self, name: str, path: Optional[Path] = None, **kwargs):
+        >>>     def __init__(self, name: str, path: Optional[Path] = None, **kwargs) -> None:
         >>>         super().__init__(name, path, **kwargs)
         >>>
         >>>     def post_task_hook(self):

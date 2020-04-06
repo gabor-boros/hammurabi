@@ -3,7 +3,16 @@
 from hammurabi.config import config
 from hammurabi.law import Law
 from hammurabi.pillar import Pillar
+from hammurabi.preconditions.attributes import (
+    HasMode,
+    HasNoMode,
+    IsNotOwnedBy,
+    IsOwnedBy,
+)
 from hammurabi.preconditions.base import Precondition
+from hammurabi.preconditions.directories import IsDirectoryExists, IsDirectoryNotExists
+from hammurabi.preconditions.files import IsFileExists, IsFileNotExists
+from hammurabi.preconditions.text import IsLineExists, IsLineNotExists
 from hammurabi.reporters.base import Reporter
 from hammurabi.reporters.json import JSONReporter
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged

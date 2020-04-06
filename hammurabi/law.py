@@ -163,10 +163,6 @@ class Law(GitMixin):
         rules = [f"* {rule.name}" for rule in order if rule.made_changes]
         rules_commit_message = "\n".join(rules)
 
-        if not rules:
-            logging.info('No changes made by "%s"', self.name)
-            return
-
         logging.debug('Committing changes made by "%s"', self.name)
         self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
