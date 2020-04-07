@@ -21,8 +21,8 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.5.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.5.0
 .. _0.6.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.6.0
 
-Unreleased
-----------
+Unreleased_
+-----------
 
 Added
 ~~~~~~~
