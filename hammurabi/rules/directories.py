@@ -142,12 +142,12 @@ class DirectoryEmptied(SinglePathRule):
 
         with os.scandir(self.param) as entries:
             for entry in map(Path, entries):
-                logging.debug('Removing "%s"', str(entry))
-
                 if entry.is_file() or entry.is_symlink():
+                    logging.debug('Removing file "%s"', str(entry))
                     entry.unlink()
 
                 elif entry.is_dir():
+                    logging.debug('Removing directory "%s"', str(entry))
                     shutil.rmtree(entry)
 
         return self.param

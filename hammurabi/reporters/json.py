@@ -1,4 +1,5 @@
 # pylint: disable=too-few-public-methods
+import logging
 
 from hammurabi.reporters.base import Reporter
 
@@ -42,4 +43,5 @@ class JSONReporter(Reporter):
         format. The report will be written into the configured report file.
         """
 
+        logging.info('Writing report to "%s"', str(self.report_path))
         self.report_path.write_text(self._get_report().json())

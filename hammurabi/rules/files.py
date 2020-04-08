@@ -145,7 +145,7 @@ class FileNotExists(SinglePathRule):
         """
 
         if self.param.exists():
-            logging.debug('Unlinking "%s"', str(self.param))
+            logging.debug('Removing "%s"', str(self.param))
             self.param.unlink()
 
         return self.param
@@ -201,7 +201,7 @@ class FilesNotExist(MultiplePathRule):
 
         for path in self.param:
             if path.exists():
-                logging.debug('Unlinking "%s"', str(path))
+                logging.debug('Removing "%s"', str(path))
                 path.unlink()
 
         return self.param
