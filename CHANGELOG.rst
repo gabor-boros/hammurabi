@@ -25,9 +25,10 @@ Unreleased
 ----------
 
 Added
-~~~~~~~
+~~~~~
 
 * Implement ``__repr`` and ``__str__`` for ``Law``, ``Rule`` and ``Precondition`` objects
+* Add logging related configuration options to customize logging
 
 0.6.0_ - 2020-04-06
 -------------------
