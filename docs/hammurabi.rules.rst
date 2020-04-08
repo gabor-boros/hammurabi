@@ -36,6 +36,14 @@ hammurabi.rules.common module
    :undoc-members:
    :show-inheritance:
 
+hammurabi.rules.dictionaries module
+-----------------------------------
+
+.. automodule:: hammurabi.rules.dictionaries
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 hammurabi.rules.directories module
 ----------------------------------
 

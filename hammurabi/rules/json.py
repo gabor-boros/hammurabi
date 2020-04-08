@@ -6,43 +6,30 @@ already parsed file.
 """
 
 from abc import abstractmethod
-from copy import deepcopy
 import json
-import logging
 from pathlib import Path
-from typing import Any, Dict, Hashable, List, Optional, Union
+from typing import Any, Optional
 
-from hammurabi.rules.common import SinglePathRule
-from hammurabi.rules.mixins import SelectorMixin
+from hammurabi.rules.dictionaries import (
+    DictKeyExists,
+    DictKeyNotExists,
+    DictKeyRenamed,
+    DictValueExists,
+    DictValueNotExists,
+    SinglePathDictParsedRule,
+)
 
 
-class SingleJSONFileRule(SinglePathRule, SelectorMixin):
+class SingleJSONFileRule(SinglePathDictParsedRule):
     """
-    Extend :class:`hammurabi.rules.base.Rule` to handle parsed content
-    manipulations on a single file.
+    Extend :class:`hammurabi.rules.dictionaries.SinglePathDictParsedRule`
+    to handle parsed content manipulations on a single JSON file.
     """
 
     def __init__(
         self, name: str, path: Optional[Path] = None, key: str = "", **kwargs
     ) -> None:
-        self.selector = self.validate(key, required=True)
-        self.split_key = self.selector.split(".")
-        self.key_name: str = self.split_key[-1]
-        self.loaded_json = Union[Dict[Hashable, Any], List[Any], None]
-
-        super().__init__(name, path, **kwargs)
-
-    def _get_parent(self) -> Dict[str, Any]:
-        """
-        Get the parent of the given key by its selector.
-
-        :return: Return the parent if there is any
-        :rtype: Dict[str, Any]
-        """
-
-        # Get the parent for modifications. If there is no parent,
-        # then the parent is the document root
-        return self.get_by_selector(self.loaded_json, self.split_key[:-1])
+        super().__init__(name, path, key, loader=json.loads, **kwargs)
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
         """
@@ -55,18 +42,11 @@ class SingleJSONFileRule(SinglePathRule, SelectorMixin):
         :type delete: bool
         """
 
-        updated_data = self.set_by_selector(
-            self.loaded_json, self.split_key, data, delete
+        self.param.write_text(
+            json.dumps(
+                self.set_by_selector(self.loaded_data, self.split_key, data, delete)
+            )
         )
-        self.param.write_text(json.dumps(updated_data))
-
-    def pre_task_hook(self) -> None:
-        """
-        Parse the json file for later use.
-        """
-
-        logging.debug('Parsing "%s" json file', self.param)
-        self.loaded_json = json.loads(self.param.read_text())
 
     @abstractmethod
     def task(self) -> Path:
@@ -79,7 +59,7 @@ class SingleJSONFileRule(SinglePathRule, SelectorMixin):
         """
 
 
-class JSONKeyExists(SingleJSONFileRule):
+class JSONKeyExists(DictKeyExists, SingleJSONFileRule):
     """
     Ensure that the given key exists. If needed, the rule will create a key with the
     given name, and optionally the specified value. In case the value is set, the value
@@ -113,41 +93,8 @@ class JSONKeyExists(SingleJSONFileRule):
         key before or after a target.
     """
 
-    def __init__(
-        self,
-        name: str,
-        path: Optional[Path] = None,
-        key: str = "",
-        value: Union[None, list, dict, str, int, float] = None,
-        **kwargs,
-    ) -> None:
-        self.value = value
-        super().__init__(name, path, key, **kwargs)
 
-    def task(self) -> Path:
-        """
-        Ensure that the given key exists in the json file. If needed, create the
-        key with the given name, and optionally the specified value.
-
-        :return: Return the input path as an output
-        :rtype: Path
-        """
-
-        parent = self._get_parent()
-
-        logging.debug(
-            'Set default value "%s" for "%s" if no value set', self.key_name, self.value
-        )
-        inserted = parent.setdefault(self.key_name, self.value)
-
-        # Only write the changes if we did any change
-        if inserted == parent[self.key_name]:
-            self._write_dump(inserted)
-
-        return self.param
-
-
-class JSONKeyNotExists(SingleJSONFileRule):
+class JSONKeyNotExists(DictKeyNotExists, SingleJSONFileRule):
     """
     Ensure that the given key not exists. If needed, the rule will remove a key with the
     given name, including its value.
@@ -173,25 +120,8 @@ class JSONKeyNotExists(SingleJSONFileRule):
         >>> pillar.register(example_law)
     """
 
-    def task(self) -> Path:
-        """
-        Ensure that the given key does not exists in the json file.
 
-        :return: Return the input path as an output
-        :rtype: Path
-        """
-
-        parent = self._get_parent()
-
-        if self.key_name in parent.keys():
-            logging.debug('Removing key "%s"', self.key_name)
-            parent.pop(self.key_name)
-            self._write_dump(parent, delete=True)
-
-        return self.param
-
-
-class JSONKeyRenamed(SingleJSONFileRule):
+class JSONKeyRenamed(DictKeyRenamed, SingleJSONFileRule):
     """
     Ensure that the given key is renamed. In case the key can not be found,
     a ``LookupError`` exception will be raised to stop the execution. The
@@ -220,55 +150,8 @@ class JSONKeyRenamed(SingleJSONFileRule):
         >>> pillar.register(example_law)
     """
 
-    def __init__(
-        self,
-        name: str,
-        path: Optional[Path] = None,
-        key: str = "",
-        new_name: str = "",
-        **kwargs,
-    ) -> None:
-        self.new_name = self.validate(new_name, required=True)
-        super().__init__(name, path, key, **kwargs)
 
-    def task(self) -> Path:
-        """
-        Ensure that the given key is renamed. In case the key can not be found,
-        a ``LookupError`` exception will be raised to stop the execution. The
-        execution must be stopped at this point, because if other rules depending
-        on the rename they will fail otherwise.
-
-        :raises: ``LookupError`` raised if no key can be renamed or both the new and
-                 old keys are in the config file
-        :return: Return the input path as an output
-        :rtype: Path
-        """
-
-        parent = self._get_parent()
-
-        has_old_key = self.key_name in parent
-        has_new_key = self.new_name in parent
-
-        if has_old_key and has_new_key:
-            raise LookupError(f'Both "{self.key_name}" and "{self.new_name}" set')
-
-        if has_new_key:
-            return self.param
-
-        if not has_old_key:
-            raise LookupError(f'No matching key for "{self.selector}"')
-
-        logging.debug('Renaming key from "%s" to "%s"', self.key_name, self.new_name)
-        parent[self.new_name] = deepcopy(parent[self.key_name])
-        parent.pop(self.key_name)
-
-        # Delete is True since we need to delete the old key
-        self._write_dump(parent, delete=True)
-
-        return self.param
-
-
-class JSONValueExists(SingleJSONFileRule):
+class JSONValueExists(DictValueExists, SingleJSONFileRule):
     """
     Ensure that the given key has the expected value(s). In case the key cannot
     be found, a ``LookupError`` exception will be raised to stop the execution.
@@ -331,62 +214,8 @@ class JSONValueExists(SingleJSONFileRule):
         the document.
     """
 
-    def __init__(
-        self,
-        name: str,
-        path: Optional[Path] = None,
-        key: str = "",
-        value: Union[None, list, dict, str, int, float] = None,
-        **kwargs,
-    ) -> None:
-        self.value = value
-        super().__init__(name, path, key, **kwargs)
 
-    def task(self) -> Path:
-        """
-        Ensure that the given key has the expected value(s). In case the key cannot
-        be found, a ``LookupError`` exception will be raised to stop the execution.
-
-        .. warning::
-
-            Since the value can be anything from ``None`` to a list of lists, and
-            rule piping passes the 1st argument (``path``) to the next rule the ``value``
-            parameter can not be defined in ``__init__`` before the ``path``. Hence
-            the ``value`` parameter must have a default value. The default value is
-            set to ``None``, which translates to the following:
-
-            Using the ``JSONValueExists`` rule and not assigning value to ``value``
-            parameter will set the matching ``key``'s value to `None`` by default in
-            the document.
-
-        :raises: ``LookupError`` raised if no key can be renamed or both the new and
-                 old keys are in the config file
-        :return: Return the input path as an output
-        :rtype: Path
-        """
-
-        parent = self._get_parent()
-
-        logging.debug('Adding value "%s" to key "%s"', self.value, self.key_name)
-
-        if self.value is None:
-            logging.debug('Setting "%s" to "%s"', self.key_name, self.value)
-            parent[self.key_name] = self.value
-        elif isinstance(parent.get(self.key_name), list):
-            if isinstance(self.value, list):
-                parent[self.key_name].extend(self.value)
-            else:
-                parent[self.key_name].append(self.value)
-        elif isinstance(parent.get(self.key_name), dict):
-            parent[self.key_name].update(self.value)
-        else:
-            parent[self.key_name] = self.value
-
-        self._write_dump(parent[self.key_name])
-        return self.param
-
-
-class JSONValueNotExists(SingleJSONFileRule):
+class JSONValueNotExists(DictValueNotExists, SingleJSONFileRule):
     """
     Ensure that the key has no value given. In case the key cannot be found,
     a ``LookupError`` exception will be raised to stop the execution.
@@ -423,57 +252,3 @@ class JSONValueNotExists(SingleJSONFileRule):
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
     """
-
-    def __init__(
-        self,
-        name: str,
-        path: Optional[Path] = None,
-        key: str = "",
-        value: Union[str, int, float] = None,
-        **kwargs,
-    ) -> None:
-        self.value = self.validate(value, required=True)
-        super().__init__(name, path, key, **kwargs)
-
-    def task(self) -> Path:
-        """
-        Ensure that the key has no value given. In case the key cannot be found,
-        a ``LookupError`` exception will be raised to stop the execution.
-
-        Based on the key's value's type if the value contains (or equals for simple types)
-        value provided in the ``value`` parameter the value is:
-        1. Set to None (if the key's value's type is not a dict or list)
-        2. Removed from the list (if the key's value's type is a list)
-        3. Removed from the dict (if the key's value's type is a dict)
-
-        :return: Return the input path as an output
-        :rtype: Path
-        """
-
-        parent = self._get_parent()
-        write_needed = False
-
-        if self.key_name not in parent:
-            return self.param
-
-        current_value = parent.get(self.key_name)
-
-        logging.debug('Removing "%s" from key "%s"', self.value, self.key_name)
-
-        if isinstance(current_value, list):
-            if self.value in current_value:
-                parent[self.key_name].remove(self.value)
-                write_needed = True
-        elif isinstance(current_value, dict):
-            if self.value in current_value:
-                del parent[self.key_name][self.value]
-                write_needed = True
-        else:
-            if current_value == self.value:
-                parent[self.key_name] = None
-                write_needed = True
-
-        if write_needed:
-            self._write_dump(parent[self.key_name])
-
-        return self.param

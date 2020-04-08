@@ -29,12 +29,15 @@ Added
 
 * Implement ``__repr`` and ``__str__`` for ``Law``, ``Rule`` and ``Precondition`` objects
 * Add logging related configuration options to customize logging
+* Add dictionary parsed rules as a base for YAML and JSON rules
+* Extend the documentations by the new dictionary rules
 
 Changed
 ~~~~~~~
 
 * Unify log message styles
 * Adjust logging levels
+* Use dictionary parsed rules as a base for YAML and JSON rules
 
 0.6.0_ - 2020-04-06
 -------------------
