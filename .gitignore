@@ -111,6 +111,7 @@ TODO
 
 # hammurabi
 example/
+hammurabi.log
 
 # test reporter
 cc-test-reporter
