@@ -4,9 +4,9 @@
 This module contains the definition of Reporters which is responsible for
 exposing the execution results in several formats.
 """
-
 from abc import ABC, abstractmethod
 from datetime import datetime
+import logging
 from pathlib import Path
 from typing import Any, Iterable, List
 
@@ -114,6 +114,8 @@ class Reporter(ABC):
         :rtype: RuleItem
         """
 
+        logging.info('Collecting report data for "%s"', str(rule))
+
         return RuleItem(
             name=rule.name,
             law=LawItem(name=law.name, description=law.description),
@@ -133,6 +135,8 @@ class Reporter(ABC):
         :rtype: List[RuleItem]
         """
 
+        logging.info('Collecting report data for "%s"', str(law))
+
         items: List[RuleItem] = list()
 
         for rule in rules:
@@ -148,12 +152,16 @@ class Reporter(ABC):
         :rtype: ``hammurabi.reporters.base.Report``
         """
 
+        logging.info("Generating execution report")
+
         report = Report(additional_data=self.additional_data)
 
         for law in self.laws:
             report.passed += self.__get_rule_items(law, law.passed_rules)
             report.failed += self.__get_rule_items(law, law.failed_rules)
             report.skipped += self.__get_rule_items(law, law.skipped_rules)
+
+        logging.info("Execution report generated")
 
         return report
 

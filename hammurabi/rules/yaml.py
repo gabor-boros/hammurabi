@@ -69,7 +69,7 @@ class SingleDocumentYAMLFileRule(SinglePathRule, SelectorMixin):
         Parse the yaml file for later use.
         """
 
-        logging.debug('parsing "%s" yaml file', self.param)
+        logging.debug('Parsing "%s" yaml file', self.param)
         self.loaded_yaml = self.yaml.load(self.param)
 
     @abstractmethod
@@ -138,6 +138,10 @@ class YAMLKeyExists(SingleDocumentYAMLFileRule):
         """
 
         parent = self._get_parent()
+
+        logging.debug(
+            'Set default value "%s" for "%s" if no value set', self.key_name, self.value
+        )
         inserted = parent.setdefault(self.key_name, self.value)
 
         # Only write the changes if we did any change
@@ -184,6 +188,7 @@ class YAMLKeyNotExists(SingleDocumentYAMLFileRule):
         parent = self._get_parent()
 
         if self.key_name in parent.keys():
+            logging.debug('Removing key "%s"', self.key_name)
             parent.pop(self.key_name)
             self._write_dump(parent, delete=True)
 
@@ -257,6 +262,7 @@ class YAMLKeyRenamed(SingleDocumentYAMLFileRule):
         if not has_old_key:
             raise LookupError(f'No matching key for "{self.selector}"')
 
+        logging.debug('Renaming key from "%s" to "%s"', self.key_name, self.new_name)
         parent[self.new_name] = deepcopy(parent[self.key_name])
         parent.pop(self.key_name)
 
@@ -365,7 +371,10 @@ class YAMLValueExists(SingleDocumentYAMLFileRule):
 
         parent = self._get_parent()
 
+        logging.debug('Adding value "%s" to key "%s"', self.value, self.key_name)
+
         if self.value is None:
+            logging.debug('Setting "%s" to "%s"', self.key_name, self.value)
             parent[self.key_name] = self.value
         elif isinstance(parent.get(self.key_name), list):
             if isinstance(self.value, list):
@@ -452,6 +461,8 @@ class YAMLValueNotExists(SingleDocumentYAMLFileRule):
             return self.param
 
         current_value = parent.get(self.key_name)
+
+        logging.debug('Removing "%s" from key "%s"', self.value, self.key_name)
 
         if isinstance(current_value, list):
             if self.value in current_value:

@@ -113,7 +113,6 @@ class GitMixin:
         """
 
         if self.__can_proceed():
-            logging.debug("Creating git commit for the changes")
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
@@ -130,8 +129,8 @@ class GitMixin:
         """
 
         if config.repo and not config.settings.dry_run:
-            logging.info("Pushing changes")
-            branch = config.settings.git_branch_name
+            branch: str = config.settings.git_branch_name
+            logging.info("Pushing changes to %s", branch)
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
 
 
@@ -264,6 +263,7 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
             github_repo: Repository = config.github.repository(owner, repository)
 
             logging.info("Checking for opened pull request")
+
             opened_pull_requests: GitHubIterator[
                 ShortPullRequest
             ] = github_repo.pull_requests(
@@ -287,7 +287,9 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
 
             # Return the last known PR url, it should be one
             # anyways, so it is not an issue
-            return opened_pull_requests.last_url
+            last_pull_request_url = opened_pull_requests.last_url
+            logging.info("Found open pull request %s", last_pull_request_url)
+            return last_pull_request_url
 
         # Although this return could be skipped, it is more
         # explicit to have it here

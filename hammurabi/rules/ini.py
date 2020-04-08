@@ -38,7 +38,7 @@ class SingleConfigFileRule(SinglePathRule):
         Parse the configuration file for later use.
         """
 
-        logging.debug('parsing "%s" configuration file', self.param)
+        logging.debug('Parsing "%s" configuration file', self.param)
         self.updater.read(self.param)
 
     @abstractmethod
@@ -138,7 +138,7 @@ class SectionExists(SingleConfigFileRule):
         sections = self.updater.sections()
 
         if not sections:
-            logging.debug('adding section "%s"', self.section)
+            logging.debug('Adding section "%s"', self.section)
 
             self.updater.add_section(self.section)
 
@@ -146,7 +146,7 @@ class SectionExists(SingleConfigFileRule):
                 self.updater[self.section][option] = value
 
         if not self.updater.has_section(self.section):
-            logging.debug('adding section "%s"', self.section)
+            logging.debug('Adding section "%s"', self.section)
 
             target = self.__get_target()
 

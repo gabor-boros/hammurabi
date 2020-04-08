@@ -2,9 +2,11 @@
 
 from importlib.util import module_from_spec, spec_from_file_location
 import logging
+from logging.handlers import WatchedFileHandler
 import os
 from pathlib import Path
 import re
+import sys
 from typing import Any, Dict, Optional
 
 from git import InvalidGitRepositoryError, Repo
@@ -49,6 +51,8 @@ class TOMLSettings(CommonSettings):
 
     github_token: str = ""
     log_level: str = "INFO"
+    log_path: Optional[Path] = Path("./hammurabi.log")
+    log_format: str = logging.BASIC_FORMAT
     pillar_config: Path = Path("pillar.conf.py")
     pillar_name: str = "pillar"
 
@@ -86,6 +90,28 @@ class Config:
         self.repo: Repo = repo
         self.github: Optional[GitHub] = None
         self.settings: Settings = Settings()
+
+    @staticmethod
+    def __setup_logging(project_config: TOMLSettings) -> None:
+        """
+        Set the logging configuration of the root logger. The root logger is
+        intentionally configured and it is not a mistake.
+
+        :param project_config: Parsed TOMLSettings
+        :type project_config: :class:`hammurabi.config.TOMLSettings`
+        """
+
+        logging.root.setLevel(project_config.log_level)
+        formatter = logging.Formatter(project_config.log_format)
+
+        stream_handler = logging.StreamHandler(sys.stdout)
+        stream_handler.setFormatter(formatter)
+        logging.root.addHandler(stream_handler)
+
+        if project_config.log_path:
+            file_handler = WatchedFileHandler(str(project_config.log_path))
+            file_handler.setFormatter(formatter)
+            logging.root.addHandler(file_handler)
 
     @staticmethod
     def __get_repo_path() -> Path:
@@ -262,18 +288,13 @@ class Config:
         # may depend on settings read from environment or config file
         self.github = login(token=project_config.github_token)
 
-        # Set logging
-        logging.root.setLevel(project_config.log_level)
+        self.__setup_logging(project_config)
 
         logging.debug('Successfully loaded "%s"', settings_path)
-        logging.debug(
-            'Successfully loaded "%s"', project_config.pillar_config.expanduser()
-        )
+        logging.debug('Successfully loaded "%s"', project_config.pillar_config)
 
         if not self.github:
-            logging.warning(
-                "GitHub client is not initialized. Missing or invalid token."
-            )
+            logging.warning("Missing or invalid GitHub token")
 
 
 config = Config()  # pylint: disable=invalid-name

@@ -71,7 +71,7 @@ class TemplateRendered(SinglePathRule):
         :rtype: Path
         """
 
-        logging.debug('rendering template "%s"', str(self.param))
+        logging.debug('Rendering template "%s"', str(self.param))
         rendered = Template(self.param.read_text()).render(self.context)
         self.destination.write_text(rendered)
 

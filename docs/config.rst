@@ -24,6 +24,10 @@ matches one of the options below.
 +-----------------+-----------------------------------------------+-----------------+
 | log_level       | logging level of the program                  | INFO            |
 +-----------------+-----------------------------------------------+-----------------+
+| log_path        | path to the log file or None                  | ./hammurabi.log |
++-----------------+-----------------------------------------------+-----------------+
+| log_format      | format of the log lines                       | BASIC_FORMAT    |
++-----------------+-----------------------------------------------+-----------------+
 | repository      | git repository (owner/repo)                   | None            |
 +-----------------+-----------------------------------------------+-----------------+
 | git_branch_name | working branch name                           | hammurabi       |
@@ -52,6 +56,8 @@ Example content of the ``pyproject.toml`` file.
     repository = "gabor-boros/hammurabi"
     git_branch_name = "custom-branch-name"
     log_level = "WARNING"
+    log_file = "/var/log/hammurabi.log"
+    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     rule_can_abort = true
     report_name = "hammurabi_report.json"
 
