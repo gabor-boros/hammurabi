@@ -278,6 +278,13 @@ For more reference please check how the existing rules are implemented.
             shutil.chown(self.param, group="admin")
             return self.param
 
+Community
+=========
+
+If you need help or you would like to be part of the Hammurabi community, join us on discord_.
+
+.. _discord: https://discord.gg/dj8Myk5
+
 Contributing
 ============
 

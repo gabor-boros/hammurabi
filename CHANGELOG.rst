@@ -31,6 +31,7 @@ Added
 * Add logging related configuration options to customize logging
 * Add dictionary parsed rules as a base for YAML and JSON rules
 * Extend the documentations by the new dictionary rules
+* Add community discord link
 
 Changed
 ~~~~~~~
