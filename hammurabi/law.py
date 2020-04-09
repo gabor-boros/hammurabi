@@ -240,8 +240,8 @@ class Law(GitMixin):
 
     def __execute_rule(self, rule: Rule) -> None:
         """
-        Execute all the rules registered for the law. In case of an exception
-        the exception will be re-raised.
+        Execute a rule registered for the law. In case of an exception the
+        exception will be re-raised.
         """
 
         try:
