@@ -129,6 +129,25 @@ class SectionExists(SingleConfigFileRule):
 
         return self.updater.sections_blocks()[-1]
 
+    def __add_section(self) -> None:
+        """
+        Add the desired section before or after the target section if exists.
+        In case the target section not exists, so the file was empty, simply
+        add the new section.
+        """
+
+        logging.debug('Adding section "%s"', self.section)
+
+        target = self.__get_target()
+        target_exists = target is not None
+
+        if target_exists and self.add_after:
+            target.add_after.space(self.space).section(self.section)
+        elif target_exists and not self.add_after:
+            target.add_before.section(self.section)
+        elif not target_exists:
+            self.updater.add_section(self.section)
+
     def __add_options(self) -> None:
         """
         Add options to the given section.
@@ -146,18 +165,8 @@ class SectionExists(SingleConfigFileRule):
         :rtype: Path
         """
 
-        logging.debug('Adding section "%s"', self.section)
-
-        target = self.__get_target()
-        target_exists = target is not None
-        section_exists = self.updater.has_section(self.section)
-
-        if not section_exists and target_exists and self.add_after:
-            target.add_after.space(self.space).section(self.section)
-        elif not section_exists and target_exists and not self.add_after:
-            target.add_before.section(self.section)
-        elif not section_exists and not target_exists:
-            self.updater.add_section(self.section)
+        if not self.updater.has_section(self.section):
+            self.__add_section()
 
         self.__add_options()
 
