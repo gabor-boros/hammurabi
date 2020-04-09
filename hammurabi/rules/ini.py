@@ -115,16 +115,27 @@ class SectionExists(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def __get_target(self) -> Section:
+    def __get_target(self) -> Optional[Section]:
         """
         Get the target of the insert. If the target is not
         specified directly add as the last section.
         """
 
+        if not self.updater.sections():
+            return None
+
         if self.updater.has_section(self.target):
             return self.updater[self.target]
 
         return self.updater.sections_blocks()[-1]
+
+    def __add_options(self) -> None:
+        """
+        Add options to the given section.
+        """
+
+        for option, value in self.options:
+            self.updater[self.section][option] = value
 
     def task(self) -> Path:
         """
@@ -135,28 +146,20 @@ class SectionExists(SingleConfigFileRule):
         :rtype: Path
         """
 
-        sections = self.updater.sections()
+        logging.debug('Adding section "%s"', self.section)
 
-        if not sections:
-            logging.debug('Adding section "%s"', self.section)
+        target = self.__get_target()
+        target_exists = target is not None
+        section_exists = self.updater.has_section(self.section)
 
+        if not section_exists and target_exists and self.add_after:
+            target.add_after.space(self.space).section(self.section)
+        elif not section_exists and target_exists and not self.add_after:
+            target.add_before.section(self.section)
+        elif not section_exists and not target_exists:
             self.updater.add_section(self.section)
 
-            for option, value in self.options:
-                self.updater[self.section][option] = value
-
-        if not self.updater.has_section(self.section):
-            logging.debug('Adding section "%s"', self.section)
-
-            target = self.__get_target()
-
-            if self.add_after:
-                target.add_after.space(self.space).section(self.section)
-            else:
-                target.add_before.section(self.section)
-
-            for option, value in self.options:
-                self.updater[self.section][option] = value
+        self.__add_options()
 
         with self.param.open("w") as file:
             self.updater.write(file)
