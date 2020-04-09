@@ -41,6 +41,7 @@ Changed
 * Use dictionary parsed rules as a base for YAML and JSON rules
 * Reduced the complexity of ``DictValueExists`` and ``DictValueNotExists`` rules
 * Reduced the complexity of ``Rule`` execution
+* Reduced the complexity of ``Law`` execution
 
 0.6.0_ - 2020-04-06
 -------------------

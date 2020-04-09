@@ -30,7 +30,7 @@ def test_executes_no_task():
     law.enforce()
 
     assert len(law.rules) == 0
-    assert law.commit.called is False
+    assert law.commit.called is True
 
 
 def test_repr():
@@ -117,7 +117,7 @@ def test_rule_execution_failed_no_abort(mocked_config, mocked_logging):
 
     assert mocked_logging.error.called
     rule.get_rule_chain.assert_called_once_with(rule)
-    assert law.commit.called is False
+    assert law.commit.called is True
 
 
 @patch("hammurabi.law.logging")
@@ -141,7 +141,7 @@ def test_rule_execution_failed_precondition_no_abort(mocked_config, mocked_loggi
     law.enforce()
 
     assert mocked_logging.warning.called
-    assert law.commit.called is False
+    assert law.commit.called is True
 
 
 @patch("hammurabi.rules.base.config")
