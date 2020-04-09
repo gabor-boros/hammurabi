@@ -39,7 +39,11 @@ Changed
 * Unify log message styles
 * Adjust logging levels
 * Use dictionary parsed rules as a base for YAML and JSON rules
-* Reduced the complexity of ``DictValueExists`` and ``DictValueNotExists`` rules
+* Reduced the method complexity of ``DictValueExists`` and ``DictValueNotExists`` rules
+* Reduced the method complexity of ``Rule`` execution
+* Reduced the method complexity of ``Law`` execution
+* Reduced the method complexity of ``LineExists`` task execution
+* Reduced the method complexity of ``SectionExists`` task execution
 
 0.6.0_ - 2020-04-06
 -------------------

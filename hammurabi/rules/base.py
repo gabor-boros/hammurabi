@@ -128,6 +128,22 @@ class Rule(AbstractRule, ABC):
 
         return not config.settings.dry_run and proceed
 
+    def __preflight_check(self) -> None:
+        """
+        Run a preflight check. If the execution can not proceed, determined by
+        the can_proceed property, an exception will be raised. We are differentiating
+        the exceptions caused by dry run and precondition failure.
+
+        :raises: ``PreconditionFailedError`` if precondition failed otherwise an
+            ``AssertionError`` raised
+        """
+
+        if not self.can_proceed:
+            if config.settings.dry_run:
+                raise AssertionError(f'"{self.name}" cannot proceed because of dry run')
+
+            raise PreconditionFailedError(f'"{self.name}" cannot proceed')
+
     def get_rule_chain(self, rule: "Rule") -> List[Union["Rule", Precondition]]:
         """
         Get the execution chain of the given rule. The execution
@@ -210,11 +226,7 @@ class Rule(AbstractRule, ABC):
         # to be able to work with hooks.
         self.param = param or self.param
 
-        if not self.can_proceed:
-            if config.settings.dry_run:
-                raise AssertionError(f'"{self.name}" cannot proceed because of dry run')
-
-            raise PreconditionFailedError(f'"{self.name}" cannot proceed')
+        self.__preflight_check()
 
         logging.debug('Running pre task hook for "%s"', self.name)
         self.pre_task_hook()

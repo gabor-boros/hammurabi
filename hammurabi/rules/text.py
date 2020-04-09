@@ -134,6 +134,30 @@ class LineExists(SinglePathRule):
         with self.param.open("w") as file:
             file.writelines((f"{line}\n" for line in lines))
 
+    def __add_line(self, lines: List[str]) -> None:
+        """
+        Make sure that the expected line is added to the list
+        of lines.
+
+        :param lines: Lines read from the input file
+        :type lines: List[str]
+        """
+
+        target_match = self.__get_target_match(lines)
+
+        # Get the index of the element from the right
+        target_match_index = len(lines) - lines[::-1].index(target_match) - 1
+
+        insert_position = target_match_index + self.position
+
+        logging.debug('Inserting "%s" to position "%d"', self.text, insert_position)
+
+        indentation = self.indentation_pattern.match(lines[target_match_index])
+        if self.respect_indentation and indentation:
+            self.text = indentation.group() + self.text
+
+        lines.insert(insert_position, self.text)
+
     def task(self) -> Path:
         """
         Make sure that the given file contains the required line. This rule is
@@ -147,24 +171,10 @@ class LineExists(SinglePathRule):
         """
 
         lines, file_was_empty = self.__get_lines_from_file()
-
         no_criteria_match = not any(filter(self.criteria.match, lines))
 
         if not file_was_empty and no_criteria_match:
-            target_match = self.__get_target_match(lines)
-
-            # Get the index of the element from the right
-            target_match_index = len(lines) - lines[::-1].index(target_match) - 1
-
-            insert_position = target_match_index + self.position
-
-            logging.debug('Inserting "%s" to position "%d"', self.text, insert_position)
-
-            indentation = self.indentation_pattern.match(lines[target_match_index])
-            if self.respect_indentation and indentation:
-                self.text = indentation.group() + self.text
-
-            lines.insert(insert_position, self.text)
+            self.__add_line(lines)
 
         if file_was_empty or no_criteria_match:
             self.__write_content_to_file(lines)

@@ -198,15 +198,16 @@ class Law(GitMixin):
             * Remove setup.py
         """
 
+        if not self.passed_rules:
+            return
+
         order = self.get_execution_order()
         rules = [f"* {rule.name}" for rule in order if rule.made_changes]
         rules_commit_message = "\n".join(rules)
-
-        logging.info('Committing changes made by "%s"', self.name)
         self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
     @staticmethod
-    def __execute_rule(rule: Rule) -> None:
+    def __execute_rule_chain(rule: Rule) -> None:
         """
         Execute the given rule. In case of an exception, the execution of rules
         will continue except the failing one. The failed rule's pipe and children
@@ -231,10 +232,26 @@ class Law(GitMixin):
             chained_rules = filter(
                 lambda r: isinstance(r, Rule), rule.get_rule_chain(rule)
             )
+
             for chain in chained_rules:
                 logging.error('Due to errors "%s" is aborted', chain.name)
 
             raise AbortLawError(str(exc)) from exc
+
+    def __execute_rule(self, rule: Rule) -> None:
+        """
+        Execute a rule registered for the law. In case of an exception the
+        exception will be re-raised.
+        """
+
+        try:
+            self.__execute_rule_chain(rule)
+        except AbortLawError as exc:
+            logging.error(str(exc))
+            self._failed_rules += (rule,)
+
+            if config.settings.rule_can_abort:
+                raise exc
 
     def enforce(self) -> None:
         """
@@ -263,18 +280,7 @@ class Law(GitMixin):
         logging.info('Executing law "%s"', self.name)
 
         for rule in self.rules:
-            try:
-                self.__execute_rule(rule)
-            except AbortLawError as exc:
-                logging.error(str(exc))
-                self._failed_rules += (rule,)
+            self.__execute_rule(rule)
 
-                if config.settings.rule_can_abort:
-                    raise exc
-
-        # We are allowing laws with empty rules, expecting that there will be
-        # scenarios when the rules will be populated later. Hence we need to
-        # make sure we are not wasting time on trying to commit if the law did
-        # not get any rule at the end.
-        if self.passed_rules:
-            self.commit()
+        logging.info('Committing changes made by "%s"', self.name)
+        self.commit()
