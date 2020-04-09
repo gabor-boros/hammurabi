@@ -207,7 +207,7 @@ class Law(GitMixin):
         self.git_commit(f"{self.documentation}\n\n{rules_commit_message}")
 
     @staticmethod
-    def __execute_rule(rule: Rule) -> None:
+    def __execute_rule_chain(rule: Rule) -> None:
         """
         Execute the given rule. In case of an exception, the execution of rules
         will continue except the failing one. The failed rule's pipe and children
@@ -238,21 +238,20 @@ class Law(GitMixin):
 
             raise AbortLawError(str(exc)) from exc
 
-    def __execute_rules(self) -> None:
+    def __execute_rule(self, rule: Rule) -> None:
         """
         Execute all the rules registered for the law. In case of an exception
         the exception will be re-raised.
         """
 
-        for rule in self.rules:
-            try:
-                self.__execute_rule(rule)
-            except AbortLawError as exc:
-                logging.error(str(exc))
-                self._failed_rules += (rule,)
+        try:
+            self.__execute_rule_chain(rule)
+        except AbortLawError as exc:
+            logging.error(str(exc))
+            self._failed_rules += (rule,)
 
-                if config.settings.rule_can_abort:
-                    raise exc
+            if config.settings.rule_can_abort:
+                raise exc
 
     def enforce(self) -> None:
         """
@@ -279,7 +278,9 @@ class Law(GitMixin):
             return
 
         logging.info('Executing law "%s"', self.name)
-        self.__execute_rules()
+
+        for rule in self.rules:
+            self.__execute_rule(rule)
 
         logging.info('Committing changes made by "%s"', self.name)
         self.commit()
