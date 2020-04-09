@@ -59,7 +59,7 @@ def test_section_exists(mocked_updater_class):
     mocked_updater = MagicMock()
     mocked_updater.__getitem__.return_value = expected_target
     mocked_updater.sections.return_value = [expected_target]
-    mocked_updater.has_section.side_effect = [True, False]
+    mocked_updater.has_section.side_effect = [False, True]
 
     mocked_updater_class.return_value = mocked_updater
 
@@ -100,7 +100,7 @@ def test_section_exists_add_before(mocked_updater_class):
     mocked_updater = MagicMock()
     mocked_updater.__getitem__.return_value = expected_target
     mocked_updater.sections.return_value = [expected_target]
-    mocked_updater.has_section.side_effect = [True, False]
+    mocked_updater.has_section.side_effect = [False, True]
 
     mocked_updater_class.return_value = mocked_updater
 
@@ -266,11 +266,11 @@ def test_section_exists_already_exists(mocked_updater_class):
 
     result = rule.task()
 
-    mocked_updater.sections.assert_called_once_with()
-    mocked_updater.has_section.has_calls([
-        call(expected_target),
-        call(expected_section)
-    ])
+    mocked_updater.has_section.has_calls(
+        [call(expected_target), call(expected_section)]
+    )
+
+    assert mocked_updater.sections.called is False
     assert mocked_before.called is False
     assert mocked_after.called is False
     assert result == expected_path

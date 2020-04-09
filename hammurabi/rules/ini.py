@@ -139,13 +139,12 @@ class SectionExists(SingleConfigFileRule):
         logging.debug('Adding section "%s"', self.section)
 
         target = self.__get_target()
-        target_exists = target is not None
 
-        if target_exists and self.add_after:
+        if target is not None and self.add_after:
             target.add_after.space(self.space).section(self.section)
-        elif target_exists and not self.add_after:
+        elif target is not None and not self.add_after:
             target.add_before.section(self.section)
-        elif not target_exists:
+        else:
             self.updater.add_section(self.section)
 
     def __add_options(self) -> None:
