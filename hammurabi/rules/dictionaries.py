@@ -361,6 +361,45 @@ class DictValueExists(SinglePathDictParsedRule, ABC):
         self.value = value
         super().__init__(name, path, key, **kwargs)
 
+    def _update_simple_value(self, parent: Dict[str, Any]) -> None:
+        """
+        Update the parent key's value by a simple value.
+
+        :param parent: Parent key of the dict
+        :type parent: Dict[str, Any]
+        """
+
+        logging.debug('Setting "%s" to "%s"', self.key_name, self.value)
+        parent[self.key_name] = self.value
+
+    def _update_list_value(self, parent: Dict[str, Any]) -> None:
+        """
+        Update the parent key's value which is an array. Depending on the new
+        value's type, the exiting list will be extended or the new value will
+        be appended to the list.
+
+        :param parent: Parent key of the dict
+        :type parent: Dict[str, Any]
+        """
+
+        if isinstance(self.value, list):
+            logging.debug('Extending "%s" by "%s"', self.key_name, self.value)
+            parent[self.key_name].extend(self.value)
+        else:
+            logging.debug('Appending "%s" to "%s"', self.value, self.key_name)
+            parent[self.key_name].append(self.value)
+
+    def _update_dict_value(self, parent: Dict[str, Any]) -> None:
+        """
+        Update the parent key's value which is a dict.
+
+        :param parent: Parent key of the dict
+        :type parent: Dict[str, Any]
+        """
+
+        logging.debug('Updating "%s" by "%s"', self.key_name, self.value)
+        parent[self.key_name].update(self.value)
+
     def task(self) -> Path:
         """
         Ensure that the given key has the expected value(s). In case the key cannot
@@ -385,21 +424,19 @@ class DictValueExists(SinglePathDictParsedRule, ABC):
         """
 
         parent = self._get_parent()
+        value = parent.get(self.key_name)
+
+        is_list_value = isinstance(value, list)
+        is_dict_value = isinstance(value, dict)
 
         logging.debug('Adding value "%s" to key "%s"', self.value, self.key_name)
 
-        if self.value is None:
-            logging.debug('Setting "%s" to "%s"', self.key_name, self.value)
-            parent[self.key_name] = self.value
-        elif isinstance(parent.get(self.key_name), list):
-            if isinstance(self.value, list):
-                parent[self.key_name].extend(self.value)
-            else:
-                parent[self.key_name].append(self.value)
-        elif isinstance(parent.get(self.key_name), dict):
-            parent[self.key_name].update(self.value)
-        else:
-            parent[self.key_name] = self.value
+        if self.value is None or (not is_list_value and not is_dict_value):
+            self._update_simple_value(parent)
+        elif is_list_value:
+            self._update_list_value(parent)
+        elif is_dict_value:
+            self._update_dict_value(parent)
 
         self._write_dump(parent[self.key_name])
         return self.param
@@ -471,27 +508,25 @@ class DictValueNotExists(SinglePathDictParsedRule, ABC):
         """
 
         parent = self._get_parent()
-        write_needed = False
+
+        value = parent.get(self.key_name)
+        value_contains = value and self.value in value
 
         if self.key_name not in parent:
             return self.param
 
-        current_value = parent.get(self.key_name)
-
+        write_needed = False
         logging.debug('Removing "%s" from key "%s"', self.value, self.key_name)
 
-        if isinstance(current_value, list):
-            if self.value in current_value:
-                parent[self.key_name].remove(self.value)
-                write_needed = True
-        elif isinstance(current_value, dict):
-            if self.value in current_value:
-                del parent[self.key_name][self.value]
-                write_needed = True
-        else:
-            if current_value == self.value:
-                parent[self.key_name] = None
-                write_needed = True
+        if self.value == value:
+            parent[self.key_name] = None
+            write_needed = True
+        elif isinstance(value, list) and value_contains:
+            parent[self.key_name].remove(self.value)
+            write_needed = True
+        elif isinstance(value, dict) and value_contains:
+            del parent[self.key_name][self.value]
+            write_needed = True
 
         if write_needed:
             self._write_dump(parent[self.key_name])
