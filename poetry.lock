@@ -261,16 +261,16 @@ description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
 python-versions = ">=3.5.2"
-version = "5.7.0"
+version = "5.8.2"
 
 [package.dependencies]
 attrs = ">=19.2.0"
 sortedcontainers = ">=2.1.0,<3.0.0"
 
 [package.extras]
-all = ["django (>=1.11)", "dpcontracts (>=0.4)", "lark-parser (>=0.6.5)", "numpy (>=1.9.0)", "pandas (>=0.19)", "pytest (>=4.3)", "python-dateutil (>=1.4)", "pytz (>=2014.1)"]
+all = ["django (>=2.2)", "dpcontracts (>=0.4)", "lark-parser (>=0.6.5)", "numpy (>=1.9.0)", "pandas (>=0.19)", "pytest (>=4.3)", "python-dateutil (>=1.4)", "pytz (>=2014.1)"]
 dateutil = ["python-dateutil (>=1.4)"]
-django = ["pytz (>=2014.1)", "django (>=1.11)"]
+django = ["pytz (>=2014.1)", "django (>=2.2)"]
 dpcontracts = ["dpcontracts (>=0.4)"]
 lark = ["lark-parser (>=0.6.5)"]
 numpy = ["numpy (>=1.9.0)"]
@@ -867,7 +867,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "70761bac5a5955018f0905d2c045d8ef62c7c7da81e6535827a634b4365db651"
+content-hash = "612c152e4168875ef50ac9c762791724ae6e82cb90deb7083e651456202de4a7"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1034,8 +1034,8 @@ gitpython = [
     {file = "GitPython-3.1.0.tar.gz", hash = "sha256:e426c3b587bd58c482f0b7fe6145ff4ac7ae6c82673fc656f489719abca6f4cb"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.7.0-py3-none-any.whl", hash = "sha256:73bb07b1d6d0097a77e35b69763fe87097f7b5605becf7f4adbb14451aba2e95"},
-    {file = "hypothesis-5.7.0.tar.gz", hash = "sha256:827f85d92dd383ad3ce495bda4a49745e86c8a64d4be8acbeac1198edc18cd01"},
+    {file = "hypothesis-5.8.2-py3-none-any.whl", hash = "sha256:5649e0f411a44c63dd998971325ff3eac4f65712855eb6776a1364dcea684b17"},
+    {file = "hypothesis-5.8.2.tar.gz", hash = "sha256:443aeea08e34735bd1d87a40c4bb7c71204ba71bd95dd4c22c81a3938e898959"},
 ]
 idna = [
     {file = "idna-2.9-py2.py3-none-any.whl", hash = "sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"},
