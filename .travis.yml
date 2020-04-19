@@ -1,11 +1,12 @@
+---
 cache: pip
 os: linux
 dist: xenial
 language: python
 
 python:
-    - "3.7"
-    - "3.8"
+    - '3.7'
+    - '3.8'
 
 install:
     - pip install poetry
@@ -26,8 +27,8 @@ deploy:
     provider: script
     script: poetry publish --build
     on:
-      python: 3.8
-      tags: true
+        python: 3.8
+        tags: true
 
 notifications:
     email: false

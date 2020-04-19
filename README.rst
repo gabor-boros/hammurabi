@@ -300,11 +300,12 @@ Hammurabi.
 Installation
 ------------
 
-For development you will need poetry_. After poetry installed,
-simply run `poetry install`. This command will both create the
-virtualenv and install development dependencies for you.
+For development you will need poetry_ and pre-commit_. After poetry
+installed, simply run `poetry install`. This command will both create
+the virtualenv and install development dependencies for you.
 
 .. _poetry: https://python-poetry.org/docs/#installation
+.. _pre-commit: https://pre-commit.com/#install
 
 
 Useful make Commands
