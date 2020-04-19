@@ -23,26 +23,29 @@ class LineExists(SinglePathRule):
     text respecting the indentation of its context.
 
     The default behaviour is to insert the required text exactly after the
-    target line, and respect its indentation. Please note that ``text``,
-    ``criteria`` and ``target`` parameters are required.
+    target line, and respect its indentation. Please note that ``text``and
+    ``target`` parameters are required.
 
     Example usage:
 
     .. code-block:: python
 
             >>> from pathlib import Path
-            >>> from hammurabi import Law, Pillar, LineExists
+            >>> from hammurabi import Law, Pillar, LineExists, IsLineNotExists
             >>>
+            >>> gunicorn_config = Path("./gunicorn.conf.py")
             >>> example_law = Law(
             >>>     name="Name of the law",
             >>>     description="Well detailed description what this law does.",
             >>>     rules=(
             >>>         LineExists(
             >>>             name="Extend gunicorn config",
-            >>>             path=Path("./gunicorn.conf.py"),
+            >>>             path=gunicorn_config,
             >>>             text="keepalive = 65",
-            >>>             criteria=r"^keepalive.*",
             >>>             target=r"^bind.*",
+            >>>             preconditions=[
+            >>>                 IsLineNotExists(path=gunicorn_config, criteria=r"^keepalive.*")
+            >>>             ]
             >>>         ),
             >>>     )
             >>> )
@@ -62,14 +65,12 @@ class LineExists(SinglePathRule):
         name: str,
         path: Optional[Path] = None,
         text: Optional[str] = None,
-        criteria: Optional[str] = None,
         target: Optional[str] = None,
         position: int = 1,
         respect_indentation: bool = True,
         **kwargs,
     ) -> None:
         self.text = self.validate(text, required=True)
-        self.criteria = re.compile(self.validate(criteria, required=True))
         self.target = re.compile(self.validate(target, required=True))
         self.position = position
         self.respect_indentation = respect_indentation
@@ -171,13 +172,11 @@ class LineExists(SinglePathRule):
         """
 
         lines, file_was_empty = self.__get_lines_from_file()
-        no_criteria_match = not any(filter(self.criteria.match, lines))
 
-        if not file_was_empty and no_criteria_match:
+        if not file_was_empty:
             self.__add_line(lines)
 
-        if file_was_empty or no_criteria_match:
-            self.__write_content_to_file(lines)
+        self.__write_content_to_file(lines)
 
         return self.param
 
@@ -222,8 +221,7 @@ class LineNotExists(SinglePathRule):
 
     def task(self) -> Path:
         """
-        Make sure that the given file not contains the specified line based
-        on the given criteria.
+        Make sure that the given file not contains the specified line.
 
         :return: Returns the path of the modified file
         :rtype: Path

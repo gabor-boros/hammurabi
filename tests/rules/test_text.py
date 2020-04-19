@@ -6,23 +6,13 @@ from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
 
 
 def get_line_exists_rule(
-    text="Example text",
-    criteria="Example criteria",
-    target="Example target",
-    position=1,
-    lines=[],
-    **kwargs,
+    text="Example text", target="Example target", position=1, lines=[], **kwargs
 ):
     mock_file = Mock()
     mock_file.read.return_value.splitlines.return_value = lines
 
     rule = LineExists(
-        name="Line exists rule",
-        text=text,
-        criteria=criteria,
-        target=target,
-        position=position,
-        **kwargs,
+        name="Line exists rule", text=text, target=target, position=position, **kwargs
     )
 
     rule.param.open.return_value.__enter__ = Mock(return_value=mock_file)
@@ -95,12 +85,11 @@ def test_line_exists_with_indentation():
 @patch("hammurabi.rules.text.re")
 def test_line_exists_re_compiled(mocked_re):
     expected_path = Mock()
-    criteria = "criteria"
     target = "target"
 
-    get_line_exists_rule(path=expected_path, criteria=criteria, target=target)
+    get_line_exists_rule(path=expected_path, target=target)
 
-    mocked_re.compile.assert_has_calls([call(criteria), call(target), call(r"^\s+")])
+    mocked_re.compile.assert_has_calls([call(target), call(r"^\s+")])
 
 
 def test_line_exists_empty_file():
@@ -143,19 +132,6 @@ def test_line_exists_multiple_matches():
     write_args = list(mock_file.writelines.call_args[0][0])
     assert write_args == [f"{target}\n", "target_match\n", f"{rule.text}\n"]
     assert result == expected_path
-
-
-def test_line_exists_failed_criteria():
-    expected_path = Mock()
-    criteria = "criteria"
-
-    rule, mock_file = get_line_exists_rule(
-        path=expected_path, criteria=criteria, lines=[criteria, "other line"]
-    )
-
-    rule.task()
-
-    assert mock_file.writelines.called is False
 
 
 def test_line_not_exists():
