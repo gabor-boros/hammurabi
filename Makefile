@@ -67,7 +67,7 @@ format: ## run formatters on the package
 	isort --apply -rc hammurabi tests
 	black hammurabi tests
 
-lint: format ## run linters against the package
+lint: ## run linters against the package
 	mypy hammurabi
 	bandit -q -r hammurabi
 	pylint hammurabi
@@ -91,7 +91,7 @@ download-test-reporter:
 
 test-reporter-before:
 	./cc-test-reporter before-build
-  
+
 upload-coverage:
 	coverage xml
 	./cc-test-reporter after-build --exit-code $(TRAVIS_TEST_RESULT) -t "coverage.py"
