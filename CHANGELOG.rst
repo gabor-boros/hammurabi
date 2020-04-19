@@ -45,6 +45,11 @@ Changed
 * Reduced the method complexity of ``LineExists`` task execution
 * Reduced the method complexity of ``SectionExists`` task execution
 
+Removed
+~~~~~~~
+
+* Remove ``criteria`` fields since Hammurabi now supports preconditions and it breaks the API uniformity
+
 0.6.0_ - 2020-04-06
 -------------------
 
