@@ -29,17 +29,9 @@ repos:
 
     - repo: local
       hooks:
-          - id: make_format
-            name: Run code formatting
-          # This way we can generate the files at commit time
-            entry: bash -c "make format; git add -u" --
-            files: .*\.py$
-            language: python
-            pass_filenames: false
-
           - id: make_lint
             name: Run code linting
             entry: /bin/bash -c "make lint" --
             files: .*\.py$
-            language: python
+            language: script
             pass_filenames: false
