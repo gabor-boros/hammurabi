@@ -68,7 +68,7 @@ class LineExists(SinglePathRule):
         target: Optional[str] = None,
         position: int = 1,
         respect_indentation: bool = True,
-        trailing_newline: bool = False,
+        ensure_trailing_newline: bool = False,
         **kwargs,
     ) -> None:
         self.text = self.validate(text, required=True)
@@ -77,7 +77,7 @@ class LineExists(SinglePathRule):
         self.respect_indentation = respect_indentation
 
         self.indentation_pattern = re.compile(r"^\s+")
-        self.trailing_newline = trailing_newline
+        self.ensure_trailing_newline = ensure_trailing_newline
 
         super().__init__(name, path, **kwargs)
 
@@ -118,7 +118,7 @@ class LineExists(SinglePathRule):
             logging.debug('Reading from "%s"', str(self.param))
             lines: List[str] = file.read().splitlines()
 
-            if self.trailing_newline and lines[-1].strip() != "":
+            if self.ensure_trailing_newline and lines[-1].strip() != "":
                 lines.append("")
 
         if not lines:
