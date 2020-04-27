@@ -26,12 +26,3 @@ repos:
       rev: v1.0.6
       hooks:
           - id: shell-lint
-
-    - repo: local
-      hooks:
-          - id: make_lint
-            name: Run code linting
-            entry: /bin/bash -c "make lint" --
-            files: .*\.py$
-            language: script
-            pass_filenames: false

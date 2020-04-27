@@ -54,6 +54,28 @@ def test_line_exists():
     assert result == expected_path
 
 
+def test_line_exists_no_newline():
+    expected_path = Mock()
+    expected_text = "apple tree"
+
+    rule, mock_file = get_line_exists_rule(
+        path=expected_path,
+        target="$",
+        text=expected_text,
+        lines=["some", "lines"],
+        ensure_trailing_newline=True
+    )
+
+    result = rule.task()
+
+    # Although this test seems bit odd, we must ensure that
+    # developers can use `$` regexp for end of file even if the
+    # file has no newline char at the end of it.
+    write_args = list(mock_file.writelines.call_args[0][0])
+    assert write_args == ["some\n", "lines\n", "\n", f"{expected_text}\n"]
+    assert result == expected_path
+
+
 def test_line_exists_insert_before():
     expected_path = Mock()
     target = "target"
