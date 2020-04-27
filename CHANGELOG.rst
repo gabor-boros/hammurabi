@@ -44,6 +44,7 @@ Changed
 * Reduced the method complexity of ``Law`` execution
 * Reduced the method complexity of ``LineExists`` task execution
 * Reduced the method complexity of ``SectionExists`` task execution
+* Improve ``LineExists`` rule to make sure text can be added at the end of file even the file has no trailing newline
 
 Removed
 ~~~~~~~
