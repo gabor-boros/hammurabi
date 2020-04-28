@@ -218,7 +218,7 @@ def describe_law(ctx: click.Context, law: str):
         raise click.ClickException(click.style(f'No such law "{law}"', fg="red"))
 
     click.echo(f"{registered_law.documentation}")
-    click.echo(f"Rules:")
+    click.echo("Rules:")
     for rule in registered_law.get_execution_order():
         click.echo(f"  --> {rule.name}")
 
@@ -239,6 +239,6 @@ def describe_rule(ctx: click.Context, rule: str):
 
     click.echo(f"{registered_rule.documentation}")
 
-    click.echo(f"Chain:")
+    click.echo("Chain:")
     for chain in registered_rule.get_execution_order():
         click.echo(f"  --> {chain.name}")
