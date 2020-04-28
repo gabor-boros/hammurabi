@@ -20,9 +20,13 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.4.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.4.0
 .. _0.5.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.5.0
 .. _0.6.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.6.0
+.. _0.7.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.0
 
 Unreleased_
 -----------
+
+0.7.0_ - 2020-04-28
+-------------------
 
 Added
 ~~~~~
@@ -45,6 +49,13 @@ Changed
 * Reduced the method complexity of ``LineExists`` task execution
 * Reduced the method complexity of ``SectionExists`` task execution
 * Improve ``LineExists`` rule to make sure text can be added at the end of file even the file has no trailing newline
+* Bump click to 7.1.2
+* Bump pylint to 2.5.0
+* Bump pydantic to 1.5.1
+* Bump hypothesis to 5.10.4
+* Bump jinja2 to 2.11.2
+* Bump coverage to 5.1
+* Bump gitpython to 3.1.1
 
 Removed
 ~~~~~~~
