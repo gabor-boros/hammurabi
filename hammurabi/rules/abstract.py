@@ -70,7 +70,7 @@ class AbstractRule(ABC):
         """
 
         if required and not val:
-            raise ValueError(f"The given value is empty")
+            raise ValueError("The given value is empty")
 
         if not cast_to:
             return val
