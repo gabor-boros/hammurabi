@@ -25,6 +25,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Fix recursive directory removal issue
+
 0.7.0_ - 2020-04-28
 -------------------
 
