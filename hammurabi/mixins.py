@@ -57,6 +57,7 @@ class GitMixin:
             branch = config.settings.git_branch_name
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
+            config.repo.git.pull("origin", branch)
 
     def git_add(self, param: Path) -> None:
         """
@@ -264,15 +265,20 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
 
             logging.info("Checking for opened pull request")
 
-            opened_pull_requests: GitHubIterator[
+            pull_request_iterator: GitHubIterator[
                 ShortPullRequest
             ] = github_repo.pull_requests(
                 state="open",
                 head=config.settings.git_branch_name,
                 base=config.settings.git_base_name,
+                number=1,  # Maximum number of PRs
             )
 
-            if opened_pull_requests.count == -1:
+            opened_pull_request: Optional[ShortPullRequest] = next(
+                pull_request_iterator, None
+            )
+
+            if not opened_pull_request:
                 description = self.generate_pull_request_body(config.settings.pillar)
 
                 logging.info("Opening pull request")
@@ -287,9 +293,9 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
 
             # Return the last known PR url, it should be one
             # anyways, so it is not an issue
-            last_pull_request_url = opened_pull_requests.last_url
-            logging.info("Found open pull request %s", last_pull_request_url)
-            return last_pull_request_url
+            pull_request_url = opened_pull_request.url
+            logging.info("Found open pull request %s", pull_request_url)
+            return pull_request_url
 
         # Although this return could be skipped, it is more
         # explicit to have it here

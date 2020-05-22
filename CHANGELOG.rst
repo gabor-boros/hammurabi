@@ -29,6 +29,7 @@ Fixed
 ~~~~~
 
 * Fix recursive directory removal issue
+* Fix updating existing pull request issue
 
 0.7.0_ - 2020-04-28
 -------------------
