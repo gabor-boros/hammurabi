@@ -27,6 +27,10 @@ def test_checkout_branch(mocked_config):
         "HEAD", B=expected_branch_name
     )
 
+    mocked_config.repo.git.pull.assert_called_once_with(
+        "origin", expected_branch_name
+    )
+
 
 @patch("hammurabi.mixins.config")
 def test_checkout_branch_dry_run(mocked_config):
@@ -36,6 +40,7 @@ def test_checkout_branch_dry_run(mocked_config):
     git_mixin.checkout_branch()
 
     assert mocked_config.repo.git.checkout.called is False
+    assert mocked_config.repo.git.pull.called is False
 
 
 @patch("hammurabi.mixins.config")
@@ -95,7 +100,7 @@ def test_git_remove(mocked_config):
     git_mixin.git_remove(expected_path)
 
     mocked_config.repo.index.remove.assert_called_once_with(
-        (str(expected_path),), ignore_unmatch=True
+        (str(expected_path),), ignore_unmatch=True, r=True
     )
 
 
@@ -501,7 +506,7 @@ def test_github_pull_request(mocked_config):
     expected_pull_request_body = "test pull body"
     expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
-    mocked_repository.pull_requests.return_value = Mock(count=-1)
+    mocked_repository.pull_requests.return_value = iter([])
     mocked_repository.create_pull.return_value = Mock(url=expected_url)
 
     github = get_github_mixin_consumer()
@@ -523,7 +528,7 @@ def test_github_pull_request(mocked_config):
     )
 
     mocked_repository.pull_requests.assert_called_once_with(
-        state="open", head=expected_branch_name, base="master"
+        state="open", head=expected_branch_name, base="master", number=1
     )
 
     mocked_repository.create_pull.assert_called_once_with(
@@ -597,7 +602,7 @@ def test_github_pull_request_has_opened_pr(mocked_config):
     expected_repo_name = "hammurabi"
     expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
-    mocked_repository.pull_requests.return_value = Mock(count=1, last_url=expected_url)
+    mocked_repository.pull_requests.return_value = iter([Mock(url=expected_url)])
 
     mocked_config.settings.dry_run = False
     mocked_config.settings.git_base_name = expected_base_name
@@ -613,7 +618,7 @@ def test_github_pull_request_has_opened_pr(mocked_config):
     )
 
     mocked_repository.pull_requests.assert_called_once_with(
-        state="open", head=expected_branch_name, base=expected_base_name
+        state="open", head=expected_branch_name, base=expected_base_name, number=1
     )
 
     assert mocked_repository.create_pull.called is False
