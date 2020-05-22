@@ -63,7 +63,7 @@ def test_line_exists_no_newline():
         target="$",
         text=expected_text,
         lines=["some", "lines"],
-        ensure_trailing_newline=True
+        ensure_trailing_newline=True,
     )
 
     result = rule.task()
