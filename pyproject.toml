@@ -56,11 +56,11 @@ jinja2 = "^2.11.1"
 bandit = "^1.6"
 black = {version = "^18.3-alpha.0", allow-prereleases = true}
 flake8 = "^3.7"
-hypothesis = "^5.10.4"
+hypothesis = "^5.11.0"
 mypy = "^0.761"
 pygments = "^2.4"
 pylint = "^2.5"
-pytest = "^5.4.1"
+pytest = "^5.4.2"
 sphinx_rtd_theme = "^0.4.3"
 coverage = "^5.1"
 
