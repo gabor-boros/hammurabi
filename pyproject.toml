@@ -55,7 +55,7 @@ jinja2 = "^2.11.1"
 [tool.poetry.dev-dependencies]
 bandit = "^1.6"
 black = {version = "^18.3-alpha.0", allow-prereleases = true}
-flake8 = "^3.7"
+flake8 = "^3.8"
 hypothesis = "^5.15.1"
 mypy = "^0.761"
 pygments = "^2.4"
