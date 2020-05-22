@@ -34,6 +34,7 @@ Fixed
 
 * Fix recursive directory removal issue
 * Fix updating existing pull request issue
+* Fix wrong default value in config documentation
 
 Changed
 ~~~~~~~
