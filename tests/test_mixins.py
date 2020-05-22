@@ -100,7 +100,7 @@ def test_git_remove(mocked_config):
     git_mixin.git_remove(expected_path)
 
     mocked_config.repo.index.remove.assert_called_once_with(
-        (str(expected_path),), ignore_unmatch=True
+        (str(expected_path),), ignore_unmatch=True, r=True
     )
 
 

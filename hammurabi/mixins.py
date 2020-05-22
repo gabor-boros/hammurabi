@@ -95,7 +95,7 @@ class GitMixin:
         if self.__can_proceed():
             logging.debug('Git remove "%s"', str(param))
             config.repo.index.remove(
-                (str(param),), ignore_unmatch=True
+                (str(param),), ignore_unmatch=True, r=True
             )  # pylint: disable=no-member
             self.made_changes = True
 
