@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.6.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.7.1...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -21,15 +21,27 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.5.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.5.0
 .. _0.6.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.6.0
 .. _0.7.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.0
+.. _0.7.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.1
 
 Unreleased_
 -----------
+
+0.7.1_ - 2020-05-22
+-------------------
 
 Fixed
 ~~~~~
 
 * Fix recursive directory removal issue
 * Fix updating existing pull request issue
+
+Changed
+~~~~~~~
+
+* Bump hypothesis to 5.15.1
+* Bump toml to 0.10.1
+* Bump flake8 to 3.8.1
+* Bump pylint to 2.5.2
 
 0.7.0_ - 2020-04-28
 -------------------
