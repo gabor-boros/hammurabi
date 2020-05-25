@@ -29,6 +29,9 @@ Unreleased_
 0.7.2_ - 2020-05-25
 -------------------
 
+Fixed
+~~~~~
+
 * Fix updating existing pull request issue pt. 2
 
 0.7.1_ - 2020-05-22
