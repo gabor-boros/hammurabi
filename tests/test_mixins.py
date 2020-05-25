@@ -21,6 +21,11 @@ def test_checkout_branch(mocked_config):
     mocked_config.settings.dry_run = False
     mocked_config.settings.git_branch_name = expected_branch_name
 
+    mock_head = Mock()
+    mock_head.name = expected_branch_name
+
+    mocked_config.repo.heads = [mock_head]
+
     git_mixin.checkout_branch()
 
     mocked_config.repo.git.checkout.assert_called_once_with(
