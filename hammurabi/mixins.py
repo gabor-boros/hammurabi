@@ -59,7 +59,8 @@ class GitMixin:
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
 
             # Only pull changes from origin when exists
-            if branch in [head.name for head in config.repo.heads]:
+            remote = config.repo.remote()
+            if f"{remote.name}/{branch}" in [ref.name for ref in remote.refs]:
                 config.repo.git.pull("origin", branch)
 
     def git_add(self, param: Path) -> None:
