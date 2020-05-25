@@ -57,7 +57,10 @@ class GitMixin:
             branch = config.settings.git_branch_name
             logging.info('Checkout branch "%s"', branch)
             config.repo.git.checkout("HEAD", B=branch)  # pylint: disable=no-member
-            config.repo.git.pull("origin", branch)
+
+            # Only pull changes from origin when exists
+            if branch in [head.name for head in config.repo.heads]:
+                config.repo.git.pull("origin", branch)
 
     def git_add(self, param: Path) -> None:
         """
