@@ -31,10 +31,16 @@ Unreleased_
 0.7.3_ - 2020-05-25
 -------------------
 
+Fixed
+~~~~~
+
 * Fix updating existing pull request issue pt. 3
 
 0.7.2_ - 2020-05-25
 -------------------
+
+Fixed
+~~~~~
 
 * Fix updating existing pull request issue pt. 2
 
