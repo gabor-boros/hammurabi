@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.7.2...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.7.3...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -22,9 +22,16 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.6.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.6.0
 .. _0.7.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.0
 .. _0.7.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.1
+.. _0.7.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.2
+.. _0.7.3: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.3
 
 Unreleased_
 -----------
+
+0.7.3_ - 2020-05-25
+-------------------
+
+* Fix updating existing pull request issue pt. 3
 
 0.7.2_ - 2020-05-25
 -------------------

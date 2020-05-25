@@ -21,16 +21,23 @@ def test_checkout_branch(mocked_config):
     mocked_config.settings.dry_run = False
     mocked_config.settings.git_branch_name = expected_branch_name
 
-    mock_head = Mock()
-    mock_head.name = expected_branch_name
+    mock_remote = Mock()
+    mock_remote.name = "origin"
 
-    mocked_config.repo.heads = [mock_head]
+    mock_ref = Mock()
+    mock_ref.name = f"{mock_remote.name}/{expected_branch_name}"
+
+    mock_remote.refs = [mock_ref]
+
+    mocked_config.repo.remote.return_value = mock_remote
 
     git_mixin.checkout_branch()
 
     mocked_config.repo.git.checkout.assert_called_once_with(
         "HEAD", B=expected_branch_name
     )
+
+    mocked_config.repo.remote.assert_called_once_with()
 
     mocked_config.repo.git.pull.assert_called_once_with(
         "origin", expected_branch_name
