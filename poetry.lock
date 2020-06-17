@@ -1,4 +1,15 @@
 [[package]]
+category = "main"
+description = "An auto-attribute dict (and a couple of other useful dict functions)"
+name = "aadict"
+optional = false
+python-versions = "*"
+version = "0.2.3"
+
+[package.dependencies]
+six = ">=1.6.0"
+
+[[package]]
 category = "dev"
 description = "A configurable sidebar-enabled Sphinx theme"
 name = "alabaster"
@@ -13,6 +24,19 @@ name = "appdirs"
 optional = false
 python-versions = "*"
 version = "1.4.3"
+
+[[package]]
+category = "main"
+description = "A package resource and symbol loading helper library."
+name = "asset"
+optional = false
+python-versions = "*"
+version = "0.6.13"
+
+[package.dependencies]
+aadict = ">=0.2.2"
+globre = ">=0.1.5"
+six = ">=1.10.0"
 
 [[package]]
 category = "dev"
@@ -249,6 +273,14 @@ version = "3.1.3"
 
 [package.dependencies]
 gitdb = ">=4.0.1,<5"
+
+[[package]]
+category = "main"
+description = "A glob matching library, providing an interface similar to the \"re\" module."
+name = "globre"
+optional = false
+python-versions = "*"
+version = "0.1.5"
 
 [[package]]
 category = "dev"
@@ -495,13 +527,14 @@ description = "HOCON parser for Python"
 name = "pyhocon"
 optional = false
 python-versions = "*"
-version = "0.3.54"
+version = "0.3.55"
 
 [package.dependencies]
+asset = "*"
 pyparsing = ">=2.0.3"
 
 [package.extras]
-duration = ["python-dateutil (>=2.8.0)"]
+Duration = ["python-dateutil (>=2.8.0)"]
 
 [[package]]
 category = "dev"
@@ -867,6 +900,9 @@ content-hash = "a665be5baf41001e4035a1c8e465034d2e06e0042a71d1d07df90a581011d1d8
 python-versions = "^3.7"
 
 [metadata.files]
+aadict = [
+    {file = "aadict-0.2.3.tar.gz", hash = "sha256:a77328ac55dbb5735da99441870251befe135f687ab707a7a178561363b27704"},
+]
 alabaster = [
     {file = "alabaster-0.7.12-py2.py3-none-any.whl", hash = "sha256:446438bdcca0e05bd45ea2de1668c1d9b032e1a9154c2c259092d77031ddd359"},
     {file = "alabaster-0.7.12.tar.gz", hash = "sha256:a661d72d58e6ea8a57f7a86e37d86716863ee5e92788398526d58b26a4e4dc02"},
@@ -874,6 +910,9 @@ alabaster = [
 appdirs = [
     {file = "appdirs-1.4.3-py2.py3-none-any.whl", hash = "sha256:d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"},
     {file = "appdirs-1.4.3.tar.gz", hash = "sha256:9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92"},
+]
+asset = [
+    {file = "asset-0.6.13.tar.gz", hash = "sha256:ec56cbf77931cb74d063848531db782f6f0fe1272d1f47f322c15efd0fa732ea"},
 ]
 astroid = [
     {file = "astroid-2.4.0-py3-none-any.whl", hash = "sha256:2fecea42b20abb1922ed65c7b5be27edfba97211b04b2b6abc6a43549a024ea6"},
@@ -1024,6 +1063,9 @@ gitdb = [
 gitpython = [
     {file = "GitPython-3.1.3-py3-none-any.whl", hash = "sha256:ef1d60b01b5ce0040ad3ec20bc64f783362d41fa0822a2742d3586e1f49bb8ac"},
     {file = "GitPython-3.1.3.tar.gz", hash = "sha256:e107af4d873daed64648b4f4beb89f89f0cfbe3ef558fc7821ed2331c2f8da1a"},
+]
+globre = [
+    {file = "globre-0.1.5.tar.gz", hash = "sha256:ee214204f237e9114b8f61eeb61c2abd1e665ca3b59e5a6a0b070971c0bb12e2"},
 ]
 hypothesis = [
     {file = "hypothesis-5.15.1-py3-none-any.whl", hash = "sha256:d44142b80572bb3392dd018a6b2e59f54b2ba77da50e2dd0cbddd815b7a84005"},
@@ -1191,8 +1233,7 @@ pygments = [
     {file = "Pygments-2.6.1.tar.gz", hash = "sha256:647344a061c249a3b74e230c739f434d7ea4d8b1d5f3721bc0f3558049b38f44"},
 ]
 pyhocon = [
-    {file = "pyhocon-0.3.54-py3-none-any.whl", hash = "sha256:aecd64e2628327f04079a91c39dc34a00a758286ca7eec24a13d1845d840f96b"},
-    {file = "pyhocon-0.3.54.tar.gz", hash = "sha256:fb2b0f7a75e5781451fe673129c9b17f4f74ddd7bbc9cb79edc2e69bbdea9e97"},
+    {file = "pyhocon-0.3.55.tar.gz", hash = "sha256:d1ce0e0e70eb194f469ec30a61b80e3fe3bbd9e291b371a2168bdb984d8cfba9"},
 ]
 pylint = [
     {file = "pylint-2.5.2-py3-none-any.whl", hash = "sha256:dd506acce0427e9e08fb87274bcaa953d38b50a58207170dbf5b36cf3e16957b"},
