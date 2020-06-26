@@ -288,7 +288,7 @@ description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
 python-versions = ">=3.5.2"
-version = "5.15.1"
+version = "5.18.2"
 
 [package.dependencies]
 attrs = ">=19.2.0"
@@ -896,7 +896,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "12fe38760cd8f093294ba4292c034511e4a185a5502bd67359fb04d7b0efd531"
+content-hash = "110704f3e3a639beb7e228adf3a57b497486632c7e10e1ecc4e0257fadae2a1c"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1068,8 +1068,8 @@ globre = [
     {file = "globre-0.1.5.tar.gz", hash = "sha256:ee214204f237e9114b8f61eeb61c2abd1e665ca3b59e5a6a0b070971c0bb12e2"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.15.1-py3-none-any.whl", hash = "sha256:d44142b80572bb3392dd018a6b2e59f54b2ba77da50e2dd0cbddd815b7a84005"},
-    {file = "hypothesis-5.15.1.tar.gz", hash = "sha256:f523846f1e323e5d74694a437ef9f681ac1643e45404dc5c5bb7d1ee947c4a99"},
+    {file = "hypothesis-5.18.2-py3-none-any.whl", hash = "sha256:693cf6ea8985fb0bb520851930c995f11939d90eb2d07cee1dbc0868a0275162"},
+    {file = "hypothesis-5.18.2.tar.gz", hash = "sha256:2537cd4f6b300cca14fd109d4874d2fec83eb37a555a5dc85baf9636ab095a81"},
 ]
 idna = [
     {file = "idna-2.9-py2.py3-none-any.whl", hash = "sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"},
