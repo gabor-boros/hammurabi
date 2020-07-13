@@ -2,6 +2,8 @@
 
 from hammurabi.config import config
 from hammurabi.law import Law
+from hammurabi.notifications.base import Notification
+from hammurabi.notifications.slack import SlackNotification
 from hammurabi.pillar import Pillar
 from hammurabi.preconditions.attributes import (
     HasMode,

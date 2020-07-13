@@ -99,9 +99,11 @@ def test_enforce(mocked_reporter, mocked_datetime):
     mock_reporter.laws = list()
     mocked_reporter.return_value = mock_reporter
 
+    mock_notification = Mock()
+
     expected_law = Mock()
     expected_pr_url = "expected_pr_url"
-    pillar = Pillar(mocked_reporter)
+    pillar = Pillar(mocked_reporter, notifications=[mock_notification])
     pillar.register(expected_law)
     pillar.checkout_branch = Mock()
     pillar.push_changes = Mock()
@@ -114,6 +116,7 @@ def test_enforce(mocked_reporter, mocked_datetime):
     pillar.checkout_branch.assert_called_once_with()
     pillar.push_changes.assert_called_once_with()
     pillar.create_pull_request.assert_called_once_with()
+    mock_notification.send.assert_called_once_with(expected_pr_url)
     assert mock_reporter.laws == pillar.laws
     assert mock_reporter.additional_data.started == mock_started.isoformat()
     assert mock_reporter.additional_data.finished == mock_finished.isoformat()

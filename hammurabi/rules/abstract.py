@@ -35,7 +35,6 @@ class AbstractRule(ABC):
     @staticmethod
     def validate(val: Any, cast_to: Optional[Any] = None, required=False) -> Any:
         """
-
         Validate and/or cast the given value to another type. In case the
         existence of the value is required or casting failed an exception
         will be raised corresponding to the failure.

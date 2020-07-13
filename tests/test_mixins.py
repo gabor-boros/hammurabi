@@ -39,9 +39,7 @@ def test_checkout_branch(mocked_config):
 
     mocked_config.repo.remote.assert_called_once_with()
 
-    mocked_config.repo.git.pull.assert_called_once_with(
-        "origin", expected_branch_name
-    )
+    mocked_config.repo.git.pull.assert_called_once_with("origin", expected_branch_name)
 
 
 @patch("hammurabi.mixins.config")

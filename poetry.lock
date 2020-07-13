@@ -666,6 +666,14 @@ version = "1.14.0"
 
 [[package]]
 category = "main"
+description = "slack-webhook is a python client library for slack api         Incoming Webhooks on Python 3.6 and above."
+name = "slack-webhook"
+optional = false
+python-versions = ">=3.6.0"
+version = "1.0.3"
+
+[[package]]
+category = "main"
 description = "A pure Python implementation of a sliding window memory map manager"
 name = "smmap"
 optional = false
@@ -899,7 +907,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "1202f2294b2b553a5c5d80ed8bf6b7f2516f7fbb3b681dfa617c618e09f743c8"
+content-hash = "981f708a8e63b67ad69a3ecd2f5b2a909307727f4b39e1c6b341cdc9c821b99e"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1275,7 +1283,6 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 requests = [
-    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
@@ -1307,6 +1314,10 @@ requests = [
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
     {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
+]
+slack-webhook = [
+    {file = "slack-webhook-1.0.3.tar.gz", hash = "sha256:babf36c4921e848ba70a77eeb57ae9e781a8d9bca10d2688515092006477f25a"},
+    {file = "slack_webhook-1.0.3-py3-none-any.whl", hash = "sha256:5efd898c1d4befbd45ee00c7cf29e2b1676278e8d6ae9212ece993b9d35f4caa"},
 ]
 smmap = [
     {file = "smmap-3.0.1-py2.py3-none-any.whl", hash = "sha256:5fead614cf2de17ee0707a8c6a5f2aa5a2fc6c698c70993ba42f515485ffda78"},
