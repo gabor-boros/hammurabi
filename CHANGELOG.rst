@@ -28,7 +28,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
-* Add `git push` notification hooks
+* Add ``git push`` notification hooks
 * Add Slack notification
 
 0.7.3_ - 2020-05-25

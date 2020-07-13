@@ -18,7 +18,7 @@ from hammurabi.helpers import full_strip
 
 class Notification(ABC):
     """
-    A `git push` notification which serves as a base for different kind
+    A ``git push`` notification which serves as a base for different kind
     of notifications like Slack or E-mail notification.
     """
 
