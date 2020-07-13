@@ -13,6 +13,38 @@ from hammurabi.notifications.base import Notification
 class SlackNotification(Notification):
     """
     Send slack notification through Slack webhooks.
+
+    Example usage:
+
+    .. code-block:: python
+
+        >>> from pathlib import Path
+        >>> from hammurabi import Law, Pillar, Renamed, IsDirectoryExists, SlackNotification
+        >>>
+        >>> example_law = Law(
+        >>>     name="Name of the law",
+        >>>     description="Well detailed description what this law does.",
+        >>>     rules=(
+        >>>         Renamed(
+        >>>             name="Rename the dir if an other one exists",
+        >>>             path=Path("old-name"),
+        >>>             new_name="new-name",
+        >>>             preconditions=[
+        >>>                 IsDirectoryExists(path=Path("other-dir"))
+        >>>             ]
+        >>>         ),
+        >>>     )
+        >>> )
+        >>>
+        >>> pillar = Pillar(notifications=[
+        >>>     SlackNotification(
+        >>>         recipients=["CHANNEL_ID"],
+        >>>         message_template="Dear team, the {repository} has new update.",
+        >>>         hook_url="https://slack.webhook.url",
+        >>>         owner="MY_BOT",
+        >>>     )
+        >>> ])
+        >>> pillar.register(example_law)
     """
 
     def __init__(
