@@ -1,6 +1,7 @@
-import pytest
 from typing import Optional
 from unittest.mock import Mock, patch
+
+import pytest
 
 from hammurabi.exceptions import NotificationSendError
 from hammurabi.helpers import full_strip
@@ -19,20 +20,21 @@ def test_notification_send(mock_config):
 
     channel = "APPLE"
     link = "https://github.com/gabor-boros/hammurabi"
-    message_template = full_strip("""
+    message_template = full_strip(
+        """
     Hello team,
     
     You got a new Hammurabi update for {repository}.
     You can check the changes by clicking *<{changes_link}|here>*.
-    """)
+    """
+    )
 
     notification = TestNotification([channel], message_template)
     notification.notify = Mock()
     notification.send(link)
 
     notification.notify.assert_called_once_with(
-        message_template.format(repository=expected_repo, changes_link=link),
-        link
+        message_template.format(repository=expected_repo, changes_link=link), link
     )
 
 
@@ -45,12 +47,14 @@ def test_notification_unexpected_error(mock_config):
 
     channel = "APPLE"
     link = "https://github.com/gabor-boros/hammurabi"
-    message_template = full_strip("""
+    message_template = full_strip(
+        """
     Hello team,
 
     You got a new Hammurabi update for {repository}.
     You can check the changes by clicking *<{changes_link}|here>*.
-    """)
+    """
+    )
 
     notification = TestNotification([channel], message_template)
     notification.notify = Mock()
@@ -60,8 +64,7 @@ def test_notification_unexpected_error(mock_config):
         notification.send(link)
 
     notification.notify.assert_called_once_with(
-        message_template.format(repository=expected_repo, changes_link=link),
-        link
+        message_template.format(repository=expected_repo, changes_link=link), link
     )
 
 
@@ -74,12 +77,14 @@ def test_notification_expected_error(mock_config):
 
     channel = "APPLE"
     link = "https://github.com/gabor-boros/hammurabi"
-    message_template = full_strip("""
+    message_template = full_strip(
+        """
     Hello team,
 
     You got a new Hammurabi update for {repository}.
     You can check the changes by clicking *<{changes_link}|here>*.
-    """)
+    """
+    )
 
     notification = TestNotification([channel], message_template)
     notification.notify = Mock()
@@ -88,6 +93,5 @@ def test_notification_expected_error(mock_config):
     notification.send(link)
 
     notification.notify.assert_called_once_with(
-        message_template.format(repository=expected_repo, changes_link=link),
-        link
+        message_template.format(repository=expected_repo, changes_link=link), link
     )
