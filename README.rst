@@ -51,6 +51,7 @@ Hammurabi supports several operations (Rules) by default. These Rules can do
 * piped rule execution (output of a rule is the input of the next rule)
 * children rule execution (output of a rule is the input of the upcoming rules)
 * creating files from Jinja2 templates
+* send notification on git push
 
 Supported file formats:
 

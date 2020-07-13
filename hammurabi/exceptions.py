@@ -1,3 +1,10 @@
+class NotificationSendError(Exception):
+    """
+    Custom exception to make sure that own exception types are
+    caught when sending notifications.
+    """
+
+
 class AbortLawError(Exception):
     """
     Custom exception to make sure that own exception types are

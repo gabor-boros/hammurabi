@@ -7,10 +7,11 @@ order of the registration.
 
 
 from datetime import datetime
-from typing import List, Type
+from typing import Iterable, List, Type
 
 from hammurabi.law import Law
 from hammurabi.mixins import GitHubMixin
+from hammurabi.notifications.base import Notification
 from hammurabi.reporters.base import Reporter
 from hammurabi.reporters.json import JSONReporter
 from hammurabi.rules.base import Rule
@@ -33,9 +34,14 @@ class Pillar(GitHubMixin):
     :type reporter_class: Type[Reporter]
     """
 
-    def __init__(self, reporter_class: Type[Reporter] = JSONReporter) -> None:
+    def __init__(
+        self,
+        reporter_class: Type[Reporter] = JSONReporter,
+        notifications: Iterable[Notification] = (),
+    ) -> None:
         self.__laws: List[Law] = list()
 
+        self.notifications: Iterable[Notification] = notifications
         self.reporter: Reporter = reporter_class(list())
 
     @property
@@ -125,7 +131,7 @@ class Pillar(GitHubMixin):
         """
 
         self.__laws.append(law)
-        self.reporter.laws = self.__laws
+        self.reporter.laws = self.laws
 
     def enforce(self):
         """
@@ -146,6 +152,9 @@ class Pillar(GitHubMixin):
 
         self.push_changes()
         pull_request_url = self.create_pull_request()
+
+        for notification in self.notifications:
+            notification.send(pull_request_url)
 
         self.reporter.additional_data.finished = datetime.now().isoformat()
         self.reporter.additional_data.pull_request_url = pull_request_url
