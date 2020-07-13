@@ -269,7 +269,7 @@ description = "Python Git Library"
 name = "gitpython"
 optional = false
 python-versions = ">=3.4"
-version = "3.1.3"
+version = "3.1.7"
 
 [package.dependencies]
 gitdb = ">=4.0.1,<5"
@@ -288,7 +288,7 @@ description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
 python-versions = ">=3.5.2"
-version = "5.19.0"
+version = "5.19.2"
 
 [package.dependencies]
 attrs = ">=19.2.0"
@@ -907,7 +907,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "981f708a8e63b67ad69a3ecd2f5b2a909307727f4b39e1c6b341cdc9c821b99e"
+content-hash = "07d371f86920e304d064407f7e574892af9e0c13e56a5843d5d008c3535c9f59"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1075,15 +1075,15 @@ gitdb = [
     {file = "github3.py-1.3.0.tar.gz", hash = "sha256:15a115c18f7bfcf934dfef7ab103844eb9f620c586bad65967708926da47cbda"},
 ]
 gitpython = [
-    {file = "GitPython-3.1.3-py3-none-any.whl", hash = "sha256:ef1d60b01b5ce0040ad3ec20bc64f783362d41fa0822a2742d3586e1f49bb8ac"},
-    {file = "GitPython-3.1.3.tar.gz", hash = "sha256:e107af4d873daed64648b4f4beb89f89f0cfbe3ef558fc7821ed2331c2f8da1a"},
+    {file = "GitPython-3.1.7-py3-none-any.whl", hash = "sha256:fa3b92da728a457dd75d62bb5f3eb2816d99a7fe6c67398e260637a40e3fafb5"},
+    {file = "GitPython-3.1.7.tar.gz", hash = "sha256:2db287d71a284e22e5c2846042d0602465c7434d910406990d5b74df4afb0858"},
 ]
 globre = [
     {file = "globre-0.1.5.tar.gz", hash = "sha256:ee214204f237e9114b8f61eeb61c2abd1e665ca3b59e5a6a0b070971c0bb12e2"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.19.0-py3-none-any.whl", hash = "sha256:dd21b1be951fefc9022047824c262f4e88d95dd24141b837b92e235c63baabb7"},
-    {file = "hypothesis-5.19.0.tar.gz", hash = "sha256:ba7c92006716aaee4684f7876c116adedcfb88b19fcb55d21c47b28f03f933bf"},
+    {file = "hypothesis-5.19.2-py3-none-any.whl", hash = "sha256:1c49d244580e84f187da8fcdeea85c62e30a10ffc7434fa952b736c15082edbc"},
+    {file = "hypothesis-5.19.2.tar.gz", hash = "sha256:f09da0ee85759662d797cd2a6cb760fa5e4bfc3de141bd08ad08a68982a839bd"},
 ]
 idna = [
     {file = "idna-2.9-py2.py3-none-any.whl", hash = "sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa"},
@@ -1283,6 +1283,7 @@ pyyaml = [
     {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
 ]
 requests = [
+    {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
 ]
