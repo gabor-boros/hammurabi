@@ -13,6 +13,7 @@ Documentation of Hammurabi
    rules
    preconditions
    reporters
+   notifications
    modules
    contributing
    vulnerabilities
