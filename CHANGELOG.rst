@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.7.3...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.7.4...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -24,12 +24,33 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.7.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.1
 .. _0.7.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.2
 .. _0.7.3: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.3
+.. _0.7.4: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.4
 
 Unreleased_
 -----------
 
+0.7.4_ - 2020-07-14
+-------------------
+
+Added
+~~~~~
+
 * Add ``git push`` notification hooks
 * Add Slack notification
+
+Changed
+~~~~~~~
+
+* Bump pydantic to 1.6
+* Bump gitpython to 3.1.7
+* Bump hypothesis to 5.19.2
+* Bump coverage to 5.2
+* Bump sphinx-rtd-theme to 0.5.0
+* Bump mypy to 0.782
+* Bump flake8 to 3.8.3
+* Bump pylint to 2.5.3
+* Bump ujson to 3.0.0
+* Bump pyhocon to 0.3.55
 
 0.7.3_ - 2020-05-25
 -------------------
