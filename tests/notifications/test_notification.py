@@ -23,7 +23,7 @@ def test_notification_send(mock_config):
     message_template = full_strip(
         """
     Hello team,
-    
+
     You got a new Hammurabi update for {repository}.
     You can check the changes by clicking *<{changes_link}|here>*.
     """

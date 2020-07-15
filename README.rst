@@ -77,6 +77,36 @@ you through the process.
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
+Installing extras
+-----------------
+
+Hammurabi tries to be as tiny as its possible, hence some rules are requiring extra
+dependencies to be installed. Please check the documentation of the Rules to know
+which dependency is required to use the specific rule.
+
+To install hammurabi with an extra package run ``pip install hammurabi[<EXTRA>]``,
+where ``<EXTRA>`` is the name of the extra option. To install multiple extra packages
+list the extra names separated by comma as described in pip_'s example section point
+number six.
+
++---------------------+--------------------------------------------+
+| Extra               | Description                                |
++=====================+============================================+
+| all                 | alias to install all the extras available  |
++---------------------+--------------------------------------------+
+| ini                 | needed for ini/cfg based rules             |
++---------------------+--------------------------------------------+
+| ujson               | install if you need faster json manipulat  |
++---------------------+--------------------------------------------+
+| yaml                | needed for yaml based rules                |
++---------------------+--------------------------------------------+
+| templating          | needed for rules which are using templates |
++---------------------+--------------------------------------------+
+| slack-notifications | needed for slack webhook notifications     |
++---------------------+--------------------------------------------+
+
+.. _pip: https://pip.pypa.io/en/stable/reference/pip_install/#examples
+
 Configuration
 =============
 

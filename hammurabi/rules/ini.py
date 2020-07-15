@@ -19,6 +19,10 @@ class SingleConfigFileRule(SinglePathRule):
     """
     Extend :class:`hammurabi.rules.base.Rule` to handle parsed content
     manipulations on a single file.
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
     """
 
     def __init__(
@@ -87,6 +91,10 @@ class SectionExists(SingleConfigFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
 
     .. warning::
 
@@ -199,6 +207,10 @@ class SectionNotExists(SingleConfigFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
     """
 
     def task(self) -> Path:
@@ -244,6 +256,10 @@ class SectionRenamed(SingleConfigFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
     """
 
     def __init__(
@@ -324,6 +340,10 @@ class OptionsExist(SingleConfigFileRule):
 
     .. warning::
 
+        This rule requires the ``ini`` extra to be installed.
+
+    .. warning::
+
         When using the ``force_value`` parameter, please note that all the existing
         option values will be replaced by those set in ``options`` parameter.
     """
@@ -395,6 +415,10 @@ class OptionsNotExist(SingleConfigFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
     """
 
     def __init__(
@@ -458,6 +482,10 @@ class OptionRenamed(SingleConfigFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``ini`` extra to be installed.
     """
 
     def __init__(

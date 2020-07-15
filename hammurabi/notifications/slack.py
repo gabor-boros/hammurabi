@@ -2,7 +2,7 @@
 Send notification to a slack channel when Hammurabi creates/updates a pull request.
 """
 
-from typing import Iterable, Optional
+from typing import Optional
 
 from slack_webhook import Slack  # type: ignore
 
@@ -43,6 +43,10 @@ class SlackNotification(Notification):
         >>>     )
         >>> ])
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This notification requires the ``slack-notifications`` extra to be installed.
     """
 
     def notify(self, message: str, changes_link: Optional[str]) -> None:
