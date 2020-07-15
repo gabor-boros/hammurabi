@@ -29,6 +29,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Simplify Slack notification sending and change its formatting to allow better customization
+
 0.7.4_ - 2020-07-14
 -------------------
 

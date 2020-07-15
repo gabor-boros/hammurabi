@@ -38,53 +38,12 @@ class SlackNotification(Notification):
         >>>
         >>> pillar = Pillar(notifications=[
         >>>     SlackNotification(
-        >>>         recipients=["CHANNEL_ID"],
+        >>>         recipients=["https://slack.webhook.url"],
         >>>         message_template="Dear team, the {repository} has new update.",
-        >>>         hook_url="https://slack.webhook.url",
-        >>>         owner="MY_BOT",
         >>>     )
         >>> ])
         >>> pillar.register(example_law)
     """
-
-    def __init__(
-        self,
-        recipients: Iterable[str],
-        message_template: str,
-        hook_url: str,
-        owner: str,
-    ) -> None:
-        self.hook_url = hook_url
-        self.owner = owner
-        super(SlackNotification, self).__init__(recipients, message_template)
-
-    def __send_notification(
-        self, client, channel: str, message: str, changes_link: Optional[str]
-    ) -> None:
-        """
-        Handle notification send through Slack webhooks.
-
-        :param message: Message to send
-        :type message: str
-
-        :param changes_link: Link to the list of changes
-        :type changes_link: Optional[str]
-        """
-
-        client.post(
-            text="Hammurabi opened a new PR",
-            channel=channel,
-            attachments=[
-                {
-                    "fallback": "Hammurabi PR",
-                    "author_name": self.owner,
-                    "title": "Hammurabi Pull Request",
-                    "title_link": f"{changes_link or ''}",
-                    "type": "mrkdwn",
-                    "text": message,
-                }
-            ],
-        )
 
     def notify(self, message: str, changes_link: Optional[str]) -> None:
         """
@@ -98,8 +57,8 @@ class SlackNotification(Notification):
         """
 
         try:
-            client = Slack(url=self.hook_url)
-            for channel in self.recipients:
-                self.__send_notification(client, channel, message, changes_link)
+            # Every recipient is a slack webhook URL
+            for hook in self.recipients:
+                Slack(url=hook).post(text=message)
         except Exception as exc:
             raise NotificationSendError(str(exc))
