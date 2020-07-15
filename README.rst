@@ -86,7 +86,7 @@ which dependency is required to use the specific rule.
 
 To install hammurabi with an extra package run ``pip install hammurabi[<EXTRA>]``,
 where ``<EXTRA>`` is the name of the extra option. To install multiple extra packages
-list the extra names separated by comma as described in pip_'s example section point
+list the extra names separated by comma as described in `pip's examples`_ section point
 number six.
 
 +---------------------+--------------------------------------------+
@@ -105,7 +105,7 @@ number six.
 | slack-notifications | needed for slack webhook notifications     |
 +---------------------+--------------------------------------------+
 
-.. _pip: https://pip.pypa.io/en/stable/reference/pip_install/#examples
+.. _`pip's examples`: https://pip.pypa.io/en/stable/reference/pip_install/#examples
 
 Configuration
 =============
