@@ -6,7 +6,6 @@ already parsed file.
 """
 
 from abc import abstractmethod
-import json
 from pathlib import Path
 from typing import Any, Optional
 
@@ -18,6 +17,11 @@ from hammurabi.rules.dictionaries import (
     DictValueNotExists,
     SinglePathDictParsedRule,
 )
+
+try:
+    import ujson as json
+except ImportError:
+    import json  # type: ignore
 
 
 class SingleJSONFileRule(SinglePathDictParsedRule):

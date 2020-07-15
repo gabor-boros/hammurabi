@@ -40,6 +40,10 @@ class TemplateRendered(SinglePathRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``templating`` extra to be installed.
     """
 
     def __init__(

@@ -10,7 +10,7 @@ python:
 
 install:
     - pip install poetry
-    - poetry install
+    - poetry install -E all
     - make download-test-reporter
 
 before_script:

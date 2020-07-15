@@ -25,6 +25,10 @@ class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
     """
     Extend :class:`hammurabi.rules.dictionaries.SinglePathDictParsedRule`
     to handle parsed content manipulations on a single YAML file.
+
+    .. warning::
+
+        This rule requires the ``yaml`` extra to be installed.
     """
 
     def __init__(
@@ -94,6 +98,10 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
 
     .. warning::
 
+        This rule requires the ``yaml`` extra to be installed.
+
+    .. warning::
+
         Compared to :mod:`hammurabi.rules.text.LineExists`, this rule is NOT able to add a
         key before or after a target.
     """
@@ -123,6 +131,10 @@ class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``yaml`` extra to be installed.
     """
 
 
@@ -153,6 +165,10 @@ class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``yaml`` extra to be installed.
     """
 
 
@@ -208,6 +224,10 @@ class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
 
     .. warning::
 
+        This rule requires the ``yaml`` extra to be installed.
+
+    .. warning::
+
         Since the value can be anything from ``None`` to a list of lists, and
         rule piping passes the 1st argument (``path``) to the next rule the ``value``
         parameter can not be defined in ``__init__`` before the ``path``. Hence
@@ -256,4 +276,8 @@ class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. warning::
+
+        This rule requires the ``yaml`` extra to be installed.
     """
