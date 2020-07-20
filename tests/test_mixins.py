@@ -537,9 +537,7 @@ def test_github_pull_request(mocked_config):
         expected_owner, expected_repo_name
     )
 
-    mocked_repository.pull_requests.assert_called_once_with(
-        state="open", head=expected_branch_name, base="master", number=1
-    )
+    mocked_repository.pull_requests.assert_called_once_with(state="open")
 
     mocked_repository.create_pull.assert_called_once_with(
         title="[hammurabi] Update to match the latest baseline",
@@ -612,7 +610,15 @@ def test_github_pull_request_has_opened_pr(mocked_config):
     expected_repo_name = "hammurabi"
     expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
-    mocked_repository.pull_requests.return_value = iter([Mock(url=expected_url)])
+    mocked_repository.pull_requests.return_value = iter(
+        [
+            Mock(
+                url=expected_url,
+                base=Mock(ref=expected_base_name),
+                head=Mock(ref=expected_branch_name),
+            )
+        ]
+    )
 
     mocked_config.settings.dry_run = False
     mocked_config.settings.git_base_name = expected_base_name
@@ -627,8 +633,5 @@ def test_github_pull_request_has_opened_pr(mocked_config):
         expected_owner, expected_repo_name
     )
 
-    mocked_repository.pull_requests.assert_called_once_with(
-        state="open", head=expected_branch_name, base=expected_base_name, number=1
-    )
-
+    mocked_repository.pull_requests.assert_called_once_with(state="open")
     assert mocked_repository.create_pull.called is False

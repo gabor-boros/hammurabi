@@ -9,7 +9,7 @@ for handling emails and delivering the message.
 
 from abc import ABC, abstractmethod
 import logging
-from typing import Iterable, Optional
+from typing import List, Optional
 
 from hammurabi.config import config
 from hammurabi.exceptions import NotificationSendError
@@ -22,7 +22,7 @@ class Notification(ABC):
     of notifications like Slack or E-mail notification.
     """
 
-    def __init__(self, recipients: Iterable[str], message_template: str) -> None:
+    def __init__(self, recipients: List[str], message_template: str) -> None:
         self.recipients = recipients
         self.message_template = full_strip(message_template)
 

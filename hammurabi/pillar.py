@@ -150,11 +150,12 @@ class Pillar(GitHubMixin):
         for law in self.laws:
             law.enforce()
 
-        self.push_changes()
+        changes_pushed = self.push_changes()
         pull_request_url = self.create_pull_request()
 
-        for notification in self.notifications:
-            notification.send(pull_request_url)
+        if changes_pushed:
+            for notification in self.notifications:
+                notification.send(pull_request_url)
 
         self.reporter.additional_data.finished = datetime.now().isoformat()
         self.reporter.additional_data.pull_request_url = pull_request_url

@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.8.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.8.1...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -26,9 +26,18 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.7.3: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.3
 .. _0.7.4: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.4
 .. _0.8.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.0
+.. _0.8.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.1
 
 Unreleased_
 -----------
+
+0.8.1_ - 2020-07-20
+-------------------
+
+Fixed
+~~~~~
+
+* Fix GitHub API change caused issues when filtering opened PRs
 
 0.8.0_ - 2020-07-15
 -------------------
