@@ -2,6 +2,7 @@
 Send notification to a slack channel when Hammurabi creates/updates a pull request.
 """
 
+import logging
 from typing import Optional
 
 from slack_webhook import Slack  # type: ignore
@@ -63,6 +64,8 @@ class SlackNotification(Notification):
         try:
             # Every recipient is a slack webhook URL
             for hook in self.recipients:
+                logging.debug('Sending to hook "%s"', hook)
                 Slack(url=hook).post(text=message)
+                logging.debug("Notification sent")
         except Exception as exc:
             raise NotificationSendError(str(exc))

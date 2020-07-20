@@ -6,11 +6,10 @@ extensions for several online git based VCS.
 
 import logging
 from pathlib import Path
-from typing import Iterable, List, Optional, Union
+from typing import Iterable, Iterator, List, Optional, Union
 
 from github3.pulls import ShortPullRequest  # type: ignore
 from github3.repos.repo import Repository  # type: ignore
-from github3.structs import GitHubIterator  # type: ignore
 
 from hammurabi.config import config
 from hammurabi.preconditions.base import Precondition
@@ -121,7 +120,7 @@ class GitMixin:
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
-    def push_changes() -> None:
+    def push_changes() -> bool:
         """
         Push the changes with the given branch set by ``git_branch_name``
         config option to the remote origin.
@@ -131,12 +130,18 @@ class GitMixin:
         .. code-block:: shell
 
             git push origin <branch name>
+
+        :return: Return whether the changes are pushed
+        :rtype: bool
         """
 
         if config.repo and not config.settings.dry_run:
             branch: str = config.settings.git_branch_name
             logging.info("Pushing changes to %s", branch)
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
+            return True
+
+        return False
 
 
 class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
@@ -237,6 +242,22 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
     on GitHub after changes are pushed to remote.
     """
 
+    @staticmethod
+    def __pr_is_matching(pull_request: ShortPullRequest) -> bool:
+        """
+        Filter the PR details manually, since github3.py started to
+        fail to retrieve the desired PRs based on the filter criteria.
+
+        :param pull_request: Opened Pull Request on GitHub
+        :type pull_request: ShortPullRequest
+
+        :return: Return whether the PR is a hammurabi pr or not
+        :rtype: bool
+        """
+        head_matching = pull_request.head.ref == config.settings.git_branch_name
+        base_matching = pull_request.base.ref == config.settings.git_base_name
+        return base_matching and head_matching
+
     def create_pull_request(self) -> Optional[str]:
         """
         Create a PR on GitHub after the changes are pushed to remote. The pull
@@ -269,13 +290,8 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
 
             logging.info("Checking for opened pull request")
 
-            pull_request_iterator: GitHubIterator[
-                ShortPullRequest
-            ] = github_repo.pull_requests(
-                state="open",
-                head=config.settings.git_branch_name,
-                base=config.settings.git_base_name,
-                number=1,  # Maximum number of PRs
+            pull_request_iterator: Iterator[ShortPullRequest] = filter(
+                self.__pr_is_matching, github_repo.pull_requests(state="open")
             )
 
             opened_pull_request: Optional[ShortPullRequest] = next(
