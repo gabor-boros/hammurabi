@@ -57,7 +57,7 @@ slack-webhook = { version = "^1.0.3", optional = true }
 bandit = "^1.6"
 black = { version = "^18.3-alpha.0", allow-prereleases = true }
 flake8 = "^3.8"
-hypothesis = "^5.19.3"
+hypothesis = "^5.20.3"
 mypy = "^0.782"
 pygments = "^2.4"
 pylint = "^2.5"
