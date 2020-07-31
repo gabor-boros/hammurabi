@@ -31,6 +31,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* GitHub API url is transformed to Pull Request URLs
+
 0.8.1_ - 2020-07-20
 -------------------
 
