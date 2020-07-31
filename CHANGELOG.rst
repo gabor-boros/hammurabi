@@ -35,6 +35,7 @@ Fixed
 ~~~~~
 
 * GitHub API url is transformed to Pull Request URLs
+* Fix import issues when importing a Rule which has a missing extras dependency
 
 0.8.1_ - 2020-07-20
 -------------------
