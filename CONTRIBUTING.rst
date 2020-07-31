@@ -68,7 +68,7 @@ Ready to contribute? Here's how to set up `hammurabi` for local development.
 3. Install your local copy. Assuming you have poetry installed, this is how you set up your fork for local development::
 
     $ cd hammurabi/
-    $ poetry install
+    $ poetry install -E all
 
 4. Create a branch for local development::
 
