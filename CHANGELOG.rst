@@ -27,15 +27,28 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.7.4: https://github.com/gabor-boros/hammurabi/releases/tag/v0.7.4
 .. _0.8.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.0
 .. _0.8.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.1
+.. _0.8.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.2
 
 Unreleased_
 -----------
+
+0.8.2_ - 2020-07-31
+-------------------
 
 Fixed
 ~~~~~
 
 * GitHub API url is transformed to Pull Request URLs
 * Fix import issues when importing a Rule which has a missing extras dependency
+
+Changed
+~~~~~~~
+
+* Bump pydantic to 1.6.1
+* Bump configupdater to 1.1.1
+* Bump coverage to 5.2.1
+* Bump pytest to 6.0.1
+* Bump hypothesis to 5.21.0
 
 0.8.1_ - 2020-07-20
 -------------------
