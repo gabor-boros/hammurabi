@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "hammurabi"
-version = "0.8.1"
+version = "0.8.2"
 license = "Apache-2.0"
 description = "Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules on a git repository."
 documentation = "https://readthedocs.org/projects/hammurabi/badge/"
 repository = "https://github.com/gabor-boros/hammurabi/"
 readme = "README.rst"
-keywords = ["automation", "project", "manipulate", "rules", "config"]
+keywords = ["automation", "project", "manipulate", "rules", "config", "codemod"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
