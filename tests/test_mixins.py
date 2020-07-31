@@ -608,12 +608,13 @@ def test_github_pull_request_has_opened_pr(mocked_config):
     expected_branch_name = "awesome branch"
     expected_owner = "gabor-boros"
     expected_repo_name = "hammurabi"
+    api_url = "https://api.github.com/repos/gabor-boros/hammurabi/pulls/1"
     expected_url = "https://github.com/gabor-boros/hammurabi/pull/1"
     mocked_repository = Mock()
     mocked_repository.pull_requests.return_value = iter(
         [
             Mock(
-                url=expected_url,
+                url=api_url,
                 base=Mock(ref=expected_base_name),
                 head=Mock(ref=expected_branch_name),
             )
