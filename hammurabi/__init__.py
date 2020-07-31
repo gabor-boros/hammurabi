@@ -3,7 +3,12 @@
 from hammurabi.config import config
 from hammurabi.law import Law
 from hammurabi.notifications.base import Notification
-from hammurabi.notifications.slack import SlackNotification
+
+try:
+    from hammurabi.notifications.slack import SlackNotification
+except ImportError:
+    pass
+
 from hammurabi.pillar import Pillar
 from hammurabi.preconditions.attributes import (
     HasMode,
@@ -31,14 +36,19 @@ from hammurabi.rules.files import (
     FilesExist,
     FilesNotExist,
 )
-from hammurabi.rules.ini import (
-    OptionRenamed,
-    OptionsExist,
-    OptionsNotExist,
-    SectionExists,
-    SectionNotExists,
-    SectionRenamed,
-)
+
+try:
+    from hammurabi.rules.ini import (
+        OptionRenamed,
+        OptionsExist,
+        OptionsNotExist,
+        SectionExists,
+        SectionNotExists,
+        SectionRenamed,
+    )
+except ImportError:
+    pass
+
 from hammurabi.rules.json import (
     JSONKeyExists,
     JSONKeyNotExists,
@@ -49,12 +59,16 @@ from hammurabi.rules.json import (
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
-from hammurabi.rules.yaml import (
-    YAMLKeyExists,
-    YAMLKeyNotExists,
-    YAMLKeyRenamed,
-    YAMLValueExists,
-    YAMLValueNotExists,
-)
+
+try:
+    from hammurabi.rules.yaml import (
+        YAMLKeyExists,
+        YAMLKeyNotExists,
+        YAMLKeyRenamed,
+        YAMLValueExists,
+        YAMLValueNotExists,
+    )
+except ImportError:
+    pass
 
 __version__ = "0.8.1"
