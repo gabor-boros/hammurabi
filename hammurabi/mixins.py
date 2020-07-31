@@ -258,6 +258,21 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
         base_matching = pull_request.base.ref == config.settings.git_base_name
         return base_matching and head_matching
 
+    @staticmethod
+    def __get_pr_url(pr_api_url: str) -> str:
+        """
+        Get Pull Request id from the API url and return the UI version of that.
+
+        :param pr_api_url: Pull Request API URL
+        :type pr_api_url: str
+
+        :return: UI version of the Pull Request
+        :rtype: str
+        """
+
+        pull_request_id = pr_api_url.split("/")[-1]
+        return f"https://github.com/{config.settings.repository}/pull/{pull_request_id}"
+
     def create_pull_request(self) -> Optional[str]:
         """
         Create a PR on GitHub after the changes are pushed to remote. The pull
@@ -309,11 +324,11 @@ class GitHubMixin(GitMixin, PullRequestHelperMixin):
                     body=description,
                 )
 
-                return response.url
+                return self.__get_pr_url(response.url)
 
             # Return the last known PR url, it should be one
             # anyways, so it is not an issue
-            pull_request_url = opened_pull_request.url
+            pull_request_url = self.__get_pr_url(opened_pull_request.url)
             logging.info("Found open pull request %s", pull_request_url)
             return pull_request_url
 
