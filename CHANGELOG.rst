@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.9.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.9.1...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -29,9 +29,18 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.8.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.1
 .. _0.8.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.2
 .. _0.9.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.0
+.. _0.9.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.1
 
 Unreleased_
 -----------
+
+0.9.1_ - 2020-08-07
+-------------------
+
+Fixed
+~~~~~
+
+* Quick fix for a flipped condition when using allow_push
 
 0.9.0_ - 2020-08-07
 -------------------
