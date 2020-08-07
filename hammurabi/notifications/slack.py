@@ -5,10 +5,9 @@ Send notification to a slack channel when Hammurabi creates/updates a pull reque
 import logging
 from typing import Optional
 
-from slack_webhook import Slack  # type: ignore
-
 from hammurabi.exceptions import NotificationSendError
 from hammurabi.notifications.base import Notification
+from slack_webhook import Slack  # type: ignore
 
 
 class SlackNotification(Notification):

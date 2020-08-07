@@ -138,7 +138,7 @@ class GitMixin:
         is_dry_run = config.settings.dry_run
         can_push = config.settings.allow_push
 
-        if (config.repo and not is_dry_run and can_push):
+        if config.repo and not is_dry_run and can_push:
             branch: str = config.settings.git_branch_name
             logging.info("Pushing changes to %s", branch)
             config.repo.remotes.origin.push(branch)  # pylint: disable=no-member
