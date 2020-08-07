@@ -92,14 +92,26 @@ def version():
     type=click.BOOL,
     help="Execute in dry run mode.",
 )
+# Using type=bool, because of the following Click issue:
+# https://github.com/pallets/click/issues/1287
+@click.option(
+    "--push/--no-push",
+    is_flag=True,
+    default=True,
+    type=bool,
+    help="Push changes to remote.",
+)
 @click.pass_context
-def enforce(ctx: click.Context, rule_can_abort: bool, dry_run: bool):
+def enforce(ctx: click.Context, rule_can_abort: bool, dry_run: bool, push: bool):
     """
     Execute all registered Law.
     """
 
     if dry_run:
         ctx.obj["config"].settings.dry_run = dry_run
+
+    if not push:
+        ctx.obj["config"].settings.allow_push = push
 
     if rule_can_abort:
         ctx.obj["config"].settings.rule_can_abort = rule_can_abort

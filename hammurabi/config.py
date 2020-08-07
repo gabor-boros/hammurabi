@@ -25,6 +25,7 @@ class CommonSettings(BaseSettings):
     used the parsed variable in the CLI configuration.
     """
 
+    allow_push: bool = True
     dry_run: bool = False
     rule_can_abort: bool = False
     git_branch_name: str = "hammurabi"
