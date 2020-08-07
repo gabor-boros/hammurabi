@@ -32,6 +32,8 @@ matches one of the options below.
 +-----------------+-----------------------------------------------+-----------------------+
 | git_branch_name | working branch name                           | hammurabi             |
 +-----------------+-----------------------------------------------+-----------------------+
+| allow_push      | allow Hammurabi to push to remote             | True                  |
++-----------------+-----------------------------------------------+-----------------------+
 | dry_run         | enforce without any modification              | False                 |
 +-----------------+-----------------------------------------------+-----------------------+
 | rule_can_abort  | if a rule fails it aborts the whole execution | False                 |
@@ -79,14 +81,16 @@ Examples
 
 .. code-block:: python
 
-    >>> from hammurabi import Law, Pillar
-    >>> from mycompany.rules import MyCustomRule
+    >>> from pathlib import Path
+    >>> from hammurabi import Law, Pillar, SectionExists
     >>>
-    >>> meaning_of_life = Law(
-    >>>     name="...",
-    >>>     description="...",
-    >>>     rules=[MyCustomRule]
+    >>> rule = SectionExists(
+    >>>     name="Ensure section exists",
+    >>>     path=Path("/tmp/test.cfg"),
+    >>>     section="test_section",
+    >>>     target="main",
+    >>>     options=(("option_1", "some value"), ("option_2", True)),
     >>> )
     >>>
     >>> pillar = Pillar()
-    >>> pillar.register(meaning_of_life)
+    >>> pillar.register(rule)

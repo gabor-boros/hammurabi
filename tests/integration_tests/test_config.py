@@ -93,6 +93,7 @@ pillar = Mock()
         == temporary_dir_repo.working_dir
     )
     assert config.settings.dict() == {
+        "allow_push": True,
         "dry_run": False,
         "git_base_name": "master",
         "git_branch_name": "hammurabi",
@@ -142,6 +143,7 @@ pillar = Mock()
         == temporary_dir_repo.working_dir
     )
     assert config.settings.dict() == {
+        "allow_push": True,
         "dry_run": False,
         "git_base_name": "master",
         "git_branch_name": "hammurabi",
@@ -197,6 +199,7 @@ pillar = Mock()
         == temporary_dir_repo.working_dir
     )
     assert config.settings.dict() == {
+        "allow_push": True,
         "dry_run": False,
         "git_base_name": "master",
         "git_branch_name": "hammurabi",

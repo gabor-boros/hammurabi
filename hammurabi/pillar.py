@@ -5,8 +5,8 @@ pull request. All the laws registered to the pillar will be executed in the
 order of the registration.
 """
 
-
 from datetime import datetime
+import logging
 from typing import Iterable, List, Type
 
 from hammurabi.law import Law
@@ -151,11 +151,15 @@ class Pillar(GitHubMixin):
             law.enforce()
 
         changes_pushed = self.push_changes()
+
+        if not changes_pushed:
+            logging.info("No changes pushed")
+            return
+
         pull_request_url = self.create_pull_request()
 
-        if changes_pushed:
-            for notification in self.notifications:
-                notification.send(pull_request_url)
+        for notification in self.notifications:
+            notification.send(pull_request_url)
 
         self.reporter.additional_data.finished = datetime.now().isoformat()
         self.reporter.additional_data.pull_request_url = pull_request_url
