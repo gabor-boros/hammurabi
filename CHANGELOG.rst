@@ -34,7 +34,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
-0.9.1_ - 2020-08-07
+0.9.1_ - 2020-08-08
 -------------------
 
 Fixed
