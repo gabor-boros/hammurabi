@@ -34,6 +34,16 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Extended the the development installation instruction by adding pre-commit
+
+Changed
+~~~~~~~
+
+* Rename `LineReplaced`'s `target` parameter to `match` to reduce confusion
+
 0.9.1_ - 2020-08-08
 -------------------
 
