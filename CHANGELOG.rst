@@ -43,6 +43,7 @@ Changed
 ~~~~~~~
 
 * Rename `LineReplaced`'s `target` parameter to `match` to reduce confusion
+* Finetune pytest configuration by using classes named `*TestCase` instead of `Test*`
 
 0.9.1_ - 2020-08-08
 -------------------
