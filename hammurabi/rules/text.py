@@ -249,9 +249,9 @@ class LineReplaced(SinglePathRule):
     Make sure that the given text is replaced in the given file.
 
     The default behaviour is to replace the required text with the
-    exact same indentation that the target line has. This behaviour
+    exact same indentation that the "match" line has. This behaviour
     can be turned off by setting the ``respect_indentation`` parameter
-    to False.  Please note that ``text`` and ``target`` parameters are
+    to False.  Please note that ``text`` and ``match`` parameters are
     required.
 
     Example usage:
@@ -269,7 +269,7 @@ class LineReplaced(SinglePathRule):
             >>>             name="Replace typo using regex",
             >>>             path=Path("./gunicorn.conf.py"),
             >>>             text="keepalive = 65",
-            >>>             target=r"^kepalive.*",
+            >>>             match=r"^kepalive.*",
             >>>         ),
             >>>     )
             >>> )
@@ -279,14 +279,14 @@ class LineReplaced(SinglePathRule):
 
     .. note::
 
-        The indentation of the target text will be extracted by a simple
+        The indentation of the `text` will be extracted by a simple
         regular expression. If a more complex regexp is required, please
         inherit from this class.
 
     .. warning::
 
         This rule will replace all the matching lines in the given file.
-        Make sure the given target regular expression is tested before
+        Make sure the given `match` regular expression is tested before
         the rule used against production code.
     """
 
@@ -295,12 +295,12 @@ class LineReplaced(SinglePathRule):
         name: str,
         path: Optional[Path] = None,
         text: Optional[str] = None,
-        target: Optional[str] = None,
+        match: Optional[str] = None,
         respect_indentation: bool = True,
         **kwargs,
     ) -> None:
         self.text = self.validate(text, required=True)
-        self.target = re.compile(self.validate(target, required=True))
+        self.match = re.compile(self.validate(match, required=True))
         self.respect_indentation = respect_indentation
 
         self.indentation_pattern = re.compile(r"^\s+")
@@ -333,24 +333,24 @@ class LineReplaced(SinglePathRule):
         with self.param.open("w") as file:
             file.writelines((f"{line}\n" for line in lines))
 
-    def __replace_line(self, lines: List[str], target: str):
+    def __replace_line(self, lines: List[str], match: str):
         """
-        Replace the target texts with the given text.
+        Replace the match texts with the given text.
 
         :param lines: The new content of the original file
         :type lines: List[str]
 
-        :param target: The matching target in the given file's content
-        :type target: str
+        :param match: The matching target in the given file's content
+        :type match: str
         """
 
-        target_index = lines.index(target)
+        match_index = lines.index(match)
 
-        indentation = self.indentation_pattern.match(lines[target_index])
+        indentation = self.indentation_pattern.match(lines[match_index])
         if self.respect_indentation and indentation:
             self.text = indentation.group() + self.text
 
-        lines[target_index] = self.text
+        lines[match_index] = self.text
 
     def task(self) -> Path:
         """
@@ -363,20 +363,20 @@ class LineReplaced(SinglePathRule):
 
         lines, _ = self.__get_lines_from_file()
 
-        target_match = list(filter(self.target.match, lines))
+        match_match = list(filter(self.match.match, lines))
         text = list(filter(lambda l: l.strip() == self.text, lines))
 
-        if target_match and text:
-            raise LookupError(f'Both "{self.target}" and "{self.text}" exists')
+        if match_match and text:
+            raise LookupError(f'Both "{self.match}" and "{self.text}" exists')
 
         if text:
             return self.param
 
-        if not target_match:
-            raise LookupError(f'No matching line for "{self.target}"')
+        if not match_match:
+            raise LookupError(f'No matching line for "{self.match}"')
 
-        for target in target_match:
-            self.__replace_line(lines, target)
+        for match in match_match:
+            self.__replace_line(lines, match)
 
         self.__write_content_to_file(lines)
 
