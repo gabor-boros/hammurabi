@@ -60,6 +60,8 @@ Get Started!
 
 Ready to contribute? Here's how to set up `hammurabi` for local development.
 
+As `step 0` make sure you have python 3.7+ and [https://pre-commit.com/](pre-commit) installed.
+
 1. Fork the `hammurabi` repo on GitHub.
 2. Clone your fork locally::
 
@@ -81,6 +83,7 @@ Ready to contribute? Here's how to set up `hammurabi` for local development.
     $ poetry shell
     $ make lint
     $ make test
+    $ pre-commit run --all-files
 
    You will need make not just for executing the command, but to build (and test) the
    documentations page as well.
