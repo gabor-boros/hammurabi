@@ -14,6 +14,22 @@ from github3 import GitHub, login
 from pydantic import BaseSettings
 import toml
 
+DEFAULT_GENERATE_REPORT = True
+DEFAULT_ALLOW_PUSH: bool = True
+DEFAULT_DRY_RUN: bool = False
+DEFAULT_RULE_CAN_ABORT: bool = False
+DEFAULT_GIT_BRANCH_NAME: str = "hammurabi"
+DEFAULT_GIT_BASE_NAME: str = "master"
+DEFAULT_REPOSITORY: str = ""
+DEFAULT_REPORT_NAME: Path = Path("hammurabi_report.json")
+DEFAULT_GITHUB_TOKEN: str = ""
+DEFAULT_LOG_LEVEL: str = "INFO"
+DEFAULT_LOG_PATH: Path = Path("./hammurabi.log")
+DEFAULT_LOG_FORMAT: str = logging.BASIC_FORMAT
+DEFAULT_PILLAR_CONFIG: Path = Path("pillar.conf.py")
+DEFAULT_PILLAR_NAME: str = "pillar"
+DEFAULT_PROJECT_CONFIG = "pyproject.toml"
+
 
 class CommonSettings(BaseSettings):
     """
@@ -25,13 +41,13 @@ class CommonSettings(BaseSettings):
     used the parsed variable in the CLI configuration.
     """
 
-    allow_push: bool = True
-    dry_run: bool = False
-    rule_can_abort: bool = False
-    git_branch_name: str = "hammurabi"
-    git_base_name: str = "master"
-    repository: str = ""
-    report_name: Path = Path("hammurabi_report.json")
+    allow_push: bool = DEFAULT_ALLOW_PUSH
+    dry_run: bool = DEFAULT_DRY_RUN
+    rule_can_abort: bool = DEFAULT_RULE_CAN_ABORT
+    git_branch_name: str = DEFAULT_GIT_BRANCH_NAME
+    git_base_name: str = DEFAULT_GIT_BASE_NAME
+    repository: str = DEFAULT_REPOSITORY
+    report_name: Path = DEFAULT_REPORT_NAME
 
     class Config:
         """
@@ -50,12 +66,12 @@ class TOMLSettings(CommonSettings):
     ``github_token`` or ``pillar``.
     """
 
-    github_token: str = ""
-    log_level: str = "INFO"
-    log_path: Optional[Path] = Path("./hammurabi.log")
-    log_format: str = logging.BASIC_FORMAT
-    pillar_config: Path = Path("pillar.conf.py")
-    pillar_name: str = "pillar"
+    github_token: str = DEFAULT_GITHUB_TOKEN
+    log_level: str = DEFAULT_LOG_LEVEL
+    log_path: Optional[Path] = DEFAULT_LOG_PATH
+    log_format: str = DEFAULT_LOG_FORMAT
+    pillar_config: Path = DEFAULT_PILLAR_CONFIG
+    pillar_name: str = DEFAULT_PILLAR_NAME
 
 
 class Settings(CommonSettings):
@@ -254,7 +270,7 @@ class Config:
 
         settings_path = Path(
             os.path.expandvars(
-                os.environ.get("HAMMURABI_SETTINGS_PATH", "pyproject.toml")
+                os.environ.get("HAMMURABI_SETTINGS_PATH", DEFAULT_PROJECT_CONFIG)
             )
         ).expanduser()
 
