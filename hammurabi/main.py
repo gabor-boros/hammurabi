@@ -18,6 +18,8 @@ from hammurabi.config import (
     config,
 )
 
+NON_ACTIONABLE_SUBCOMMANDS = ["version"]
+
 
 class LoggingChoices(str, Enum):
     """
@@ -63,7 +65,7 @@ def success_message(message: str):
 @app.callback()
 def main(
     ctx: typer.Context,
-    cfg: str = typer.Option(
+    cfg: Path = typer.Option(
         DEFAULT_PROJECT_CONFIG, "--config", "-c", help="Set the configuration file."
     ),
     repository: str = typer.Option(
@@ -82,7 +84,10 @@ def main(
     Find more information at: https://hammurabi.readthedocs.io/latest/
     """
 
-    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", str(Path(cfg).expanduser()))
+    if ctx.invoked_subcommand in NON_ACTIONABLE_SUBCOMMANDS:
+        return
+
+    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", str(cfg.expanduser()))
 
     try:
         # Reload the configuration
