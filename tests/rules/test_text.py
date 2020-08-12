@@ -31,7 +31,7 @@ def get_line_replaced_rule(
 
     mock_file.read.return_value.splitlines.return_value = lines
 
-    rule = LineReplaced(name="Line replaced rule", text=text, target=target, **kwargs)
+    rule = LineReplaced(name="Line replaced rule", text=text, match=target, **kwargs)
 
     rule.param.open.return_value.__enter__ = Mock(return_value=mock_file)
     rule.param.open.return_value.__exit__ = Mock()
@@ -307,5 +307,5 @@ def test_line_replaced_both_target_and_text():
         rule.task()
 
     # Use rule.target because of transformations on it
-    assert str(exc.value) == f'Both "{rule.target}" and "{rule.text}" exists'
+    assert str(exc.value) == f'Both "{rule.match}" and "{rule.text}" exists'
     assert mock_file.writelines.called is False
