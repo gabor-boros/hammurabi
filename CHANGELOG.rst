@@ -38,6 +38,7 @@ Added
 ~~~~~
 
 * Extended the the development installation instruction by adding pre-commit
+* Add more tests for pillar
 
 Fixed
 ~~~~~
