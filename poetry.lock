@@ -147,7 +147,7 @@ description = "Parser like ConfigParser but for updating configuration files"
 name = "configupdater"
 optional = true
 python-versions = ">=3.6"
-version = "1.1.2"
+version = "1.1.3"
 
 [package.dependencies]
 setuptools = ">=38.3"
@@ -956,8 +956,8 @@ colorama = [
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
 ]
 configupdater = [
-    {file = "ConfigUpdater-1.1.2-py2.py3-none-any.whl", hash = "sha256:97a73b5b778ad7417a9e44fd14419da2d9a704eb99499c0236ca2184adec93e9"},
-    {file = "ConfigUpdater-1.1.2.tar.gz", hash = "sha256:a012ee7c49bc12ddafdfb724dc1cd958f25c3f63fdfc79c5520bf85a8925ff14"},
+    {file = "ConfigUpdater-1.1.3-py2.py3-none-any.whl", hash = "sha256:d49f1d64d16cb92f2cffef442d42fdfd5e317fd9368ddfb8b96f7683b3ec751c"},
+    {file = "ConfigUpdater-1.1.3.tar.gz", hash = "sha256:5363c45babe9c95df58f054b72ed513d1fca1be089ee4b2e32dc9fb3351f12b8"},
 ]
 coverage = [
     {file = "coverage-5.2.1-cp27-cp27m-macosx_10_13_intel.whl", hash = "sha256:40f70f81be4d34f8d491e55936904db5c527b0711b2a46513641a5729783c2e4"},
