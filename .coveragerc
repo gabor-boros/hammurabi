@@ -2,7 +2,6 @@
 source = hammurabi
 omit = *tests*
        *__init__*
-       hammurabi/main.py
 
 [report]
 sort = cover

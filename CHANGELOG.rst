@@ -52,6 +52,7 @@ Changed
 * Replace click based CLI with a Typer based one
 * Use `__version__` for local documentation generation
 * Update CONTRIBUTING.md regarding documentation config version bump
+* Include `main.py` in test reports
 
 Removed
 ~~~~~~~
