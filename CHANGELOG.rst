@@ -66,6 +66,7 @@ Removed
 * Drop `get rule` command since it is not used at all
 * Drop `describe law` command since it is not used at all
 * Drop `describe rule` command since it is not used at all
+* Remove hypothesis test reporting statistics generation
 
 0.9.1_ - 2020-08-08
 -------------------

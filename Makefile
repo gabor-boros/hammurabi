@@ -74,15 +74,15 @@ lint: ## run linters against the package
 	flake8 hammurabi --count --ignore=E501,W503 --show-source --statistics
 
 test-unit: ## run unit tests and generate coverage
-	coverage run -m pytest -m "not integration" --hypothesis-show-statistics -vv
+	coverage run -m pytest -m "not integration" -vv
 	coverage report
 
 test-integration: ## run unit tests and generate coverage
-	coverage run -m pytest -m "integration" --hypothesis-show-statistics -vv
+	coverage run -m pytest -m "integration" -vv
 	coverage report
 
 test: ## run all tests and generate coverage
-	coverage run -m pytest --hypothesis-show-statistics -vv
+	coverage run -m pytest -vv
 	coverage report
 
 download-test-reporter:
