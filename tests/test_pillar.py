@@ -143,3 +143,23 @@ def test_enforce_failed(_):
     pillar.checkout_branch.assert_called_once_with()
     assert pillar.push_changes.called is False
     assert pillar.create_pull_request.called is False
+
+
+@patch("hammurabi.pillar.JSONReporter")
+def test_enforce_no_changes(_):
+    mock_notification = Mock()
+
+    expected_law = Mock()
+    pillar = Pillar(notifications=[mock_notification])
+    pillar.register(expected_law)
+    pillar.checkout_branch = Mock()
+    pillar.push_changes = Mock(return_value=False)
+    pillar.create_pull_request = Mock()
+
+    pillar.enforce()
+
+    expected_law.enforce.assert_called_once_with()
+    pillar.checkout_branch.assert_called_once_with()
+    pillar.push_changes.assert_called_once_with()
+    assert pillar.create_pull_request.called is False
+    assert mock_notification.send.called is False

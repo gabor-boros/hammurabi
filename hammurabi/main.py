@@ -1,42 +1,81 @@
+from enum import Enum
 import logging
 import os
 from pathlib import Path
 
-import click
-from github3 import login
+import github3
+import typer
 
 from hammurabi import Pillar, __version__
-from hammurabi.config import config
+from hammurabi.config import (
+    DEFAULT_ALLOW_PUSH,
+    DEFAULT_DRY_RUN,
+    DEFAULT_GENERATE_REPORT,
+    DEFAULT_GITHUB_TOKEN,
+    DEFAULT_LOG_LEVEL,
+    DEFAULT_PROJECT_CONFIG,
+    DEFAULT_REPOSITORY,
+    config,
+)
+
+NON_ACTIONABLE_SUBCOMMANDS = ["version"]
 
 
-@click.group()
-@click.pass_context
-@click.option(
-    "-c",
-    "--config",
-    "cfg",
-    type=click.STRING,
-    default="pyproject.toml",
-    show_default=True,
-    help="Set the configuration file.",
-)
-@click.option(
-    "--repository",
-    type=click.STRING,
-    default=None,
-    help="Set the remote repository. Required format: owner/repository",
-)
-@click.option(
-    "--github-token", type=click.STRING, default=None, help="Set github access token"
-)
-@click.option(
-    "--log-level",
-    type=click.Choice(["DEBUG", "INFO", "WARNING", "ERROR"]),
-    default=None,
-    help="Set logging level.",
-)
-def cli(
-    ctx: click.Context, cfg: str, repository: str, github_token: str, log_level: str
+class LoggingChoices(str, Enum):
+    """
+    Logging choices for CLI settings.
+    """
+
+    debug = "DEBUG"
+    info = "INFO"
+    warning = "WARNING"
+    error = "ERROR"
+
+
+app = typer.Typer()
+
+
+def print_message(message: str, color: str, bold: bool, should_exit: bool, code: int):
+    """
+    Print formatted message and exit if requested.
+    """
+
+    typer.echo(typer.style(message, fg=color, bold=bold))
+
+    if should_exit:
+        typer.Exit(code)
+
+
+def error_message(message: str, should_exit: bool = True, code: int = 1):
+    """
+    Print error message and exit the CLI application
+    """
+
+    print_message(message, typer.colors.RED, True, should_exit, code)
+
+
+def success_message(message: str):
+    """
+    Print error message and exit the CLI application
+    """
+
+    print_message(message, typer.colors.GREEN, True, False, 0)
+
+
+@app.callback()
+def main(
+    ctx: typer.Context,
+    cfg: Path = typer.Option(
+        DEFAULT_PROJECT_CONFIG, "--config", "-c", help="Set the configuration file."
+    ),
+    repository: str = typer.Option(
+        DEFAULT_REPOSITORY,
+        help="Set the remote repository. Required format: owner/repository.",
+    ),
+    token: str = typer.Option(DEFAULT_GITHUB_TOKEN, help="Set github access token."),
+    log_level: LoggingChoices = typer.Option(
+        DEFAULT_LOG_LEVEL, help="Set logging level."
+    ),
 ):
     """
     Hammurabi is an extensible CLI tool responsible for enforcing user-defined rules on a git
@@ -45,212 +84,61 @@ def cli(
     Find more information at: https://hammurabi.readthedocs.io/latest/
     """
 
-    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", str(Path(cfg).expanduser()))
+    if ctx.invoked_subcommand in NON_ACTIONABLE_SUBCOMMANDS:
+        return
+
+    os.environ.setdefault("HAMMURABI_SETTINGS_PATH", str(cfg.expanduser()))
 
     try:
         # Reload the configuration
         config.load()
-    except Exception as exc:
-        raise click.ClickException(str(exc))
+        success_message("Configuration loaded")
+    except Exception as exc:  # pylint: disable=broad-except
+        error_message(f"Failed to load configuration: {str(exc)}")
 
-    if repository:
-        config.settings.repository = repository
+    if token != DEFAULT_GITHUB_TOKEN:
+        config.github = github3.login(token=token)
 
-    if github_token:
-        config.github = login(token=github_token)
-
-    if log_level:
-        # Override log level
-        logging.root.setLevel(log_level)
+    config.settings.repository = repository
+    logging.root.setLevel(log_level.value)
 
     ctx.ensure_object(dict)
     ctx.obj["config"] = config
 
 
-@cli.command()
+@app.command(short_help="Print hammurabi version.")
 def version():
     """
-    Print Hammurabi version.
+    Print hammurabi version.
     """
 
-    click.echo(__version__)
+    typer.echo(__version__)
 
 
-@cli.command()
-@click.option(
-    "-a",
-    "--rule-can-abort",
-    is_flag=True,
-    default=False,
-    type=click.BOOL,
-    help="Abort the law when a rule raise an exception.",
-)
-@click.option(
-    "--dry-run",
-    is_flag=True,
-    default=False,
-    type=click.BOOL,
-    help="Execute in dry run mode.",
-)
-# Using type=bool, because of the following Click issue:
-# https://github.com/pallets/click/issues/1287
-@click.option(
-    "--push/--no-push",
-    is_flag=True,
-    default=True,
-    type=bool,
-    help="Push changes to remote.",
-)
-@click.pass_context
-def enforce(ctx: click.Context, rule_can_abort: bool, dry_run: bool, push: bool):
+@app.command(short_help="Execute registered laws.")
+def enforce(
+    ctx: typer.Context,
+    dry_run: bool = typer.Option(DEFAULT_DRY_RUN, help="Execute laws in dry run mode."),
+    allow_push: bool = typer.Option(DEFAULT_ALLOW_PUSH, help="Push changes to remote."),
+    report: bool = typer.Option(
+        DEFAULT_GENERATE_REPORT, help="Generate execution report."
+    ),
+):
     """
-    Execute all registered Law.
+    Longer description
     """
 
-    if dry_run:
-        ctx.obj["config"].settings.dry_run = dry_run
-
-    if not push:
-        ctx.obj["config"].settings.allow_push = push
-
-    if rule_can_abort:
-        ctx.obj["config"].settings.rule_can_abort = rule_can_abort
+    ctx.obj["config"].settings.allow_push = allow_push
+    ctx.obj["config"].settings.dry_run = dry_run
 
     pillar: Pillar = ctx.obj["config"].settings.pillar
     pillar.enforce()
+    success_message("Finished successfully")
 
-    # Generate report for the execution
-    pillar.reporter.report()
-
-
-@cli.group()
-def get():
-    """
-    Show a specific resource or group of resources.
-    """
+    if report:
+        pillar.reporter.report()
+        success_message("Report generated")
 
 
-@get.command(name="order")
-@click.pass_context
-def get_order(ctx: click.Context):
-    """
-    Show the Pillar's execution order.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-
-    for law in pillar.laws:
-        click.echo(f"- {law.name}")
-
-        for rule in law.get_execution_order():
-            click.echo(f"  --> {rule.name}")
-
-
-@get.command(name="laws")
-@click.pass_context
-def get_laws(ctx: click.Context):
-    """
-    Show the registered Laws and rules on the Pillar.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-
-    for law in pillar.laws:
-        click.echo(f"- {law.name}")
-
-
-@get.command(name="law", help="Specific law to get")
-@click.argument("law", type=click.STRING)
-@click.pass_context
-def get_law(ctx: click.Context, law: str):
-    """
-    Show specific registered Law.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-
-    try:
-        registered_law = pillar.get_law(law)
-    except StopIteration:
-        raise click.ClickException(click.style(f'No such law "{law}"', fg="red"))
-
-    click.echo(f"{registered_law.documentation}")
-
-
-@get.command(name="rules")
-@click.pass_context
-def get_rules(ctx: click.Context):
-    """
-    TODO
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-
-    for rule in pillar.rules:
-        click.echo(f"- {rule.name}")
-
-
-@get.command(name="rule")
-@click.argument("rule", type=click.STRING)
-@click.pass_context
-def get_rule(ctx: click.Context, rule: str):
-    """
-    Specific rule to get.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-
-    try:
-        registered_rule = pillar.get_rule(rule)
-    except StopIteration:
-        raise click.ClickException(click.style(f'No such rule "{rule}"', fg="red"))
-
-    click.echo(f"{registered_rule.documentation}")
-
-
-@cli.group()
-def describe():
-    """
-    Show details of a specific resource or group of resources.
-    """
-
-
-@describe.command(name="law", help="Specific law to describe")
-@click.argument("law", type=click.STRING)
-@click.pass_context
-def describe_law(ctx: click.Context, law: str):
-    """
-    Show details of the given Law.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-    registered_law = pillar.get_law(law)
-
-    if not registered_law:
-        raise click.ClickException(click.style(f'No such law "{law}"', fg="red"))
-
-    click.echo(f"{registered_law.documentation}")
-    click.echo("Rules:")
-    for rule in registered_law.get_execution_order():
-        click.echo(f"  --> {rule.name}")
-
-
-@describe.command(name="rule")
-@click.argument("rule", type=click.STRING)
-@click.pass_context
-def describe_rule(ctx: click.Context, rule: str):
-    """
-    Specific rule to describe.
-    """
-
-    pillar: Pillar = ctx.obj["config"].settings.pillar
-    registered_rule = pillar.get_rule(rule)
-
-    if not registered_rule:
-        raise click.ClickException(click.style(f'No such rule "{rule}"', fg="red"))
-
-    click.echo(f"{registered_rule.documentation}")
-
-    click.echo("Chain:")
-    for chain in registered_rule.get_execution_order():
-        click.echo(f"  --> {chain.name}")
+if __name__ == "__main__":
+    app()

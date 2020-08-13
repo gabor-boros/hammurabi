@@ -65,6 +65,13 @@ Upcoming file format support:
 * ``toml``
 * ``hocon``
 
+Community
+=========
+
+If you need help or you would like to be part of the Hammurabi community, join us on discord_.
+
+.. _discord: https://discord.gg/dj8Myk5
+
 Installation
 ============
 
@@ -114,34 +121,6 @@ For configuration instructions, please visit the documentation_ site.
 
 .. _documentation: https://hammurabi.readthedocs.io/en/latest/config.html
 
-Command line options
-====================
-
-.. code-block:: bash
-
-    hammurabi [OPTIONS] COMMAND [ARGS]...
-
-    Hammurabi is an extensible CLI tool responsible for enforcing user-defined
-    rules on a git repository.
-
-    Find more information at: https://hammurabi.readthedocs.io/latest/
-
-    Options:
-    -c, --config PATH               Set the configuration file.  [default:
-                                    pyproject.toml]
-    --repository TEXT               Set the remote repository. Required format:
-                                    owner/repository
-    --github-token TEXT             Set github access token
-    --log-level [DEBUG|INFO|WARNING|ERROR]
-                                    Set logging level.
-    --help                          Show this message and exit.
-
-    Commands:
-    describe  Show details of a specific resource or group of resources.
-    enforce   Execute all registered Law.
-    get       Show a specific resource or group of resources.
-    version   Print Hammurabi version.
-
 Usage examples
 ==============
 
@@ -170,105 +149,6 @@ Enforce registered laws
     [INFO]  2020-14-07 16:31 - Pushing changes
     [INFO]  2020-14-07 16:35 - Checking for opened pull request
     [INFO]  2020-14-07 16:35 - Opening pull request
-
-Listing available laws
-----------------------
-
-.. code-block:: bash
-
-    $ hammurabi get laws
-    - Gunicorn config set up properly
-
-Get info about a law by its name
---------------------------------
-
-.. code-block:: bash
-
-    $ hammurabi get law "Gunicorn config set up properly"
-    Gunicorn config set up properly
-
-    Change the gunicorn configuration based on our learnings
-    described at: https://google.com/?q=gunicorn.
-
-    If the gunicorn configuration does not exist, create a
-    new one configuration file.
-
-Get all registered (root) rules
--------------------------------
-
-.. code-block:: bash
-
-    $ hammurabi get rules
-    - Rule 1
-    - Rule 5
-
-Get a rule by its name
-----------------------
-
-.. code-block:: bash
-
-    $ hammurabi get rule "Rule 1"
-    Rule 1
-
-    Ensure that a file exists. If the file does not exists,
-    this :class:`hammurabi.rules.base.Rule` will create it.
-
-    Due to the file is already created by :func:`pre_task_hook`
-    there is no need to do anything just return the input parameter.
-
-Describe a law by its name
---------------------------
-
-.. code-block:: bash
-
-    $ hammurabi describe law "Gunicorn config set up properly"
-    Gunicorn config set up properly
-
-    Change the gunicorn configuration based on our learnings
-    described at: http://docs.gunicorn.org/en/latest/configure.html.
-
-    If the gunicorn configuration does not exist, create a
-    new one configuration file.
-
-    Rules:
-    --> Rule 1
-    --> Rule 2
-    --> Rule 3
-    --> Rule 4
-    --> Rule 5
-
-Describe a rule by its name
----------------------------
-
-.. code-block:: bash
-
-    $ hammurabi describe rule "Rule 1"
-    Rule 1
-
-    Ensure that a file exists. If the file does not exists,
-    this :class:`hammurabi.rules.base.Rule` will create it.
-
-    Due to the file is already created by :func:`pre_task_hook`
-    there is no need to do anything just return the input parameter.
-
-    Chain:
-    --> Rule 1
-    --> Rule 2
-    --> Rule 3
-    --> Rule 4
-
-Getting the execution order of laws and rules
----------------------------------------------
-
-.. code-block:: bash
-
-    $ hammurabi get order
-    - Gunicorn config set up properly
-    --> Rule 1
-    --> Rule 2
-    --> Rule 3
-    --> Rule 4
-    --> Rule 5
 
 Custom Rules
 ============
@@ -309,12 +189,55 @@ For more reference please check how the existing rules are implemented.
             shutil.chown(self.param, group="admin")
             return self.param
 
-Community
-=========
+Custom Preconditions
+====================
 
-If you need help or you would like to be part of the Hammurabi community, join us on discord_.
+Rule execution supports preconditions. The logic is simple: if all preconditions
+pass, the rule is executed. Otherwise it will be skipped.
 
-.. _discord: https://discord.gg/dj8Myk5
+.. code-block:: python
+
+    # custom.py
+    from hammurabi import IsLineExists
+
+
+    class IsPackage(IsLineExists):
+        def __init__(self, **kwargs):
+            super().__init__(path=Path("Jenkinsfile"), criteria="package", **kwargs)
+
+Command line options
+====================
+
+.. code-block:: bash
+
+    Usage: hammurabi [OPTIONS] COMMAND [ARGS]...
+
+    Hammurabi is an extensible CLI tool responsible for enforcing user-defined
+    rules on a git repository.
+
+    Find more information at: https://hammurabi.readthedocs.io/latest/
+
+    Options:
+    -c, --config PATH               Set the configuration file.  [default:
+                                    pyproject.toml]
+
+    --repository TEXT               Set the remote repository. Required format:
+                                    owner/repository.  [default: ]
+
+    --token TEXT                    Set github access token.  [default: ]
+    --log-level [DEBUG|INFO|WARNING|ERROR]
+                                    Set logging level.  [default: INFO]
+    --install-completion [bash|zsh|fish|powershell|pwsh]
+                                    Install completion for the specified shell.
+    --show-completion [bash|zsh|fish|powershell|pwsh]
+                                    Show completion for the specified shell, to
+                                    copy it or customize the installation.
+
+    --help                          Show this message and exit.
+
+    Commands:
+    enforce  Execute registered laws.
+    version  Print hammurabi version.
 
 Contributing
 ============
@@ -331,9 +254,9 @@ Hammurabi.
 Installation
 ------------
 
-For development you will need poetry_ and pre-commit_. After poetry
-installed, simply run `poetry install`. This command will both create
-the virtualenv and install development dependencies for you.
+For development you will need poetry_ and pre-commit_. After poetry installed,
+simply run `poetry install -E all`. This command will both create the virtualenv
+and install all development dependencies for you.
 
 .. _poetry: https://python-poetry.org/docs/#installation
 .. _pre-commit: https://pre-commit.com/#install

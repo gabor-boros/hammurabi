@@ -38,12 +38,35 @@ Added
 ~~~~~
 
 * Extended the the development installation instruction by adding pre-commit
+* Add more tests for pillar
+
+Fixed
+~~~~~
+
+* Set `__version__` to the latest tag to fix documentation generation
 
 Changed
 ~~~~~~~
 
 * Rename `LineReplaced`'s `target` parameter to `match` to reduce confusion
 * Finetune pytest configuration by using classes named `*TestCase` instead of `Test*`
+* Replace click based CLI with a Typer based one
+* Use `__version__` for local documentation generation
+* Update CONTRIBUTING.md regarding documentation config version bump
+* Include `main.py` in test reports and add tests
+
+Removed
+~~~~~~~
+
+* `--rule-can-abort` is not an option anymore for enforce command
+* Drop `get order` command since it is not used at all
+* Drop `get laws` command since it is not used at all
+* Drop `get law` command since it is not used at all
+* Drop `get rules` command since it is not used at all
+* Drop `get rule` command since it is not used at all
+* Drop `describe law` command since it is not used at all
+* Drop `describe rule` command since it is not used at all
+* Remove hypothesis test reporting statistics generation
 
 0.9.1_ - 2020-08-08
 -------------------
