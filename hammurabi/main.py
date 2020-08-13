@@ -2,6 +2,7 @@ from enum import Enum
 import logging
 import os
 from pathlib import Path
+import sys
 
 import github3
 import typer
@@ -43,7 +44,8 @@ def print_message(message: str, color: str, bold: bool, should_exit: bool, code:
     typer.echo(typer.style(message, fg=color, bold=bold))
 
     if should_exit:
-        typer.Exit(code)
+        sys.exit(code)
+        return
 
 
 def error_message(message: str, should_exit: bool = True, code: int = 1):
@@ -95,6 +97,7 @@ def main(
         success_message("Configuration loaded")
     except Exception as exc:  # pylint: disable=broad-except
         error_message(f"Failed to load configuration: {str(exc)}")
+        return
 
     if token != DEFAULT_GITHUB_TOKEN:
         config.github = github3.login(token=token)

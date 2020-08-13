@@ -48,8 +48,9 @@ def test_print_message(mock_typer):
     mock_typer.echo.assert_called_once_with(mocked_styled_message)
 
 
+@patch("hammurabi.main.sys")
 @patch("hammurabi.main.typer")
-def test_print_message_with_exit(mock_typer):
+def test_print_message_with_exit(mock_typer, mock_sys):
     mocked_styled_message = Mock()
     mock_typer.style.return_value = mocked_styled_message
 
@@ -71,7 +72,7 @@ def test_print_message_with_exit(mock_typer):
         expected_message, fg=expected_color, bold=expected_is_bold
     )
     mock_typer.echo.assert_called_once_with(mocked_styled_message)
-    mock_typer.Exit.assert_called_once_with(expected_exit_code)
+    mock_sys.exit.assert_called_once_with(expected_exit_code)
 
 
 @patch("hammurabi.main.print_message")
@@ -189,19 +190,16 @@ def test_main_bad_config(
     load_error_message = "Whoops"
     mock_config.load.side_effect = Exception(load_error_message)
 
-    mock_error_message.side_effect = typer.Exit()
-
     # Passing default params, because typer not resolves the
     # typer.Option parameter assignments (since it is not an
     # integration test)
-    with pytest.raises(click.exceptions.Exit):
-        main(
-            ctx,
-            Path(DEFAULT_PROJECT_CONFIG),
-            DEFAULT_REPOSITORY,
-            DEFAULT_GITHUB_TOKEN,
-            LoggingChoices[DEFAULT_LOG_LEVEL.lower()],
-        )
+    main(
+        ctx,
+        Path(DEFAULT_PROJECT_CONFIG),
+        DEFAULT_REPOSITORY,
+        DEFAULT_GITHUB_TOKEN,
+        LoggingChoices[DEFAULT_LOG_LEVEL.lower()],
+    )
 
     mock_os.environ.setdefault.assert_called_once_with(
         "HAMMURABI_SETTINGS_PATH", DEFAULT_PROJECT_CONFIG
