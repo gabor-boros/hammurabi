@@ -51,7 +51,7 @@ Changed
 * Rename `LineReplaced`'s `target` parameter to `match` to reduce confusion
 * Finetune pytest configuration by using classes named `*TestCase` instead of `Test*`
 * Replace click based CLI with a Typer based one
-* Use `__version__` for local documentation generation
+* Use `latest` for local documentation generation
 * Update CONTRIBUTING.md regarding documentation config version bump
 * Include `main.py` in test reports and add tests
 
