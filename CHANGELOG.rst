@@ -40,6 +40,11 @@ Changed
 
 * CI/CD now executes `pre-commit run --all-files`
 
+Fixed
+~~~~~
+
+* Fix reading settings from environment variables
+
 0.10.0-beta_ - 2020-08-13
 -------------------------
 

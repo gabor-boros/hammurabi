@@ -133,7 +133,7 @@ def test_main_intermediate_actions(
         Path(DEFAULT_PROJECT_CONFIG),
         DEFAULT_REPOSITORY,
         DEFAULT_GITHUB_TOKEN,
-        LoggingChoices[DEFAULT_LOG_LEVEL.lower()],
+        LoggingChoices.DEBUG,
     )
 
     mock_os.environ.setdefault.assert_called_once_with(
@@ -142,7 +142,7 @@ def test_main_intermediate_actions(
     mock_config.load.assert_called_once_with()
     mock_success_message.assert_called_once_with("Configuration loaded")
     assert mock_github.login.called is False
-    mock_logging.root.setLevel.assert_called_once_with(DEFAULT_LOG_LEVEL)
+    mock_logging.root.setLevel.assert_called_once_with("DEBUG")
     ctx.ensure_object.assert_called_once_with(dict)
     assert ctx.obj["config"] == mock_config
 
@@ -198,7 +198,7 @@ def test_main_bad_config(
         Path(DEFAULT_PROJECT_CONFIG),
         DEFAULT_REPOSITORY,
         DEFAULT_GITHUB_TOKEN,
-        LoggingChoices[DEFAULT_LOG_LEVEL.lower()],
+        LoggingChoices.DEBUG,
     )
 
     mock_os.environ.setdefault.assert_called_once_with(
@@ -235,7 +235,7 @@ def test_main_new_github_token_set(
         Path(DEFAULT_PROJECT_CONFIG),
         DEFAULT_REPOSITORY,
         expected_token,
-        LoggingChoices[DEFAULT_LOG_LEVEL.lower()],
+        LoggingChoices.DEBUG,
     )
 
     mock_os.environ.setdefault.assert_called_once_with(
@@ -244,7 +244,7 @@ def test_main_new_github_token_set(
     mock_config.load.assert_called_once_with()
     mock_success_message.assert_called_once_with("Configuration loaded")
     mock_github.login.assert_called_once_with(token=expected_token)
-    mock_logging.root.setLevel.assert_called_once_with(DEFAULT_LOG_LEVEL)
+    mock_logging.root.setLevel.assert_called_once_with("DEBUG")
     ctx.ensure_object.assert_called_once_with(dict)
     assert ctx.obj["config"] == mock_config
 
