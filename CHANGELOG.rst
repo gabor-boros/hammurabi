@@ -35,6 +35,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* CI/CD now executes `pre-commit run --all-files`
+
 0.10.0-beta_ - 2020-08-13
 -------------------------
 
