@@ -14,7 +14,13 @@ from github3 import GitHub, login
 from pydantic import BaseSettings
 import toml
 
+# CLI only configuration
+# The CLI only configuration items are here, to keep the config at one place,
+# but these options not used at other places. Please keep them here and do not
+# create a CLI configuration
 DEFAULT_GENERATE_REPORT = True
+
+# Other configuration
 DEFAULT_ALLOW_PUSH: bool = True
 DEFAULT_DRY_RUN: bool = False
 DEFAULT_RULE_CAN_ABORT: bool = False

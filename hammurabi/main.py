@@ -27,10 +27,10 @@ class LoggingChoices(str, Enum):
     Logging choices for CLI settings.
     """
 
-    debug = "DEBUG"
-    info = "INFO"
-    warning = "WARNING"
-    error = "ERROR"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
 
 
 app = typer.Typer()
@@ -45,7 +45,6 @@ def print_message(message: str, color: str, bold: bool, should_exit: bool, code:
 
     if should_exit:
         sys.exit(code)
-        return
 
 
 def error_message(message: str, should_exit: bool = True, code: int = 1):
@@ -102,8 +101,11 @@ def main(
     if token != DEFAULT_GITHUB_TOKEN:
         config.github = github3.login(token=token)
 
-    config.settings.repository = repository
-    logging.root.setLevel(log_level.value)
+    if repository != DEFAULT_REPOSITORY:
+        config.settings.repository = repository
+
+    if log_level != DEFAULT_LOG_LEVEL:
+        logging.root.setLevel(log_level.value)
 
     ctx.ensure_object(dict)
     ctx.obj["config"] = config
@@ -131,8 +133,11 @@ def enforce(
     Longer description
     """
 
-    ctx.obj["config"].settings.allow_push = allow_push
-    ctx.obj["config"].settings.dry_run = dry_run
+    if allow_push != DEFAULT_ALLOW_PUSH:
+        ctx.obj["config"].settings.allow_push = allow_push
+
+    if dry_run != DEFAULT_DRY_RUN:
+        ctx.obj["config"].settings.dry_run = dry_run
 
     pillar: Pillar = ctx.obj["config"].settings.pillar
     pillar.enforce()

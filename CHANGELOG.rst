@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.10.0-beta...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.10.0...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -30,13 +30,13 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.8.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.8.2
 .. _0.9.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.0
 .. _0.9.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.1
-.. _0.10.0-beta: https://github.com/gabor-boros/hammurabi/releases/tag/v0.10.0-beta
+.. _0.10.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.10.0
 
 Unreleased_
 -----------
 
-0.10.0-beta_ - 2020-08-13
--------------------------
+0.10.0_ - 2020-08-14
+--------------------
 
 Added
 ~~~~~
@@ -52,6 +52,7 @@ Fixed
 Changed
 ~~~~~~~
 
+* CI/CD now executes `pre-commit run --all-files`
 * Rename `LineReplaced`'s `target` parameter to `match` to reduce confusion
 * Finetune pytest configuration by using classes named `*TestCase` instead of `Test*`
 * Replace click based CLI with a Typer based one

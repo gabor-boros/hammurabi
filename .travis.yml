@@ -9,7 +9,7 @@ python:
     - '3.8'
 
 install:
-    - pip install poetry
+    - pip install poetry pre-commit
     - poetry install -E all
     - make download-test-reporter
 
@@ -17,6 +17,7 @@ before_script:
     - make test-reporter-before
 
 script:
+    - pre-commit run --all-files
     - poetry run make lint
     - poetry run make test
 
