@@ -40,6 +40,7 @@ Changed
 
 * Rename all `target` to `match` as it shows the intention better
 * Remove trailing "s" from preconditions starting with "Is"
+* Extend the documentation of `DirectoryNotExists`
 
 Fixed
 ~~~~~
