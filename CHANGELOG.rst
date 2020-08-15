@@ -35,6 +35,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Allow documentation generation for rules which are depending on extra packages
+
 0.10.0_ - 2020-08-14
 --------------------
 

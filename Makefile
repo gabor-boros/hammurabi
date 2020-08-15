@@ -57,7 +57,7 @@ clean-test: ## remove test and coverage artifacts
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/hammurabi.rst
 	rm -f docs/modules.rst
-	poetry export --dev -f requirements.txt > docs/requirements.txt
+	poetry export --E all --dev -f requirements.txt > docs/requirements.txt
 	sphinx-apidoc -o docs/ hammurabi
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
