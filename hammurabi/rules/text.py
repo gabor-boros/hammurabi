@@ -81,9 +81,9 @@ class LineExists(SinglePathRule):
 
         super().__init__(name, path, **kwargs)
 
-    def __get_match_match(self, lines: List[str]) -> str:
+    def __get_match(self, lines: List[str]) -> str:
         """
-        Get the matching match from the content of the given file.
+        Get the matching line from the content of the given file.
         In case the matching number of lines are more than one or no
         match found, an exception will be raised accordingly.
 
@@ -149,7 +149,7 @@ class LineExists(SinglePathRule):
         :type lines: List[str]
         """
 
-        match_match = self.__get_match_match(lines)
+        match_match = self.__get_match(lines)
 
         # Get the index of the element from the right
         match_match_index = len(lines) - lines[::-1].index(match_match) - 1
