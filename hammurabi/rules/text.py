@@ -31,7 +31,7 @@ class LineExists(SinglePathRule):
     .. code-block:: python
 
             >>> from pathlib import Path
-            >>> from hammurabi import Law, Pillar, LineExists, IsLineNotExists
+            >>> from hammurabi import Law, Pillar, LineExists, IsLineNotExist
             >>>
             >>> gunicorn_config = Path("./gunicorn.conf.py")
             >>> example_law = Law(
@@ -44,7 +44,7 @@ class LineExists(SinglePathRule):
             >>>             text="keepalive = 65",
             >>>             match=r"^bind.*",
             >>>             preconditions=[
-            >>>                 IsLineNotExists(path=gunicorn_config, criteria=r"^keepalive.*")
+            >>>                 IsLineNotExist(path=gunicorn_config, criteria=r"^keepalive.*")
             >>>             ]
             >>>         ),
             >>>     )

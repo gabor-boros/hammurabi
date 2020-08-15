@@ -9,7 +9,7 @@ import re
 from hammurabi.preconditions.base import Precondition
 
 
-class IsLineExists(Precondition):
+class IsLineExist(Precondition):
     """
     Check if the given line exists.
 
@@ -18,7 +18,7 @@ class IsLineExists(Precondition):
     .. code-block:: python
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, Renamed, IsLineExists
+        >>> from hammurabi import Law, Pillar, Renamed, IsLineExist
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -29,7 +29,7 @@ class IsLineExists(Precondition):
         >>>             path=Path("old-name"),
         >>>             new_name="new-name",
         >>>             preconditions=[
-        >>>                 IsLineExists(path=Path("other-file"), criteria=r"^string=some-value$")
+        >>>                 IsLineExist(path=Path("other-file"), criteria=r"^string=some-value$")
         >>>             ]
         >>>         ),
         >>>     )
@@ -62,9 +62,9 @@ class IsLineExists(Precondition):
         return any(filter(self.criteria.match, lines))
 
 
-class IsLineNotExists(IsLineExists):
+class IsLineNotExist(IsLineExist):
     """
-    Opposite of :class:`hammurabi.preconditions.text.IsLineExists`.
+    Opposite of :class:`hammurabi.preconditions.text.IsLineExist`.
     """
 
     def task(self) -> bool:

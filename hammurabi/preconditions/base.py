@@ -41,7 +41,7 @@ class Precondition(AbstractRule, ABC):
         >>> from pathlib import Path
         >>> from hammurabi import Precondition
         >>>
-        >>> class IsFileExists(Precondition):
+        >>> class IsFileExist(Precondition):
         >>>     def __init__(self, path: Optional[Path] = None, **kwargs) -> None:
         >>>         super().__init__(param=path, **kwargs)
         >>>
