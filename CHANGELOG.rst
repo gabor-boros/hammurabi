@@ -35,6 +35,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Rename all `target` to `match` as it shows the intention better
+
 Fixed
 ~~~~~
 

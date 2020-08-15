@@ -6,13 +6,13 @@ from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
 
 
 def get_line_exists_rule(
-    text="Example text", target="Example target", position=1, lines=[], **kwargs
+    text="Example text", match="Example match", position=1, lines=[], **kwargs
 ):
     mock_file = Mock()
     mock_file.read.return_value.splitlines.return_value = lines
 
     rule = LineExists(
-        name="Line exists rule", text=text, target=target, position=position, **kwargs
+        name="Line exists rule", text=text, match=match, position=position, **kwargs
     )
 
     rule.param.open.return_value.__enter__ = Mock(return_value=mock_file)
@@ -22,16 +22,16 @@ def get_line_exists_rule(
 
 
 def get_line_replaced_rule(
-    text="Example text", target="Example target", lines=None, **kwargs
+    text="Example text", match="Example match", lines=None, **kwargs
 ):
     mock_file = Mock()
 
     if lines is None:
-        lines = [target]
+        lines = [match]
 
     mock_file.read.return_value.splitlines.return_value = lines
 
-    rule = LineReplaced(name="Line replaced rule", text=text, match=target, **kwargs)
+    rule = LineReplaced(name="Line replaced rule", text=text, match=match, **kwargs)
 
     rule.param.open.return_value.__enter__ = Mock(return_value=mock_file)
     rule.param.open.return_value.__exit__ = Mock()
@@ -41,16 +41,16 @@ def get_line_replaced_rule(
 
 def test_line_exists():
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, target=target, lines=[target, "other line"]
+        path=expected_path, match=match, lines=[match, "other line"]
     )
 
     result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == [f"{target}\n", f"{rule.text}\n", "other line\n"]
+    assert write_args == [f"{match}\n", f"{rule.text}\n", "other line\n"]
     assert result == expected_path
 
 
@@ -60,7 +60,7 @@ def test_line_exists_no_newline():
 
     rule, mock_file = get_line_exists_rule(
         path=expected_path,
-        target="$",
+        match="$",
         text=expected_text,
         lines=["some", "lines"],
         ensure_trailing_newline=True,
@@ -78,47 +78,47 @@ def test_line_exists_no_newline():
 
 def test_line_exists_insert_before():
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, target=target, lines=[target, "other line"], position=0
+        path=expected_path, match=match, lines=[match, "other line"], position=0
     )
 
     rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == [f"{rule.text}\n", f"{target}\n", "other line\n"]
+    assert write_args == [f"{rule.text}\n", f"{match}\n", "other line\n"]
 
 
 def test_line_exists_with_indentation():
     expected_path = Mock()
-    target = "\ttarget"
+    match = "\tmatch"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, target=target, lines=[target, "other line"]
+        path=expected_path, match=match, lines=[match, "other line"]
     )
 
     rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == [f"{target}\n", f"{rule.text}\n", "other line\n"]
+    assert write_args == [f"{match}\n", f"{rule.text}\n", "other line\n"]
 
 
 @patch("hammurabi.rules.text.re")
 def test_line_exists_re_compiled(mocked_re):
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
-    get_line_exists_rule(path=expected_path, target=target)
+    get_line_exists_rule(path=expected_path, match=match)
 
-    mocked_re.compile.assert_has_calls([call(target), call(r"^\s+")])
+    mocked_re.compile.assert_has_calls([call(match), call(r"^\s+")])
 
 
 def test_line_exists_empty_file():
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
-    rule, mock_file = get_line_exists_rule(path=expected_path, target=target)
+    rule, mock_file = get_line_exists_rule(path=expected_path, match=match)
 
     rule.task()
 
@@ -128,10 +128,10 @@ def test_line_exists_empty_file():
 
 def test_line_exists_no_match():
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, target=target, lines=["no", "match"]
+        path=expected_path, match=match, lines=["nothing", "to see", "here"]
     )
 
     with pytest.raises(LookupError) as exc:
@@ -143,16 +143,16 @@ def test_line_exists_no_match():
 
 def test_line_exists_multiple_matches():
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, target=target, lines=["target", "target_match"]
+        path=expected_path, match=match, lines=["match", "match_match"]
     )
 
     result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == [f"{target}\n", "target_match\n", f"{rule.text}\n"]
+    assert write_args == [f"{match}\n", "match_match\n", f"{rule.text}\n"]
     assert result == expected_path
 
 
@@ -220,7 +220,7 @@ def test_line_replaced_with_indentation():
     rule, mock_file = get_line_replaced_rule(
         path=expected_path,
         text=replacement,
-        target="\treplace me",
+        match="\treplace me",
         lines=["\treplace me", "other line"],
     )
 
@@ -233,11 +233,11 @@ def test_line_replaced_with_indentation():
 @patch("hammurabi.rules.text.re")
 def test_line_replaced_re_compiled(mocked_re):
     expected_path = Mock()
-    target = "target"
+    match = "match"
 
-    get_line_replaced_rule(path=expected_path, target=target)
+    get_line_replaced_rule(path=expected_path, match=match)
 
-    mocked_re.compile.assert_has_calls([call(target), call(r"^\s+")])
+    mocked_re.compile.assert_has_calls([call(match), call(r"^\s+")])
 
 
 def test_line_replaced_empty_file():
@@ -294,18 +294,18 @@ def test_line_replaced_no_match_no_text():
     assert mock_file.writelines.called is False
 
 
-def test_line_replaced_both_target_and_text():
+def test_line_replaced_both_match_and_text():
     expected_path = Mock()
-    target = "target"
+    match = "match"
     text = "apple tree"
 
     rule, mock_file = get_line_replaced_rule(
-        path=expected_path, lines=["no", target, text], target=target, text=text
+        path=expected_path, lines=["no", match, text], match=match, text=text
     )
 
     with pytest.raises(LookupError) as exc:
         rule.task()
 
-    # Use rule.target because of transformations on it
+    # Use rule.match because of transformations on it
     assert str(exc.value) == f'Both "{rule.match}" and "{rule.text}" exists'
     assert mock_file.writelines.called is False

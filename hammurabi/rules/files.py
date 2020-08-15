@@ -41,7 +41,7 @@ class FileExists(SinglePathRule):
 
     def task(self) -> Path:
         """
-        If the target file not exists, create the file to make sure we
+        If the match file not exists, create the file to make sure we
         can manipulate it.
 
         :return: The created/existing file's path
@@ -87,7 +87,7 @@ class FilesExist(MultiplePathRule):
 
     def task(self) -> Iterable[Path]:
         """
-        If the target files not exist, create the files to make sure we
+        If the match files not exist, create the files to make sure we
         can manipulate them.
 
         :return: The created/existing files' path

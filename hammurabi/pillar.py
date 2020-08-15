@@ -141,7 +141,7 @@ class Pillar(GitHubMixin):
 
         This method glues together the lower level components and makes sure that the
         execution of laws and rules can not be called more than once at the same time
-        for a target.
+        for a match.
         """
 
         self.reporter.additional_data.started = datetime.now().isoformat()
