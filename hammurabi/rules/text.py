@@ -96,12 +96,12 @@ class LineExists(SinglePathRule):
         :rtype: str
         """
 
-        match_match = list(filter(self.match.match, lines))
+        match = list(filter(self.match.match, lines))
 
-        if not match_match:
+        if not match:
             raise LookupError(f'No matching line for "{self.match}"')
 
-        return match_match.pop()
+        return match.pop()
 
     def __get_lines_from_file(self) -> Tuple[List[str], bool]:
         """
@@ -149,16 +149,16 @@ class LineExists(SinglePathRule):
         :type lines: List[str]
         """
 
-        match_match = self.__get_match(lines)
+        match = self.__get_match(lines)
 
         # Get the index of the element from the right
-        match_match_index = len(lines) - lines[::-1].index(match_match) - 1
+        match_index = len(lines) - lines[::-1].index(match) - 1
 
-        insert_position = match_match_index + self.position
+        insert_position = match_index + self.position
 
         logging.debug('Inserting "%s" to position "%d"', self.text, insert_position)
 
-        indentation = self.indentation_pattern.match(lines[match_match_index])
+        indentation = self.indentation_pattern.match(lines[match_index])
         if self.respect_indentation and indentation:
             self.text = indentation.group() + self.text
 
@@ -363,19 +363,19 @@ class LineReplaced(SinglePathRule):
 
         lines, _ = self.__get_lines_from_file()
 
-        match_match = list(filter(self.match.match, lines))
+        match = list(filter(self.match.match, lines))
         text = list(filter(lambda l: l.strip() == self.text, lines))
 
-        if match_match and text:
+        if match and text:
             raise LookupError(f'Both "{self.match}" and "{self.text}" exists')
 
         if text:
             return self.param
 
-        if not match_match:
+        if not match:
             raise LookupError(f'No matching line for "{self.match}"')
 
-        for match in match_match:
+        for match in match:
             self.__replace_line(lines, match)
 
         self.__write_content_to_file(lines)

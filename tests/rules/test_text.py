@@ -146,13 +146,13 @@ def test_line_exists_multiple_matches():
     match = "match"
 
     rule, mock_file = get_line_exists_rule(
-        path=expected_path, match=match, lines=["match", "match_match"]
+        path=expected_path, match=match, lines=["match", "match"]
     )
 
     result = rule.task()
 
     write_args = list(mock_file.writelines.call_args[0][0])
-    assert write_args == [f"{match}\n", "match_match\n", f"{rule.text}\n"]
+    assert write_args == [f"{match}\n", "match\n", f"{rule.text}\n"]
     assert result == expected_path
 
 
