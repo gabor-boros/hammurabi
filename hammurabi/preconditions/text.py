@@ -43,6 +43,18 @@ class IsLineExist(Precondition):
 
     :param criteria: Regexp of the desired line
     :type criteria: str
+
+    .. warning::
+
+        When using ``criteria`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
     """
 
     def __init__(self, path: Path, criteria: str, **kwargs) -> None:

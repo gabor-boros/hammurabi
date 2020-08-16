@@ -98,6 +98,18 @@ class SectionExists(SingleConfigFileRule):
 
     .. warning::
 
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
+
+    .. warning::
+
         When ``options`` parameter is set, make sure you are using an iterable tuple.
         The option keys must be strings, but there is no limitation for the value. It can
         be set to anything what the parser can handle. For more information on the parser,

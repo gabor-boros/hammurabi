@@ -53,6 +53,18 @@ class LineExists(SinglePathRule):
             >>> pillar = Pillar()
             >>> pillar.register(example_law)
 
+    .. warning::
+
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
+
     .. note::
 
         The indentation of the match text will be extracted by a simple
@@ -282,6 +294,18 @@ class LineReplaced(SinglePathRule):
         The indentation of the `text` will be extracted by a simple
         regular expression. If a more complex regexp is required, please
         inherit from this class.
+
+    .. warning::
+
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
 
     .. warning::
 
