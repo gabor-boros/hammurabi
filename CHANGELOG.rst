@@ -35,6 +35,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Changed
+~~~~~~~
+
+* Add László Üveges to maintainers
+
 Fixed
 ~~~~~
 
