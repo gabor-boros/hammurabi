@@ -9,6 +9,13 @@ Development Lead
 
 .. _@gabor-boros: https://github.com/gabor-boros
 
+Maintainers
+-----------
+
+- László Üveges (`@uvegla`_)
+
+.. _@uvegla: https://github.com/uvegla
+
 Contributors
 ------------
 

@@ -42,6 +42,7 @@ Changed
 * Remove trailing "s" from preconditions starting with "Is"
 * Extend the documentation of `DirectoryNotExists`
 * Mention in the docs that `match` will use partial match if the regex is not specific enough
+* Add László Üveges to maintainers
 
 Fixed
 ~~~~~
