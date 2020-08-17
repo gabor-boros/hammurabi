@@ -39,6 +39,7 @@ Changed
 ~~~~~~~
 
 * Add László Üveges to maintainers
+* Replace Travis CI with GitHub Actions
 
 Fixed
 ~~~~~
