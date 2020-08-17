@@ -25,7 +25,7 @@ jobs:
                   poetry install -E all
 
             - name: Prepare coverage reporting
-              if: ${{ runner.os }} == 'Linux'
+              if: runner.os == 'Linux'
               run: |
                   make download-test-reporter
                   make test-reporter-before
@@ -39,7 +39,7 @@ jobs:
             - name: Upload coverage report
               env:
                   CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-              if: ${{ runner.os }} == 'Linux'
+              if: runner.os == 'Linux'
               run: make upload-coverage
 
             - name: Deploy to PyPi
