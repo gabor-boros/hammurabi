@@ -1,0 +1,50 @@
+---
+name: Test and build
+
+on: [push, pull_request, release]
+
+jobs:
+    test-and-build:
+        name: Test on Python ${{ matrix.python_version }} and ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                python_version: ['3.7', '3.8']
+                os: [ubuntu-latest, windows-latest, macOS-latest]
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python_version }}
+              uses: actions/setup-python@v2
+              with:
+                  python-version: ${{ matrix.python_version }}
+
+            - name: Install requirements
+              run: |
+                  pip install poetry pre-commit
+                  poetry install -E all
+
+            - name: Prepare coverage reporting
+              if: ${{ runner.os }} == 'ubuntu-latest'
+              run: |
+                  make download-test-reporter
+                  make test-reporter-before
+
+            - name: Run tests
+              run: |
+                  pre-commit run --all-files
+                  poetry run make lint
+                  poetry run make test
+
+            - name: Upload coverage report
+              env:
+                  CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+              if: ${{ runner.os }} == 'ubuntu-latest'
+              run: make upload-coverage
+
+            - name: Deploy to PyPi
+              env:
+                  POETRY_HTTP_BASIC_PYPI_USERNAME: ${{ secrets.POETRY_HTTP_BASIC_PYPI_USERNAME }}
+                  POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.POETRY_HTTP_BASIC_PYPI_PASSWORD }}
+              if: github.event == 'release'
+              run: poetry publish --build
