@@ -387,19 +387,19 @@ class LineReplaced(SinglePathRule):
 
         lines, _ = self.__get_lines_from_file()
 
-        match = list(filter(self.match.match, lines))
+        matches = list(filter(self.match.match, lines))
         text = list(filter(lambda l: l.strip() == self.text, lines))
 
-        if match and text:
+        if matches and text:
             raise LookupError(f'Both "{self.match}" and "{self.text}" exists')
 
         if text:
             return self.param
 
-        if not match:
+        if not matches:
             raise LookupError(f'No matching line for "{self.match}"')
 
-        for match in match:
+        for match in matches:
             self.__replace_line(lines, match)
 
         self.__write_content_to_file(lines)
