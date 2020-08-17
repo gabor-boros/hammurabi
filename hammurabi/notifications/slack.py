@@ -20,7 +20,7 @@ class SlackNotification(Notification):
     .. code-block:: python
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, Renamed, IsDirectoryExists, SlackNotification
+        >>> from hammurabi import Law, Pillar, Renamed, IsDirectoryExist, SlackNotification
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -31,7 +31,7 @@ class SlackNotification(Notification):
         >>>             path=Path("old-name"),
         >>>             new_name="new-name",
         >>>             preconditions=[
-        >>>                 IsDirectoryExists(path=Path("other-dir"))
+        >>>                 IsDirectoryExist(path=Path("other-dir"))
         >>>             ]
         >>>         ),
         >>>     )

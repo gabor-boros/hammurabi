@@ -94,7 +94,7 @@ class JSONKeyExists(DictKeyExists, SingleJSONFileRule):
     .. warning::
 
         Compared to :mod:`hammurabi.rules.text.LineExists`, this rule is NOT able to add a
-        key before or after a target.
+        key before or after a match.
     """
 
 

@@ -8,7 +8,7 @@ from pathlib import Path
 from hammurabi.preconditions.base import Precondition
 
 
-class IsDirectoryExists(Precondition):
+class IsDirectoryExist(Precondition):
     """
     Check if the given directory exists.
 
@@ -17,7 +17,7 @@ class IsDirectoryExists(Precondition):
     .. code-block:: python
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, Renamed, IsDirectoryExists
+        >>> from hammurabi import Law, Pillar, Renamed, IsDirectoryExist
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -28,7 +28,7 @@ class IsDirectoryExists(Precondition):
         >>>             path=Path("old-name"),
         >>>             new_name="new-name",
         >>>             preconditions=[
-        >>>                 IsDirectoryExists(path=Path("other-dir"))
+        >>>                 IsDirectoryExist(path=Path("other-dir"))
         >>>             ]
         >>>         ),
         >>>     )
@@ -56,9 +56,9 @@ class IsDirectoryExists(Precondition):
         return self.param.exists() and self.param.is_dir()
 
 
-class IsDirectoryNotExists(IsDirectoryExists):
+class IsDirectoryNotExist(IsDirectoryExist):
     """
-    Opposite of :class:`hammurabi.preconditions.directories.IsDirectoryExists`.
+    Opposite of :class:`hammurabi.preconditions.directories.IsDirectoryExist`.
     """
 
     def task(self) -> bool:

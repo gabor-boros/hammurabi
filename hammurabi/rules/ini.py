@@ -63,9 +63,9 @@ class SectionExists(SingleConfigFileRule):
     case options are set, the config options will be assigned to that config sections.
 
     Similarly to :mod:`hammurabi.rules.text.LineExists`, this rule is able to add a
-    section before or after a target section. The limitation compared to ``LineExists``
+    section before or after a match section. The limitation compared to ``LineExists``
     is that the ``SectionExists`` rule is only able to add the new entry exactly before
-    or after its target.
+    or after its match.
 
     Example usage:
 
@@ -80,7 +80,7 @@ class SectionExists(SingleConfigFileRule):
         >>>             name="Ensure section exists",
         >>>             path=Path("./config.ini"),
         >>>             section="polling",
-        >>>             target="add_after_me",
+        >>>             match="add_after_me",
         >>>             options=(
         >>>                 ("interval", "2s"),
         >>>                 ("abort_on_error", True),
@@ -98,6 +98,18 @@ class SectionExists(SingleConfigFileRule):
 
     .. warning::
 
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
+
+    .. warning::
+
         When ``options`` parameter is set, make sure you are using an iterable tuple.
         The option keys must be strings, but there is no limitation for the value. It can
         be set to anything what the parser can handle. For more information on the parser,
@@ -110,12 +122,12 @@ class SectionExists(SingleConfigFileRule):
         self,
         name: str,
         path: Optional[Path] = None,
-        target: Optional[str] = None,
+        match: Optional[str] = None,
         options: Iterable[Tuple[str, Any]] = (),
         add_after: bool = True,
         **kwargs,
     ) -> None:
-        self.target = target
+        self.match = match
         self.options = options
         self.add_after = add_after
 
@@ -123,35 +135,35 @@ class SectionExists(SingleConfigFileRule):
 
         super().__init__(name, path, **kwargs)
 
-    def __get_target(self) -> Optional[Section]:
+    def __get_match(self) -> Optional[Section]:
         """
-        Get the target of the insert. If the target is not
+        Get the match of the insert. If the match is not
         specified directly add as the last section.
         """
 
         if not self.updater.sections():
             return None
 
-        if self.updater.has_section(self.target):
-            return self.updater[self.target]
+        if self.updater.has_section(self.match):
+            return self.updater[self.match]
 
         return self.updater.sections_blocks()[-1]
 
     def __add_section(self) -> None:
         """
-        Add the desired section before or after the target section if exists.
-        In case the target section not exists, so the file was empty, simply
+        Add the desired section before or after the match section if exists.
+        In case the match section not exists, so the file was empty, simply
         add the new section.
         """
 
         logging.debug('Adding section "%s"', self.section)
 
-        target = self.__get_target()
+        match = self.__get_match()
 
-        if target is not None and self.add_after:
-            target.add_after.space(self.space).section(self.section)
-        elif target is not None and not self.add_after:
-            target.add_before.section(self.section)
+        if match is not None and self.add_after:
+            match.add_after.space(self.space).section(self.section)
+        elif match is not None and not self.add_after:
+            match.add_before.section(self.section)
         else:
             self.updater.add_section(self.section)
 

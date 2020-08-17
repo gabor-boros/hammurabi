@@ -154,13 +154,13 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def __get_chained_rules(
-        target: Rule, chain: List[Union[Rule, Precondition]]
+        match: Rule, chain: List[Union[Rule, Precondition]]
     ) -> Iterable[Rule]:
         """
         Return all the chained rules excluding the root rule.
 
-        :param target: The root Rule
-        :type target: Rule
+        :param match: The root Rule
+        :type match: Rule
 
         :param chain: The whole chain
         :type chain: Iterable[Rule]
@@ -170,7 +170,7 @@ class PullRequestHelperMixin:  # pylint: disable=too-few-public-methods
         """
 
         rules = filter(lambda i: isinstance(i, Rule), chain)
-        return filter(lambda r: r != target, rules)  # type: ignore
+        return filter(lambda r: r != match, rules)  # type: ignore
 
     def __get_rules_body(self, rules: Iterable[Rule]) -> List[str]:
         """

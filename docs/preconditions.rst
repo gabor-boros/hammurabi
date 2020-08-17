@@ -37,44 +37,44 @@ HasNoMode
 Directories
 -----------
 
-IsDirectoryExists
-~~~~~~~~~~~~~~~~~
+IsDirectoryExist
+~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.directories.IsDirectoryExists
+.. autoclass:: hammurabi.preconditions.directories.IsDirectoryExist
    :noindex:
 
-IsDirectoryNotExists
-~~~~~~~~~~~~~~~~~~~~
+IsDirectoryNotExist
+~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.directories.IsDirectoryNotExists
+.. autoclass:: hammurabi.preconditions.directories.IsDirectoryNotExist
    :noindex:
 
 Files
 -----
 
-IsFileExists
-~~~~~~~~~~~~
+IsFileExist
+~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.files.IsFileExists
+.. autoclass:: hammurabi.preconditions.files.IsFileExist
    :noindex:
 
-IsFileNotExists
-~~~~~~~~~~~~~~~
+IsFileNotExist
+~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.files.IsFileNotExists
+.. autoclass:: hammurabi.preconditions.files.IsFileNotExist
    :noindex:
 
 Text files
 ----------
 
-IsLineExists
-~~~~~~~~~~~~
+IsLineExist
+~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.text.IsLineExists
+.. autoclass:: hammurabi.preconditions.text.IsLineExist
    :noindex:
 
-IsLineNotExists
-~~~~~~~~~~~~~~~
+IsLineNotExist
+~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.preconditions.text.IsLineNotExists
+.. autoclass:: hammurabi.preconditions.text.IsLineNotExist
    :noindex:

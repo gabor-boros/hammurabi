@@ -19,19 +19,19 @@ from hammurabi.rules.common import SinglePathRule
 class LineExists(SinglePathRule):
     """
     Make sure that the given file contains the required line. This rule is
-    capable for inserting the expected text before or after the unique target
+    capable for inserting the expected text before or after the unique match
     text respecting the indentation of its context.
 
     The default behaviour is to insert the required text exactly after the
-    target line, and respect its indentation. Please note that ``text``and
-    ``target`` parameters are required.
+    match line, and respect its indentation. Please note that ``text``and
+    ``match`` parameters are required.
 
     Example usage:
 
     .. code-block:: python
 
             >>> from pathlib import Path
-            >>> from hammurabi import Law, Pillar, LineExists, IsLineNotExists
+            >>> from hammurabi import Law, Pillar, LineExists, IsLineNotExist
             >>>
             >>> gunicorn_config = Path("./gunicorn.conf.py")
             >>> example_law = Law(
@@ -42,9 +42,9 @@ class LineExists(SinglePathRule):
             >>>             name="Extend gunicorn config",
             >>>             path=gunicorn_config,
             >>>             text="keepalive = 65",
-            >>>             target=r"^bind.*",
+            >>>             match=r"^bind.*",
             >>>             preconditions=[
-            >>>                 IsLineNotExists(path=gunicorn_config, criteria=r"^keepalive.*")
+            >>>                 IsLineNotExist(path=gunicorn_config, criteria=r"^keepalive.*")
             >>>             ]
             >>>         ),
             >>>     )
@@ -53,9 +53,21 @@ class LineExists(SinglePathRule):
             >>> pillar = Pillar()
             >>> pillar.register(example_law)
 
+    .. warning::
+
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
+
     .. note::
 
-        The indentation of the target text will be extracted by a simple
+        The indentation of the match text will be extracted by a simple
         regular expression. If a more complex regexp is required, please
         inherit from this class.
     """
@@ -65,14 +77,14 @@ class LineExists(SinglePathRule):
         name: str,
         path: Optional[Path] = None,
         text: Optional[str] = None,
-        target: Optional[str] = None,
+        match: Optional[str] = None,
         position: int = 1,
         respect_indentation: bool = True,
         ensure_trailing_newline: bool = False,
         **kwargs,
     ) -> None:
         self.text = self.validate(text, required=True)
-        self.target = re.compile(self.validate(target, required=True))
+        self.match = re.compile(self.validate(match, required=True))
         self.position = position
         self.respect_indentation = respect_indentation
 
@@ -81,27 +93,27 @@ class LineExists(SinglePathRule):
 
         super().__init__(name, path, **kwargs)
 
-    def __get_target_match(self, lines: List[str]) -> str:
+    def __get_match(self, lines: List[str]) -> str:
         """
-        Get the matching target from the content of the given file.
+        Get the matching line from the content of the given file.
         In case the matching number of lines are more than one or no
         match found, an exception will be raised accordingly.
 
         :param lines: Content of the given file
         :type lines: List[str]
 
-        :raises: ``LookupError`` if no matching line can be found for target
+        :raises: ``LookupError`` if no matching line can be found for match
 
         :return: List of the matching line
         :rtype: str
         """
 
-        target_match = list(filter(self.target.match, lines))
+        match = list(filter(self.match.match, lines))
 
-        if not target_match:
-            raise LookupError(f'No matching line for "{self.target}"')
+        if not match:
+            raise LookupError(f'No matching line for "{self.match}"')
 
-        return target_match.pop()
+        return match.pop()
 
     def __get_lines_from_file(self) -> Tuple[List[str], bool]:
         """
@@ -149,16 +161,16 @@ class LineExists(SinglePathRule):
         :type lines: List[str]
         """
 
-        target_match = self.__get_target_match(lines)
+        match = self.__get_match(lines)
 
         # Get the index of the element from the right
-        target_match_index = len(lines) - lines[::-1].index(target_match) - 1
+        match_index = len(lines) - lines[::-1].index(match) - 1
 
-        insert_position = target_match_index + self.position
+        insert_position = match_index + self.position
 
         logging.debug('Inserting "%s" to position "%d"', self.text, insert_position)
 
-        indentation = self.indentation_pattern.match(lines[target_match_index])
+        indentation = self.indentation_pattern.match(lines[match_index])
         if self.respect_indentation and indentation:
             self.text = indentation.group() + self.text
 
@@ -167,7 +179,7 @@ class LineExists(SinglePathRule):
     def task(self) -> Path:
         """
         Make sure that the given file contains the required line. This rule is
-        capable for inserting the expected rule before or after the unique target
+        capable for inserting the expected rule before or after the unique match
         text respecting the indentation of its context.
 
         :raises: ``LookupError``
@@ -285,6 +297,18 @@ class LineReplaced(SinglePathRule):
 
     .. warning::
 
+        When using ``match`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
+
+    .. warning::
+
         This rule will replace all the matching lines in the given file.
         Make sure the given `match` regular expression is tested before
         the rule used against production code.
@@ -340,7 +364,7 @@ class LineReplaced(SinglePathRule):
         :param lines: The new content of the original file
         :type lines: List[str]
 
-        :param match: The matching target in the given file's content
+        :param match: The matching match in the given file's content
         :type match: str
         """
 
@@ -363,19 +387,19 @@ class LineReplaced(SinglePathRule):
 
         lines, _ = self.__get_lines_from_file()
 
-        match_match = list(filter(self.match.match, lines))
+        matches = list(filter(self.match.match, lines))
         text = list(filter(lambda l: l.strip() == self.text, lines))
 
-        if match_match and text:
+        if matches and text:
             raise LookupError(f'Both "{self.match}" and "{self.text}" exists')
 
         if text:
             return self.param
 
-        if not match_match:
+        if not matches:
             raise LookupError(f'No matching line for "{self.match}"')
 
-        for match in match_match:
+        for match in matches:
             self.__replace_line(lines, match)
 
         self.__write_content_to_file(lines)

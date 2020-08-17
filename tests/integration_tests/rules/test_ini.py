@@ -17,7 +17,7 @@ def test_section_exists(temporary_file):
         name="Ensure section exists",
         path=expected_file,
         section="test_section",
-        target="main",
+        match="main",
         options=(("option_1", "some value"), ("option_2", True)),
     )
 
@@ -32,7 +32,7 @@ def test_section_exists(temporary_file):
 
 
 @pytest.mark.integration
-def test_section_exists_no_target(temporary_file):
+def test_section_exists_no_match(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("[main]")
 
@@ -40,7 +40,7 @@ def test_section_exists_no_target(temporary_file):
         name="Ensure section exists",
         path=expected_file,
         section="test_section",
-        target="last",
+        match="last",
         options=(("option_1", "some value"), ("option_2", True)),
     )
 
@@ -55,7 +55,7 @@ def test_section_exists_no_target(temporary_file):
 
 
 @pytest.mark.integration
-def test_section_exists_no_target_set(temporary_file):
+def test_section_exists_no_match_set(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("[main]\n[last]")
 
@@ -85,7 +85,7 @@ def test_section_exists_keeping_comment(temporary_file):
         name="Ensure section exists",
         path=expected_file,
         section="test_section",
-        target="main",
+        match="main",
         options=(("option_1", "some value"), ("option_2", True)),
     )
 
@@ -108,7 +108,7 @@ def test_section_exists_empty_file(temporary_file):
         name="Ensure section exists",
         path=expected_file,
         section="test_section",
-        target=r"^$",
+        match=r"^$",
         options=(("option_1", "some value"), ("option_2", True)),
     )
 
@@ -131,7 +131,7 @@ def test_section_exists_add_before(temporary_file):
         name="Ensure section exists",
         path=expected_file,
         section="test_section",
-        target="main",
+        match="main",
         add_after=False,
         options=(("option_1", "some value"), ("option_2", True)),
     )
