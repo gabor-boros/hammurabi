@@ -8,7 +8,7 @@ from pathlib import Path
 from hammurabi.preconditions.base import Precondition
 
 
-class IsFileExists(Precondition):
+class IsFileExist(Precondition):
     """
     Check if the given file exists.
 
@@ -17,7 +17,7 @@ class IsFileExists(Precondition):
     .. code-block:: python
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, Renamed, IsFileExists
+        >>> from hammurabi import Law, Pillar, Renamed, IsFileExist
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -28,7 +28,7 @@ class IsFileExists(Precondition):
         >>>             path=Path("old-name"),
         >>>             new_name="new-name",
         >>>             preconditions=[
-        >>>                 IsFileExists(path=Path("other-file"))
+        >>>                 IsFileExist(path=Path("other-file"))
         >>>             ]
         >>>         ),
         >>>     )
@@ -56,9 +56,9 @@ class IsFileExists(Precondition):
         return self.param.exists() and self.param.is_file()
 
 
-class IsFileNotExists(IsFileExists):
+class IsFileNotExist(IsFileExist):
     """
-    Opposite of :class:`hammurabi.preconditions.files.IsFileExists`.
+    Opposite of :class:`hammurabi.preconditions.files.IsFileExist`.
     """
 
     def task(self) -> bool:

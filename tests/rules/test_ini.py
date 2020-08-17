@@ -51,14 +51,14 @@ def test_section_exists(mocked_updater_class):
     expected_section = Mock()
 
     mock_add_after_return = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_prop = PropertyMock(return_value=mock_add_after_return)
-    type(expected_target).add_after = mocked_prop
+    type(expected_match).add_after = mocked_prop
 
     mocked_updater = MagicMock()
-    mocked_updater.__getitem__.return_value = expected_target
-    mocked_updater.sections.return_value = [expected_target]
+    mocked_updater.__getitem__.return_value = expected_match
+    mocked_updater.sections.return_value = [expected_match]
     mocked_updater.has_section.side_effect = [False, True]
 
     mocked_updater_class.return_value = mocked_updater
@@ -67,13 +67,13 @@ def test_section_exists(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target,
+        match=expected_match,
     )
 
     result = rule.task()
 
     mocked_updater.sections.assert_called_once_with()
-    mocked_updater.has_section.has_calls(call(expected_section), call(expected_target))
+    mocked_updater.has_section.has_calls(call(expected_section), call(expected_match))
     mocked_prop.assert_called_once_with()
     mock_add_after_return.space.assert_called_once_with(rule.space)
     mock_add_after_return.space.return_value.section.assert_called_once_with(
@@ -92,14 +92,14 @@ def test_section_exists_add_before(mocked_updater_class):
     expected_section = Mock()
 
     mock_add_before_return = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_prop = PropertyMock(return_value=mock_add_before_return)
-    type(expected_target).add_before = mocked_prop
+    type(expected_match).add_before = mocked_prop
 
     mocked_updater = MagicMock()
-    mocked_updater.__getitem__.return_value = expected_target
-    mocked_updater.sections.return_value = [expected_target]
+    mocked_updater.__getitem__.return_value = expected_match
+    mocked_updater.sections.return_value = [expected_match]
     mocked_updater.has_section.side_effect = [False, True]
 
     mocked_updater_class.return_value = mocked_updater
@@ -108,14 +108,14 @@ def test_section_exists_add_before(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target,
+        match=expected_match,
         add_after=False,
     )
 
     result = rule.task()
 
     mocked_updater.sections.assert_called_once_with()
-    mocked_updater.has_section.has_calls(call(expected_section), call(expected_target))
+    mocked_updater.has_section.has_calls(call(expected_section), call(expected_match))
     mocked_prop.assert_called_once_with()
     mock_add_before_return.section.assert_called_once_with(expected_section)
     assert mock_add_before_return.section.return_value.space.called is False
@@ -130,7 +130,7 @@ def test_section_exists_no_sections(mocked_updater_class):
     expected_path.open.return_value.__exit__ = Mock()
 
     expected_section = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_updater = MagicMock()
     mocked_updater.sections.return_value = []
@@ -142,7 +142,7 @@ def test_section_exists_no_sections(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target,
+        match=expected_match,
     )
 
     rule.task()
@@ -152,7 +152,7 @@ def test_section_exists_no_sections(mocked_updater_class):
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")
-def test_section_exists_no_target(mocked_updater_class):
+def test_section_exists_no_match(mocked_updater_class):
     mock_file = Mock()
     expected_path = Mock()
     expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
@@ -161,13 +161,13 @@ def test_section_exists_no_target(mocked_updater_class):
     expected_section = Mock()
 
     mock_add_after_return = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_prop = PropertyMock(return_value=mock_add_after_return)
-    type(expected_target).add_after = mocked_prop
+    type(expected_match).add_after = mocked_prop
 
     mocked_updater = MagicMock()
-    mocked_updater.sections.return_value = [expected_target]
+    mocked_updater.sections.return_value = [expected_match]
     mocked_updater.sections_blocks.return_value = mocked_updater.sections.return_value
     mocked_updater.has_section.side_effect = [False, False]
 
@@ -177,13 +177,13 @@ def test_section_exists_no_target(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=Mock(),
+        match=Mock(),
     )
 
     result = rule.task()
 
     mocked_updater.sections.assert_called_once_with()
-    mocked_updater.has_section.has_calls(call(expected_section), call(expected_target))
+    mocked_updater.has_section.has_calls(call(expected_section), call(expected_match))
     mocked_prop.assert_called_once_with()
     mock_add_after_return.space.assert_called_once_with(rule.space)
     mock_add_after_return.space.return_value.section.assert_called_once_with(
@@ -193,7 +193,7 @@ def test_section_exists_no_target(mocked_updater_class):
 
 
 @patch("hammurabi.rules.ini.ConfigUpdater")
-def test_section_exists_no_target_set(mocked_updater_class):
+def test_section_exists_no_match_set(mocked_updater_class):
     mock_file = Mock()
     expected_path = Mock()
     expected_path.open.return_value.__enter__ = Mock(return_value=mock_file)
@@ -202,14 +202,14 @@ def test_section_exists_no_target_set(mocked_updater_class):
     expected_section = Mock()
 
     mock_add_after_return = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_prop = PropertyMock(return_value=mock_add_after_return)
-    type(expected_target).add_after = mocked_prop
+    type(expected_match).add_after = mocked_prop
 
     mocked_updater = MagicMock()
-    mocked_updater.__getitem__.return_value = expected_target
-    mocked_updater.sections.return_value = [Mock(), Mock(), expected_target]
+    mocked_updater.__getitem__.return_value = expected_match
+    mocked_updater.sections.return_value = [Mock(), Mock(), expected_match]
     mocked_updater.sections_blocks.return_value = mocked_updater.sections.return_value
     mocked_updater.has_section.side_effect = [False, False]
 
@@ -222,7 +222,7 @@ def test_section_exists_no_target_set(mocked_updater_class):
     result = rule.task()
 
     mocked_updater.sections.assert_called_once_with()
-    mocked_updater.has_section.has_calls(call(expected_section), call(expected_target))
+    mocked_updater.has_section.has_calls(call(expected_section), call(expected_match))
     mocked_updater.sections_blocks.assert_called_once_with()
     mocked_prop.assert_called_once_with()
     mock_add_after_return.space.assert_called_once_with(rule.space)
@@ -243,16 +243,16 @@ def test_section_exists_already_exists(mocked_updater_class):
 
     mock_add_before_return = Mock()
     mock_add_after_return = Mock()
-    expected_target = Mock()
+    expected_match = Mock()
 
     mocked_before = PropertyMock(return_value=mock_add_before_return)
     mocked_after = PropertyMock(return_value=mock_add_after_return)
-    type(expected_target).add_before = mocked_before
-    type(expected_target).add_after = mocked_after
+    type(expected_match).add_before = mocked_before
+    type(expected_match).add_after = mocked_after
 
     mocked_updater = MagicMock()
-    mocked_updater.__getitem__.return_value = expected_target
-    mocked_updater.sections.return_value = [expected_target]
+    mocked_updater.__getitem__.return_value = expected_match
+    mocked_updater.sections.return_value = [expected_match]
     mocked_updater.has_section.side_effect = [True, True]
 
     mocked_updater_class.return_value = mocked_updater
@@ -261,14 +261,12 @@ def test_section_exists_already_exists(mocked_updater_class):
         name="Section exists rule",
         path=expected_path,
         section=expected_section,
-        target=expected_target,
+        match=expected_match,
     )
 
     result = rule.task()
 
-    mocked_updater.has_section.has_calls(
-        [call(expected_target), call(expected_section)]
-    )
+    mocked_updater.has_section.has_calls([call(expected_match), call(expected_section)])
 
     assert mocked_updater.sections.called is False
     assert mocked_before.called is False

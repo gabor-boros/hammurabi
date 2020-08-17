@@ -215,7 +215,10 @@ def test_validate_param_required():
     with pytest.raises(ValueError) as exc:
         rule.validate(val=None, cast_to=str, required=True)
 
-    assert str(exc.value) == "The given value is empty"
+    assert (
+        str(exc.value)
+        == f"Parameter validation of {str(rule)} failed, the given value is empty"
+    )
 
 
 def test_execution_order():

@@ -56,7 +56,8 @@ class DirectoryExists(SinglePathRule):
 
 class DirectoryNotExists(SinglePathRule):
     """
-    Ensure that the given directory does not exists.
+    Ensure that the given directory does not exists. In case the directory
+    contains any file or sub-directory, those will be removed too.
 
     Example usage:
 

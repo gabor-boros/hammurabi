@@ -1,6 +1,6 @@
 from unittest.mock import Mock, patch
 
-from hammurabi.preconditions.text import IsLineExists, IsLineNotExists
+from hammurabi.preconditions.text import IsLineExist, IsLineNotExist
 
 
 @patch("hammurabi.preconditions.text.re")
@@ -15,7 +15,7 @@ def test_line_exists(mock_re):
     mock_criteria.match.side_effect = [True]
     mock_re.compile.return_value = mock_criteria
 
-    rule = IsLineExists(path=input_file, criteria=fr"{expected_line}")
+    rule = IsLineExist(path=input_file, criteria=fr"{expected_line}")
     result = rule.task()
 
     mock_re.compile.assert_called_once_with(expected_line)
@@ -38,7 +38,7 @@ def test_line_not_exists(mock_re):
     mock_criteria.match.side_effect = [False]
     mock_re.compile.return_value = mock_criteria
 
-    rule = IsLineNotExists(path=input_file, criteria=fr"{expected_line}")
+    rule = IsLineNotExist(path=input_file, criteria=fr"{expected_line}")
     result = rule.task()
 
     mock_re.compile.assert_called_once_with(expected_line)

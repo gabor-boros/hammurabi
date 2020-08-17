@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from hammurabi.preconditions.text import IsLineExists, IsLineNotExists
+from hammurabi.preconditions.text import IsLineExist, IsLineNotExist
 from tests.fixtures import temporary_file
 
 assert temporary_file
@@ -15,7 +15,7 @@ def test_line_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text(expected_line)
 
-    rule = IsLineExists(path=expected_file, criteria=fr"{expected_line}")
+    rule = IsLineExist(path=expected_file, criteria=fr"{expected_line}")
     result = rule.task()
 
     assert result is True
@@ -28,7 +28,7 @@ def test_line_not_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("other-line")
 
-    rule = IsLineNotExists(path=expected_file, criteria=fr"{expected_line}")
+    rule = IsLineNotExist(path=expected_file, criteria=fr"{expected_line}")
     result = rule.task()
 
     assert result is True

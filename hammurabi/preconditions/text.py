@@ -9,7 +9,7 @@ import re
 from hammurabi.preconditions.base import Precondition
 
 
-class IsLineExists(Precondition):
+class IsLineExist(Precondition):
     """
     Check if the given line exists.
 
@@ -18,7 +18,7 @@ class IsLineExists(Precondition):
     .. code-block:: python
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, Renamed, IsLineExists
+        >>> from hammurabi import Law, Pillar, Renamed, IsLineExist
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -29,7 +29,7 @@ class IsLineExists(Precondition):
         >>>             path=Path("old-name"),
         >>>             new_name="new-name",
         >>>             preconditions=[
-        >>>                 IsLineExists(path=Path("other-file"), criteria=r"^string=some-value$")
+        >>>                 IsLineExist(path=Path("other-file"), criteria=r"^string=some-value$")
         >>>             ]
         >>>         ),
         >>>     )
@@ -43,6 +43,18 @@ class IsLineExists(Precondition):
 
     :param criteria: Regexp of the desired line
     :type criteria: str
+
+    .. warning::
+
+        When using ``criteria`` be aware that partial matches will be recognized
+        as well. This means you must be as strict with regular expressions as
+        it is needed. Example of a partial match:
+
+        >>> import re
+        >>> pattern = re.compile(r"apple")
+        >>> text = "appletree"
+        >>> pattern.match(text).group()
+        >>> 'apple'
     """
 
     def __init__(self, path: Path, criteria: str, **kwargs) -> None:
@@ -62,9 +74,9 @@ class IsLineExists(Precondition):
         return any(filter(self.criteria.match, lines))
 
 
-class IsLineNotExists(IsLineExists):
+class IsLineNotExist(IsLineExist):
     """
-    Opposite of :class:`hammurabi.preconditions.text.IsLineExists`.
+    Opposite of :class:`hammurabi.preconditions.text.IsLineExist`.
     """
 
     def task(self) -> bool:
