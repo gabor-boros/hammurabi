@@ -84,6 +84,7 @@ test-integration: ## run unit tests and generate coverage
 test: ## run all tests and generate coverage
 	coverage run -m pytest -vv
 	coverage report
+	coverage xml
 
 download-test-reporter:
 	curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -93,5 +94,4 @@ test-reporter-before:
 	./cc-test-reporter before-build
 
 upload-coverage:
-	coverage xml
-	./cc-test-reporter after-build --exit-code $(TRAVIS_TEST_RESULT) -t "coverage.py"
+	./cc-test-reporter after-build -t "coverage.py"
