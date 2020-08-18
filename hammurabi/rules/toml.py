@@ -42,7 +42,7 @@ class SingleDocumentTomlFileRule(SinglePathDictParsedRule):
 
     @staticmethod
     def __loader(toml_str: str) -> MutableMapping[str, Any]:
-        return toml.loads(
+        return toml.loads(  # type: ignore
             toml_str, decoder=toml.TomlPreserveCommentDecoder()  # type: ignore
         )
 
@@ -61,7 +61,7 @@ class SingleDocumentTomlFileRule(SinglePathDictParsedRule):
         # something for that field if the user forgot to fill the value.
 
         self.param.write_text(
-            toml.dumps(
+            toml.dumps(  # type: ignore
                 self.set_by_selector(self.loaded_data, self.split_key, data, delete),
                 encoder=toml.TomlPreserveCommentEncoder(),  # type: ignore
             )
