@@ -35,6 +35,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Added
+~~~~~
+
+* Add TOML file support and adjust readme
+
 Changed
 ~~~~~~~
 
@@ -44,11 +49,14 @@ Changed
 * Mention in the docs that `match` will use partial match if the regex is not specific enough
 * Add László Üveges to maintainers
 * Replace Travis CI with GitHub Actions
+* Update requirements minimum version
 
 Fixed
 ~~~~~
 
 * Allow documentation generation for rules which are depending on extra packages
+* Hypothesis test execution skips `:` character when running owner change test
+* Fix some documentation highlight issues
 
 0.10.0_ - 2020-08-14
 --------------------

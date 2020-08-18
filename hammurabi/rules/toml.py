@@ -1,15 +1,21 @@
 """
-This module adds YAML file support. YAML module is an extension for text rules
-tailor made for .yaml/.yml files. The main difference lies in the way it works.
-First, the .yaml/.yml file is parsed, then the modifications are made on the
+This module adds TOML file support. TOML module is an extension for text rules
+tailor made for .toml files. The main difference lies in the way it works.
+First, the .toml file is parsed, then the modifications are made on the
 already parsed file.
+
+.. warning::
+
+    In case of a single line toml file, the parser used in hammurabi will only
+    keep the comment if the file contains a newline character.
+
 """
 
 from abc import abstractmethod
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, MutableMapping, Optional
 
-from ruamel.yaml import YAML
+import toml
 
 from hammurabi.rules.dictionaries import (
     DictKeyExists,
@@ -21,23 +27,22 @@ from hammurabi.rules.dictionaries import (
 )
 
 
-class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
+class SingleDocumentTomlFileRule(SinglePathDictParsedRule):
     """
     Extend :class:`hammurabi.rules.dictionaries.SinglePathDictParsedRule`
-    to handle parsed content manipulations on a single YAML file.
-
-    .. warning::
-
-        This rule requires the ``yaml`` extra to be installed.
+    to handle parsed content manipulations on a single TOML file.
     """
 
     def __init__(
         self, name: str, path: Optional[Path] = None, key: str = "", **kwargs
     ) -> None:
-        self.yaml = YAML()
-        self.yaml.default_flow_style = False
+        super().__init__(name, path, key, loader=self.__loader, **kwargs)
 
-        super().__init__(name, path, key, loader=self.yaml.load, **kwargs)
+    @staticmethod
+    def __loader(toml_str: str) -> MutableMapping[str, Any]:
+        return toml.loads(  # type: ignore
+            toml_str, decoder=toml.TomlPreserveCommentDecoder()  # type: ignore
+        )
 
     def _write_dump(self, data: Any, delete: bool = False) -> None:
         """
@@ -50,11 +55,14 @@ class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
         :type delete: bool
         """
 
-        self.param: Path
+        # TOML file cannot handle None as value, hence we need to set
+        # something for that field if the user forgot to fill the value.
 
-        self.yaml.dump(
-            self.set_by_selector(self.loaded_data, self.split_key, data, delete),
-            self.param,
+        self.param.write_text(
+            toml.dumps(  # type: ignore
+                self.set_by_selector(self.loaded_data, self.split_key, data, delete),
+                encoder=toml.TomlPreserveCommentEncoder(),  # type: ignore
+            )
         )
 
     @abstractmethod
@@ -68,7 +76,7 @@ class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
         """
 
 
-class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
+class TomlKeyExists(DictKeyExists, SingleDocumentTomlFileRule):
     """
     Ensure that the given key exists. If needed, the rule will create a key with the
     given name, and optionally the specified value. In case the value is set, the value
@@ -78,15 +86,15 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyExists
+        >>> from hammurabi import Law, Pillar, TomlKeyExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyExists(
+        >>>         TomlKeyExists(
         >>>             name="Ensure service descriptor has stack",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="stack",
         >>>             value="my-awesome-stack",
         >>>         ),
@@ -98,7 +106,8 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
 
     .. warning::
 
-        This rule requires the ``yaml`` extra to be installed.
+        Setting a value to None will result in a deleted key as per the documentation of how
+        null/nil values should be handled. More info: https://github.com/toml-lang/toml/issues/30
 
     .. warning::
 
@@ -107,7 +116,7 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
     """
 
 
-class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
+class TomlKeyNotExists(DictKeyNotExists, SingleDocumentTomlFileRule):
     """
     Ensure that the given key not exists. If needed, the rule will remove a key with the
     given name, including its value.
@@ -115,15 +124,15 @@ class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyNotExists
+        >>> from hammurabi import Law, Pillar, TomlKeyNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyNotExists(
+        >>>         TomlKeyNotExists(
         >>>             name="Ensure outdated_key is removed",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="outdated_key",
         >>>         ),
         >>>     )
@@ -131,14 +140,10 @@ class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
-
-    .. warning::
-
-        This rule requires the ``yaml`` extra to be installed.
     """
 
 
-class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
+class TomlKeyRenamed(DictKeyRenamed, SingleDocumentTomlFileRule):
     """
     Ensure that the given key is renamed. In case the key can not be found,
     a ``LookupError`` exception will be raised to stop the execution. The
@@ -148,15 +153,15 @@ class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyRenamed
+        >>> from hammurabi import Law, Pillar, TomlKeyRenamed
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyRenamed(
+        >>>         TomlKeyRenamed(
         >>>             name="Ensure service descriptor has dependencies",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.depends_on",
         >>>             value="dependencies",
         >>>         ),
@@ -165,14 +170,10 @@ class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
-
-    .. warning::
-
-        This rule requires the ``yaml`` extra to be installed.
     """
 
 
-class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
+class TomlValueExists(DictValueExists, SingleDocumentTomlFileRule):
     """
     Ensure that the given key has the expected value(s). In case the key cannot
     be found, a ``LookupError`` exception will be raised to stop the execution.
@@ -183,36 +184,36 @@ class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLValueExists
+        >>> from hammurabi import Law, Pillar, TomlValueExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLValueExists(
+        >>>         TomlValueExists(
         >>>             name="Ensure service descriptor has dependencies",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.dependencies",
         >>>             value=["service1", "service2", "service3"],
         >>>         ),
         >>>         # Or
-        >>>         YAMLValueExists(
+        >>>         TomlValueExists(
         >>>             name="Add infra alerting to existing alerting components",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.alerting",
         >>>             value={"infra": "#slack-channel-2"},
         >>>         ),
         >>>         # Or
-        >>>         YAMLValueExists(
+        >>>         TomlValueExists(
         >>>             name="Add support info",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.supported",
         >>>             value=True,
         >>>         ),
         >>>         # Or even
-        >>>         YAMLValueExists(
+        >>>         TomlValueExists(
         >>>             name="Make sure that no development branch is set",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.branch",
         >>>             value=None,
         >>>         ),
@@ -224,28 +225,24 @@ class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
 
     .. warning::
 
-        This rule requires the ``yaml`` extra to be installed.
-
-    .. warning::
-
         Since the value can be anything from ``None`` to a list of lists, and
         rule piping passes the 1st argument (``path``) to the next rule the ``value``
         parameter can not be defined in ``__init__`` before the ``path``. Hence
         the ``value`` parameter must have a default value. The default value is
         set to ``None``, which translates to the following:
 
-        Using the ``YAMLValueExists`` rule and not assigning value to ``value``
+        Using the ``TomlValueExists`` rule and not assigning value to ``value``
         parameter will set the matching ``key``'s value to `None`` by default in
         the document.
     """
 
 
-class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
+class TomlValueNotExists(DictValueNotExists, SingleDocumentTomlFileRule):
     """
     Ensure that the key has no value given. In case the key cannot be found,
     a ``LookupError`` exception will be raised to stop the execution.
 
-    Compared to ``hammurabi.rules.yaml.YAMLValueExists``, this rule can only
+    Compared to ``hammurabi.rules.Toml.TomlValueExists``, this rule can only
     accept simple value for its ``value`` parameter. No ``list``, ``dict``, or
     ``None`` can be used.
 
@@ -259,15 +256,15 @@ class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLValueNotExists
+        >>> from hammurabi import Law, Pillar, TomlValueNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLValueNotExists(
+        >>>         TomlValueNotExists(
         >>>             name="Remove decommissioned service from dependencies",
-        >>>             path=Path("./service.yaml"),
+        >>>             path=Path("./service.toml"),
         >>>             key="development.dependencies",
         >>>             value="service4",
         >>>         ),
@@ -276,8 +273,4 @@ class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
-
-    .. warning::
-
-        This rule requires the ``yaml`` extra to be installed.
     """
