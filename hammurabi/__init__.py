@@ -40,6 +40,13 @@ from hammurabi.rules.json import (
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered
 from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
+from hammurabi.rules.toml import (
+    TomlKeyExists,
+    TomlKeyNotExists,
+    TomlKeyRenamed,
+    TomlValueExists,
+    TomlValueNotExists,
+)
 
 try:
     from hammurabi.notifications.slack import SlackNotification
