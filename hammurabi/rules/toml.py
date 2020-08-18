@@ -36,8 +36,6 @@ class SingleDocumentTomlFileRule(SinglePathDictParsedRule):
     def __init__(
         self, name: str, path: Optional[Path] = None, key: str = "", **kwargs
     ) -> None:
-        # TOML ``loads`` function supports decoder which could handle comments too.
-        # I need to figure out how to pass loader function which can be used well
         super().__init__(name, path, key, loader=self.__loader, **kwargs)
 
     @staticmethod
