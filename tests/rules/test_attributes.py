@@ -32,7 +32,7 @@ def test_single_attribute_rule():
     rule.git_add.assert_called_once_with(expected_path)
 
 
-@given(user=st.text(min_size=2))
+@given(user=st.text(alphabet=st.characters(blacklist_characters=":"), min_size=2))
 @patch("hammurabi.rules.attributes.shutil")
 def test_owner_changed(mocked_shutil, user):
     expected_path = Path("test/path")
