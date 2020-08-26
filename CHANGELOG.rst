@@ -39,6 +39,7 @@ Added
 ~~~~~
 
 * Add references to external documentation site
+* Log skipped imports on debug level
 
 Fixed
 ~~~~~

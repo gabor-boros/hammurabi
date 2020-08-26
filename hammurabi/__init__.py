@@ -1,4 +1,5 @@
 # flake8: noqa
+import logging
 
 from hammurabi.config import config
 from hammurabi.law import Law
@@ -44,7 +45,7 @@ from hammurabi.rules.text import LineExists, LineNotExists, LineReplaced
 try:
     from hammurabi.notifications.slack import SlackNotification
 except ImportError:
-    pass
+    logging.debug("import of slack notification is skipped")
 
 
 try:
@@ -57,7 +58,7 @@ try:
         SectionRenamed,
     )
 except ImportError:
-    pass
+    logging.debug("import of ini file based rules is skipped")
 
 
 try:
@@ -69,6 +70,6 @@ try:
         YAMLValueNotExists,
     )
 except ImportError:
-    pass
+    logging.debug("import of yaml file based rules is skipped")
 
 __version__ = "0.10.0"
