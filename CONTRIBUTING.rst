@@ -122,5 +122,6 @@ Please follow this checklist for the release:
 2. Make sure that linters are not complaining (``make lint`` returns 0)
 3. Update CHANGELOG.rst - do not forget to update the unreleased link comparison
 4. Update version in ``pyproject.toml``, ``CHANGELOG.rst`` and ``hammurabi/__init__.py``
-5. Create a new Release on GitHub with a detailed release description based on
+5. Compare the external and generated documentation
+6. Create a new Release on GitHub with a detailed release description based on
    the previous releases.
