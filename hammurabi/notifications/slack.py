@@ -68,4 +68,4 @@ class SlackNotification(Notification):
                 Slack(url=hook).post(text=message)
                 logging.debug("Notification sent")
         except Exception as exc:
-            raise NotificationSendError(str(exc))
+            raise NotificationSendError from exc
