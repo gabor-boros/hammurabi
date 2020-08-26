@@ -40,6 +40,13 @@ Added
 
 * Add references to external documentation site
 
+Fixed
+~~~~~
+
+* Allow documentation generation for rules which are depending on extra packages
+* Update enforce command description
+* Fix failing pylint error W0707 in slack notification
+
 Changed
 ~~~~~~~
 
@@ -50,13 +57,6 @@ Changed
 * Add László Üveges to maintainers
 * Replace Travis CI with GitHub Actions
 * Update the release process with the external documentation site
-
-Fixed
-~~~~~
-
-* Allow documentation generation for rules which are depending on extra packages
-* Update enforce command description
-* Fix failing pylint error W0707 in slack notification
 
 0.10.0_ - 2020-08-14
 --------------------
