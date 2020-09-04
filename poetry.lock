@@ -262,7 +262,7 @@ description = "A library for property-based testing"
 name = "hypothesis"
 optional = false
 python-versions = ">=3.5.2"
-version = "5.30.0"
+version = "5.32.0"
 
 [package.dependencies]
 attrs = ">=19.2.0"
@@ -914,7 +914,7 @@ ujson = ["ujson"]
 yaml = ["ruamel.yaml"]
 
 [metadata]
-content-hash = "1ee92c22b3e5f336285026264eaa20d15e9fddc10fa32395597fc6d09686fba1"
+content-hash = "aa25f64f23df5d3281e852add4fd6739e48c6fa47128a67a07145dd9e3a86771"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1079,8 +1079,8 @@ gitpython = [
     {file = "GitPython-3.1.7.tar.gz", hash = "sha256:2db287d71a284e22e5c2846042d0602465c7434d910406990d5b74df4afb0858"},
 ]
 hypothesis = [
-    {file = "hypothesis-5.30.0-py3-none-any.whl", hash = "sha256:4a57b7add9203c6244912ce6d67a2dc040fabb600d90268a022b2c7ca3bce046"},
-    {file = "hypothesis-5.30.0.tar.gz", hash = "sha256:d810af02dcb0edabb36dd77f3db01b89a4028098dad237bafeaf23060e1dd5be"},
+    {file = "hypothesis-5.32.0-py3-none-any.whl", hash = "sha256:f95ab883c6260026b3462c54fdbe2a14c4066f3ab603ed8c3b639fb2f0ed053d"},
+    {file = "hypothesis-5.32.0.tar.gz", hash = "sha256:92b993398097e9e135381d1590c72feda02b8635ce2b64e52ab8ecc0191fbe82"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
