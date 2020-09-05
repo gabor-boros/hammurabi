@@ -14,7 +14,7 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, Hashable, List, Optional, Union
+from typing import Any, Callable, Dict, Hashable, List, MutableMapping, Optional, Union
 
 from hammurabi.rules.common import SinglePathRule
 from hammurabi.rules.mixins import SelectorMixin
@@ -40,7 +40,7 @@ class SinglePathDictParsedRule(SinglePathRule, SelectorMixin):
         name: str,
         path: Optional[Path] = None,
         key: str = "",
-        loader: Callable[[Any], Dict[str, Any]] = dict,
+        loader: Callable[[Any], MutableMapping[str, Any]] = dict,
         **kwargs,
     ) -> None:
         self.selector = self.validate(key, required=True)
@@ -69,7 +69,7 @@ class SinglePathDictParsedRule(SinglePathRule, SelectorMixin):
         does nothing.
 
         :param data: The modified data
-        :type data: :class:``hammurabi.rules.mixins.Any`
+        :type data: :class:``hammurabi.rules.mixins.Any``
 
         :param delete: Indicate if the key should be deleted
         :type delete: bool

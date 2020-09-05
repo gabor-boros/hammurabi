@@ -59,10 +59,10 @@ Supported file formats:
 * ``ini``
 * ``json``
 * ``yaml`` (basic, single document operations)
+* ``toml``
 
 Upcoming file format support:
 
-* ``toml``
 * ``hocon``
 
 Community

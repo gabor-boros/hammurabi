@@ -232,3 +232,41 @@ YAMLValueNotExists
 
 .. autoclass:: hammurabi.rules.yaml.YAMLValueNotExists
    :noindex:
+
+TOML files
+----------
+
+.. warning::
+
+    In case of a single line toml file, the parser used in hammurabi will only
+    keep the comment if the file contains a newline character.
+
+TomlKeyExists
+~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.toml.TomlKeyExists
+   :noindex:
+
+TomlKeyNotExists
+~~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.toml.TomlKeyNotExists
+   :noindex:
+
+TomlKeyRenamed
+~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.toml.TomlKeyRenamed
+   :noindex:
+
+TomlValueExists
+~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.toml.TomlValueExists
+   :noindex:
+
+TomlValueNotExists
+~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: hammurabi.rules.toml.TomlValueNotExists
+   :noindex:

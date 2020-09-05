@@ -38,6 +38,7 @@ Unreleased_
 Added
 ~~~~~
 
+* Add TOML file support and adjust readme
 * Add references to external documentation site
 * Log skipped imports on debug level
 
@@ -58,6 +59,14 @@ Changed
 * Add László Üveges to maintainers
 * Replace Travis CI with GitHub Actions
 * Update the release process with the external documentation site
+* Update requirements minimum version
+
+Fixed
+~~~~~
+
+* Allow documentation generation for rules which are depending on extra packages
+* Hypothesis test execution skips `:` character when running owner change test
+* Fix some documentation highlight issues
 
 0.10.0_ - 2020-08-14
 --------------------
