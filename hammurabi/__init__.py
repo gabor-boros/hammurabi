@@ -70,11 +70,11 @@ except ImportError:
 
 try:
     from hammurabi.rules.yaml import (
-        YAMLKeyExists,
-        YAMLKeyNotExists,
-        YAMLKeyRenamed,
-        YAMLValueExists,
-        YAMLValueNotExists,
+        YamlKeyExists,
+        YamlKeyNotExists,
+        YamlKeyRenamed,
+        YamlValueExists,
+        YamlValueNotExists,
     )
 except ImportError:
     logging.debug("import of yaml file based rules is skipped")
