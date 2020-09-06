@@ -62,6 +62,10 @@ Changed
 * Update requirements minimum version
 * Rename all JSON rule to Json to keep naming convention
 * Rename all YAML rule to Yaml to keep naming convention
+* Bump gitpython to 3.1.8
+* Bump hypothesis to 5.26.1
+* Bump black to 20.8b1
+* Bump typer to 0.3.2
 
 Fixed
 ~~~~~
