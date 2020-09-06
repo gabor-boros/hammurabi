@@ -60,6 +60,8 @@ Changed
 * Replace Travis CI with GitHub Actions
 * Update the release process with the external documentation site
 * Update requirements minimum version
+* Rename all JSON rule to Json to keep naming convention
+* Rename all YAML rule to Yaml to keep naming convention
 
 Fixed
 ~~~~~
