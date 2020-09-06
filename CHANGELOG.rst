@@ -39,7 +39,6 @@ Added
 ~~~~~
 
 * Add TOML file support and adjust readme
-* Add references to external documentation site
 * Log skipped imports on debug level
 
 Fixed
