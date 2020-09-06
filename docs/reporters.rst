@@ -10,8 +10,8 @@ Base reporter
 Formatted reporters
 -------------------
 
-JSONReporter
+JsonReporter
 ~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.reporters.json.JSONReporter
+.. autoclass:: hammurabi.reporters.json.JsonReporter
    :noindex:
