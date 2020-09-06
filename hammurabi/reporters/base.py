@@ -86,7 +86,7 @@ class Reporter(ABC):
         >>> from hammurabi.reporters.base import Reporter
         >>>
         >>>
-        >>> class JSONReporter(Reporter):
+        >>> class JsonReporter(Reporter):
         >>>     def report(self) -> str:
         >>>         return self._get_report().json()
 

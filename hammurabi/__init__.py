@@ -16,7 +16,7 @@ from hammurabi.preconditions.directories import IsDirectoryExist, IsDirectoryNot
 from hammurabi.preconditions.files import IsFileExist, IsFileNotExist
 from hammurabi.preconditions.text import IsLineExist, IsLineNotExist
 from hammurabi.reporters.base import Reporter
-from hammurabi.reporters.json import JSONReporter
+from hammurabi.reporters.json import JsonReporter
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged
 from hammurabi.rules.base import Rule
 from hammurabi.rules.directories import (
@@ -32,11 +32,11 @@ from hammurabi.rules.files import (
     FilesNotExist,
 )
 from hammurabi.rules.json import (
-    JSONKeyExists,
-    JSONKeyNotExists,
-    JSONKeyRenamed,
-    JSONValueExists,
-    JSONValueNotExists,
+    JsonKeyExists,
+    JsonKeyNotExists,
+    JsonKeyRenamed,
+    JsonValueExists,
+    JsonValueNotExists,
 )
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered

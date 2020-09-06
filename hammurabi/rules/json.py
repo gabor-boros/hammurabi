@@ -1,5 +1,5 @@
 """
-This module adds JSON file support. JSON module is an extension for text rules
+This module adds Json file support. Json module is an extension for text rules
 tailor made for .json files. The main difference lies in the way it works.
 First, the .json file is parsed, then the modifications are made on the
 already parsed file.
@@ -24,10 +24,10 @@ except ImportError:
     import json  # type: ignore
 
 
-class SingleJSONFileRule(SinglePathDictParsedRule):
+class SingleJsonFileRule(SinglePathDictParsedRule):
     """
     Extend :class:`hammurabi.rules.dictionaries.SinglePathDictParsedRule`
-    to handle parsed content manipulations on a single JSON file.
+    to handle parsed content manipulations on a single Json file.
     """
 
     def __init__(
@@ -63,7 +63,7 @@ class SingleJSONFileRule(SinglePathDictParsedRule):
         """
 
 
-class JSONKeyExists(DictKeyExists, SingleJSONFileRule):
+class JsonKeyExists(DictKeyExists, SingleJsonFileRule):
     """
     Ensure that the given key exists. If needed, the rule will create a key with the
     given name, and optionally the specified value. In case the value is set, the value
@@ -73,13 +73,13 @@ class JSONKeyExists(DictKeyExists, SingleJSONFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, JSONKeyExists
+        >>> from hammurabi import Law, Pillar, JsonKeyExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         JSONKeyExists(
+        >>>         JsonKeyExists(
         >>>             name="Ensure service descriptor has stack",
         >>>             path=Path("./service.json"),
         >>>             key="stack",
@@ -98,7 +98,7 @@ class JSONKeyExists(DictKeyExists, SingleJSONFileRule):
     """
 
 
-class JSONKeyNotExists(DictKeyNotExists, SingleJSONFileRule):
+class JsonKeyNotExists(DictKeyNotExists, SingleJsonFileRule):
     """
     Ensure that the given key not exists. If needed, the rule will remove a key with the
     given name, including its value.
@@ -106,13 +106,13 @@ class JSONKeyNotExists(DictKeyNotExists, SingleJSONFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, JSONKeyNotExists
+        >>> from hammurabi import Law, Pillar, JsonKeyNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         JSONKeyNotExists(
+        >>>         JsonKeyNotExists(
         >>>             name="Ensure outdated_key is removed",
         >>>             path=Path("./service.json"),
         >>>             key="outdated_key",
@@ -125,7 +125,7 @@ class JSONKeyNotExists(DictKeyNotExists, SingleJSONFileRule):
     """
 
 
-class JSONKeyRenamed(DictKeyRenamed, SingleJSONFileRule):
+class JsonKeyRenamed(DictKeyRenamed, SingleJsonFileRule):
     """
     Ensure that the given key is renamed. In case the key can not be found,
     a ``LookupError`` exception will be raised to stop the execution. The
@@ -135,13 +135,13 @@ class JSONKeyRenamed(DictKeyRenamed, SingleJSONFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, JSONKeyRenamed
+        >>> from hammurabi import Law, Pillar, JsonKeyRenamed
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         JSONKeyRenamed(
+        >>>         JsonKeyRenamed(
         >>>             name="Ensure service descriptor has dependencies",
         >>>             path=Path("./service.json"),
         >>>             key="development.depends_on",
@@ -155,7 +155,7 @@ class JSONKeyRenamed(DictKeyRenamed, SingleJSONFileRule):
     """
 
 
-class JSONValueExists(DictValueExists, SingleJSONFileRule):
+class JsonValueExists(DictValueExists, SingleJsonFileRule):
     """
     Ensure that the given key has the expected value(s). In case the key cannot
     be found, a ``LookupError`` exception will be raised to stop the execution.
@@ -166,34 +166,34 @@ class JSONValueExists(DictValueExists, SingleJSONFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, JSONValueExists
+        >>> from hammurabi import Law, Pillar, JsonValueExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         JSONValueExists(
+        >>>         JsonValueExists(
         >>>             name="Ensure service descriptor has dependencies",
         >>>             path=Path("./service.json"),
         >>>             key="development.dependencies",
         >>>             value=["service1", "service2", "service3"],
         >>>         ),
         >>>         # Or
-        >>>         JSONValueExists(
+        >>>         JsonValueExists(
         >>>             name="Add infra alerting to existing alerting components",
         >>>             path=Path("./service.json"),
         >>>             key="development.alerting",
         >>>             value={"infra": "#slack-channel-2"},
         >>>         ),
         >>>         # Or
-        >>>         JSONValueExists(
+        >>>         JsonValueExists(
         >>>             name="Add support info",
         >>>             path=Path("./service.json"),
         >>>             key="development.supported",
         >>>             value=True,
         >>>         ),
         >>>         # Or even
-        >>>         JSONValueExists(
+        >>>         JsonValueExists(
         >>>             name="Make sure that no development branch is set",
         >>>             path=Path("./service.json"),
         >>>             key="development.branch",
@@ -213,18 +213,18 @@ class JSONValueExists(DictValueExists, SingleJSONFileRule):
         the ``value`` parameter must have a default value. The default value is
         set to ``None``, which translates to the following:
 
-        Using the ``JSONValueExists`` rule and not assigning value to ``value``
+        Using the ``JsonValueExists`` rule and not assigning value to ``value``
         parameter will set the matching ``key``'s value to `None`` by default in
         the document.
     """
 
 
-class JSONValueNotExists(DictValueNotExists, SingleJSONFileRule):
+class JsonValueNotExists(DictValueNotExists, SingleJsonFileRule):
     """
     Ensure that the key has no value given. In case the key cannot be found,
     a ``LookupError`` exception will be raised to stop the execution.
 
-    Compared to ``hammurabi.rules.json.JSONValueExists``, this rule can only
+    Compared to ``hammurabi.rules.json.JsonValueExists``, this rule can only
     accept simple value for its ``value`` parameter. No ``list``, ``dict``, or
     ``None`` can be used.
 
@@ -238,13 +238,13 @@ class JSONValueNotExists(DictValueNotExists, SingleJSONFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, JSONValueNotExists
+        >>> from hammurabi import Law, Pillar, JsonValueNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         JSONValueNotExists(
+        >>>         JsonValueNotExists(
         >>>             name="Remove decommissioned service from dependencies",
         >>>             path=Path("./service.json"),
         >>>             key="development.dependencies",

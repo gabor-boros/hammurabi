@@ -13,7 +13,7 @@ from hammurabi.law import Law
 from hammurabi.mixins import GitHubMixin
 from hammurabi.notifications.base import Notification
 from hammurabi.reporters.base import Reporter
-from hammurabi.reporters.json import JSONReporter
+from hammurabi.reporters.json import JsonReporter
 from hammurabi.rules.base import Rule
 
 
@@ -28,7 +28,7 @@ class Pillar(GitHubMixin):
 
     As a final step, pillar will prepare its ``reporter`` for report generation.
     For more information about reporters, check :class:`hammurabi.reporters.base.Reporter`
-    and :class:`hammurabi.reporters.json.JSONReporter`.
+    and :class:`hammurabi.reporters.json.JsonReporter`.
 
     :param reporter_class: The reporter class used for generating the reports
     :type reporter_class: Type[Reporter]
@@ -36,7 +36,7 @@ class Pillar(GitHubMixin):
 
     def __init__(
         self,
-        reporter_class: Type[Reporter] = JSONReporter,
+        reporter_class: Type[Reporter] = JsonReporter,
         notifications: Iterable[Notification] = (),
     ) -> None:
         self.__laws: List[Law] = list()

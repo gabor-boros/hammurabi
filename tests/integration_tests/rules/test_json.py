@@ -3,11 +3,11 @@ from pathlib import Path
 import pytest
 
 from hammurabi.rules.json import (
-    JSONKeyExists,
-    JSONKeyNotExists,
-    JSONKeyRenamed,
-    JSONValueExists,
-    JSONValueNotExists,
+    JsonKeyExists,
+    JsonKeyNotExists,
+    JsonKeyRenamed,
+    JsonValueExists,
+    JsonValueNotExists,
 )
 from tests.fixtures import temporary_file
 
@@ -19,7 +19,7 @@ def test_key_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("{}")
 
-    rule = JSONKeyExists(name="Ensure key exists", path=expected_file, key="stack")
+    rule = JsonKeyExists(name="Ensure key exists", path=expected_file, key="stack")
 
     rule.pre_task_hook()
     rule.task()
@@ -33,7 +33,7 @@ def test_key_nested_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("{}")
 
-    rule = JSONKeyExists(
+    rule = JsonKeyExists(
         name="Ensure key exists",
         path=expected_file,
         key="development.supported",
@@ -54,7 +54,7 @@ def test_key_nested_already_exists(temporary_file):
         '{"apple":"banana","dict":{"value":"exists","development":{"supported":true}}}'
     )
 
-    rule = JSONKeyExists(
+    rule = JsonKeyExists(
         name="Ensure key exists",
         path=expected_file,
         key="dict.development.supported",
@@ -76,7 +76,7 @@ def test_key_exists_with_value(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("{}")
 
-    rule = JSONKeyExists(
+    rule = JsonKeyExists(
         name="Ensure key exists", path=expected_file, key="stack", value="python"
     )
 
@@ -92,7 +92,7 @@ def test_key_exists_with_root_dot(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("{}")
 
-    rule = JSONKeyExists(
+    rule = JsonKeyExists(
         name="Ensure key exists", path=expected_file, key=".stack", value="python"
     )
 
@@ -108,7 +108,7 @@ def test_key_not_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[]}')
 
-    rule = JSONKeyNotExists(
+    rule = JsonKeyNotExists(
         name="Ensure key not exists", path=expected_file, key="stack"
     )
 
@@ -124,7 +124,7 @@ def test_key_not_exists_no_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"dependencies":[]}')
 
-    rule = JSONKeyNotExists(
+    rule = JsonKeyNotExists(
         name="Ensure key not exists", path=expected_file, key="stack"
     )
 
@@ -140,7 +140,7 @@ def test_key_not_exists_empty_file(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text("{}")
 
-    rule = JSONKeyNotExists(
+    rule = JsonKeyNotExists(
         name="Ensure key not exists", path=expected_file, key="stack"
     )
 
@@ -156,7 +156,7 @@ def test_key_renamed(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","depends_on":[]}')
 
-    rule = JSONKeyRenamed(
+    rule = JsonKeyRenamed(
         name="Ensure key renamed",
         path=expected_file,
         key="depends_on",
@@ -175,7 +175,7 @@ def test_key_renamed_no_old_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[]}')
 
-    rule = JSONKeyRenamed(
+    rule = JsonKeyRenamed(
         name="Ensure key renamed",
         path=expected_file,
         key="depends_on",
@@ -194,7 +194,7 @@ def test_key_renamed_no_old_or_new_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python"}')
 
-    rule = JSONKeyRenamed(
+    rule = JsonKeyRenamed(
         name="Ensure key renamed",
         path=expected_file,
         key="depends_on",
@@ -215,7 +215,7 @@ def test_key_renamed_has_old_and_new_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[], "depends_on":[]}')
 
-    rule = JSONKeyRenamed(
+    rule = JsonKeyRenamed(
         name="Ensure key renamed",
         path=expected_file,
         key="depends_on",
@@ -239,7 +239,7 @@ def test_value_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"scala"}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="stack",
@@ -258,7 +258,7 @@ def test_value_nested_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"development":{"apple":true}}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure local development is supported",
         path=expected_file,
         key="development.supported",
@@ -279,7 +279,7 @@ def test_value_nested_already_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"development":{"supported":true}}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure local development is supported",
         path=expected_file,
         key="development.supported",
@@ -298,7 +298,7 @@ def test_value_exists_no_value(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"scala"}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="stack",
@@ -316,7 +316,7 @@ def test_value_exists_list(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[]}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -339,7 +339,7 @@ def test_value_exists_list_single_item(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[]}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -359,7 +359,7 @@ def test_value_exists_nested_list_single_item(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","nested":{"dependencies":[]}}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="nested.dependencies",
@@ -382,7 +382,7 @@ def test_value_exists_list_already_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":["service3"]}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -404,7 +404,7 @@ def test_value_exists_list_already_exists_single_item(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":["service2"]}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -426,7 +426,7 @@ def test_value_exists_dict(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":[]}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -448,7 +448,7 @@ def test_value_exists_dict_already_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":{"service3":true}}')
 
-    rule = JSONValueExists(
+    rule = JsonValueExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -470,7 +470,7 @@ def test_value_not_exists(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python"}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="stack",
@@ -489,7 +489,7 @@ def test_value_not_exists_nested(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"development":{"stack":"python"}}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="development.stack",
@@ -508,7 +508,7 @@ def test_value_not_exists_not_changed(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"scala"}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="stack",
@@ -527,7 +527,7 @@ def test_value_not_exists_nested_not_changed(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"development":{"stack":"scala"}}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="development.stack",
@@ -546,7 +546,7 @@ def test_value_not_exists_no_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"dependencies":[]}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="stack",
@@ -565,7 +565,7 @@ def test_value_not_exists_nested_no_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"development":{"supported":{"apple":"banana"}}}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies.supported.stack",
@@ -588,7 +588,7 @@ def test_value_not_exists_list(temporary_file):
         '{"stack":"python","dependencies":["service1","service2"]}'
     )
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -608,7 +608,7 @@ def test_value_not_exists_list_no_item(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":["service3"]}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -627,7 +627,7 @@ def test_value_not_exists_dict(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":{"service1":true}}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",
@@ -646,7 +646,7 @@ def test_value_not_exists_dict_no_key(temporary_file):
     expected_file = Path(temporary_file.name)
     expected_file.write_text('{"stack":"python","dependencies":{"service3":true}}')
 
-    rule = JSONValueNotExists(
+    rule = JsonValueNotExists(
         name="Ensure service descriptor has dependencies",
         path=expected_file,
         key="dependencies",

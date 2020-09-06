@@ -1,10 +1,10 @@
 """
 Extend :class:`hammurabi.rules.base.Rule` to handle parsed content manipulations dictionaries.
 Standalone these rules are not useful, but they are very handy when files should be manipulated
-like YAML or JSON which will be parsed as dict.
+like YAML or Json which will be parsed as dict.
 
 These rules are intentionally not exported directly through hammurabi as it is done for YAML or
-JSON rules. The reason, as it is mentioned above, these rules are not standalone rules. Also, it
+Json rules. The reason, as it is mentioned above, these rules are not standalone rules. Also, it
 is intentional that these rules are not represented in the documentation's `Rules section`_.
 
 .. _`Rules section`: https://hammurabi.readthedocs.io/en/latest/rules.html
@@ -25,7 +25,7 @@ class SinglePathDictParsedRule(SinglePathRule, SelectorMixin):
     Extend :class:`hammurabi.rules.base.Rule` to handle parsed content
     manipulations dictionaries. Standalone this rule is not useful, but
     it is very handy when files should be manipulated like YAML or
-    JSON which will be parsed as dict. This rule ensures that the implementation
+    Json which will be parsed as dict. This rule ensures that the implementation
     will be the same for these rules, so the maintenance cost and effort
     is reduced.
 
