@@ -119,7 +119,7 @@ class Reporter(ABC):
         return RuleItem(
             name=rule.name,
             law=LawItem(name=law.name, description=law.description),
-            **kwargs
+            **kwargs,
         )
 
     def __get_rule_items(

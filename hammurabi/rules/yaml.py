@@ -9,7 +9,7 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Any, Optional
 
-from ruamel.yaml import Yaml
+from ruamel.yaml import YAML
 
 from hammurabi.rules.dictionaries import (
     DictKeyExists,
@@ -34,7 +34,7 @@ class SingleDocumentYamlFileRule(SinglePathDictParsedRule):
     def __init__(
         self, name: str, path: Optional[Path] = None, key: str = "", **kwargs
     ) -> None:
-        self.yaml = Yaml()
+        self.yaml = YAML()
         self.yaml.default_flow_style = False
 
         super().__init__(name, path, key, loader=self.yaml.load, **kwargs)
