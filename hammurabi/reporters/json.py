@@ -4,11 +4,11 @@ import logging
 from hammurabi.reporters.base import Reporter
 
 
-class JSONReporter(Reporter):
+class JsonReporter(Reporter):
     """
-    Generate reports in JSON format and write into file. JSONReporter
+    Generate reports in Json format and write into file. JsonReporter
     is the default reporter of the pillar. The example below shows the
-    way how to replace a reporter which could base on the JSONReporter.
+    way how to replace a reporter which could base on the JsonReporter.
 
     The report will be written into the configured report file. The report
     file's name set by ``report_name`` config parameter.
@@ -19,7 +19,7 @@ class JSONReporter(Reporter):
 
         >>> from pathlib import Path
         >>> from hammurabi import Law, Pillar, OwnerChanged
-        >>> from my_company import MyJSONReporter
+        >>> from my_company import MyJsonReporter
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
@@ -33,13 +33,13 @@ class JSONReporter(Reporter):
         >>>     )
         >>> )
         >>>
-        >>> # override pillar's default JSONReporter reporter
-        >>> pillar = Pillar(reporter_class=MyJSONReporter)
+        >>> # override pillar's default JsonReporter reporter
+        >>> pillar = Pillar(reporter_class=MyJsonReporter)
     """
 
     def report(self) -> None:
         """
-        Do the actual reporting based on the report assembled in JSON
+        Do the actual reporting based on the report assembled in Json
         format. The report will be written into the configured report file.
         """
 

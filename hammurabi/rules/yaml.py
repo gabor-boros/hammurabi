@@ -1,5 +1,5 @@
 """
-This module adds YAML file support. YAML module is an extension for text rules
+This module adds Yaml file support. Yaml module is an extension for text rules
 tailor made for .yaml/.yml files. The main difference lies in the way it works.
 First, the .yaml/.yml file is parsed, then the modifications are made on the
 already parsed file.
@@ -21,10 +21,10 @@ from hammurabi.rules.dictionaries import (
 )
 
 
-class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
+class SingleDocumentYamlFileRule(SinglePathDictParsedRule):
     """
     Extend :class:`hammurabi.rules.dictionaries.SinglePathDictParsedRule`
-    to handle parsed content manipulations on a single YAML file.
+    to handle parsed content manipulations on a single Yaml file.
 
     .. warning::
 
@@ -68,7 +68,7 @@ class SingleDocumentYAMLFileRule(SinglePathDictParsedRule):
         """
 
 
-class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
+class YamlKeyExists(DictKeyExists, SingleDocumentYamlFileRule):
     """
     Ensure that the given key exists. If needed, the rule will create a key with the
     given name, and optionally the specified value. In case the value is set, the value
@@ -78,13 +78,13 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyExists
+        >>> from hammurabi import Law, Pillar, YamlKeyExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyExists(
+        >>>         YamlKeyExists(
         >>>             name="Ensure service descriptor has stack",
         >>>             path=Path("./service.yaml"),
         >>>             key="stack",
@@ -107,7 +107,7 @@ class YAMLKeyExists(DictKeyExists, SingleDocumentYAMLFileRule):
     """
 
 
-class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
+class YamlKeyNotExists(DictKeyNotExists, SingleDocumentYamlFileRule):
     """
     Ensure that the given key not exists. If needed, the rule will remove a key with the
     given name, including its value.
@@ -115,13 +115,13 @@ class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyNotExists
+        >>> from hammurabi import Law, Pillar, YamlKeyNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyNotExists(
+        >>>         YamlKeyNotExists(
         >>>             name="Ensure outdated_key is removed",
         >>>             path=Path("./service.yaml"),
         >>>             key="outdated_key",
@@ -138,7 +138,7 @@ class YAMLKeyNotExists(DictKeyNotExists, SingleDocumentYAMLFileRule):
     """
 
 
-class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
+class YamlKeyRenamed(DictKeyRenamed, SingleDocumentYamlFileRule):
     """
     Ensure that the given key is renamed. In case the key can not be found,
     a ``LookupError`` exception will be raised to stop the execution. The
@@ -148,13 +148,13 @@ class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLKeyRenamed
+        >>> from hammurabi import Law, Pillar, YamlKeyRenamed
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLKeyRenamed(
+        >>>         YamlKeyRenamed(
         >>>             name="Ensure service descriptor has dependencies",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.depends_on",
@@ -172,7 +172,7 @@ class YAMLKeyRenamed(DictKeyRenamed, SingleDocumentYAMLFileRule):
     """
 
 
-class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
+class YamlValueExists(DictValueExists, SingleDocumentYamlFileRule):
     """
     Ensure that the given key has the expected value(s). In case the key cannot
     be found, a ``LookupError`` exception will be raised to stop the execution.
@@ -183,34 +183,34 @@ class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLValueExists
+        >>> from hammurabi import Law, Pillar, YamlValueExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLValueExists(
+        >>>         YamlValueExists(
         >>>             name="Ensure service descriptor has dependencies",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.dependencies",
         >>>             value=["service1", "service2", "service3"],
         >>>         ),
         >>>         # Or
-        >>>         YAMLValueExists(
+        >>>         YamlValueExists(
         >>>             name="Add infra alerting to existing alerting components",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.alerting",
         >>>             value={"infra": "#slack-channel-2"},
         >>>         ),
         >>>         # Or
-        >>>         YAMLValueExists(
+        >>>         YamlValueExists(
         >>>             name="Add support info",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.supported",
         >>>             value=True,
         >>>         ),
         >>>         # Or even
-        >>>         YAMLValueExists(
+        >>>         YamlValueExists(
         >>>             name="Make sure that no development branch is set",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.branch",
@@ -234,18 +234,18 @@ class YAMLValueExists(DictValueExists, SingleDocumentYAMLFileRule):
         the ``value`` parameter must have a default value. The default value is
         set to ``None``, which translates to the following:
 
-        Using the ``YAMLValueExists`` rule and not assigning value to ``value``
+        Using the ``YamlValueExists`` rule and not assigning value to ``value``
         parameter will set the matching ``key``'s value to `None`` by default in
         the document.
     """
 
 
-class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
+class YamlValueNotExists(DictValueNotExists, SingleDocumentYamlFileRule):
     """
     Ensure that the key has no value given. In case the key cannot be found,
     a ``LookupError`` exception will be raised to stop the execution.
 
-    Compared to ``hammurabi.rules.yaml.YAMLValueExists``, this rule can only
+    Compared to ``hammurabi.rules.yaml.YamlValueExists``, this rule can only
     accept simple value for its ``value`` parameter. No ``list``, ``dict``, or
     ``None`` can be used.
 
@@ -259,13 +259,13 @@ class YAMLValueNotExists(DictValueNotExists, SingleDocumentYAMLFileRule):
     Example usage:
 
         >>> from pathlib import Path
-        >>> from hammurabi import Law, Pillar, YAMLValueNotExists
+        >>> from hammurabi import Law, Pillar, YamlValueNotExists
         >>>
         >>> example_law = Law(
         >>>     name="Name of the law",
         >>>     description="Well detailed description what this law does.",
         >>>     rules=(
-        >>>         YAMLValueNotExists(
+        >>>         YamlValueNotExists(
         >>>             name="Remove decommissioned service from dependencies",
         >>>             path=Path("./service.yaml"),
         >>>             key="development.dependencies",

@@ -130,7 +130,9 @@ def enforce(
     ),
 ):
     """
-    Longer description
+    The `enforce` command executes the laws registered on the pillar. But the command
+    has other responsibilities too. It will make sure the execution report is generated
+    and controls if the changes are pushed to remote or not.
     """
 
     if allow_push != DEFAULT_ALLOW_PUSH:

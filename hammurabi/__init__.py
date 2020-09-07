@@ -1,4 +1,5 @@
 # flake8: noqa
+import logging
 
 from hammurabi.config import config
 from hammurabi.law import Law
@@ -15,7 +16,7 @@ from hammurabi.preconditions.directories import IsDirectoryExist, IsDirectoryNot
 from hammurabi.preconditions.files import IsFileExist, IsFileNotExist
 from hammurabi.preconditions.text import IsLineExist, IsLineNotExist
 from hammurabi.reporters.base import Reporter
-from hammurabi.reporters.json import JSONReporter
+from hammurabi.reporters.json import JsonReporter
 from hammurabi.rules.attributes import ModeChanged, OwnerChanged
 from hammurabi.rules.base import Rule
 from hammurabi.rules.directories import (
@@ -31,11 +32,11 @@ from hammurabi.rules.files import (
     FilesNotExist,
 )
 from hammurabi.rules.json import (
-    JSONKeyExists,
-    JSONKeyNotExists,
-    JSONKeyRenamed,
-    JSONValueExists,
-    JSONValueNotExists,
+    JsonKeyExists,
+    JsonKeyNotExists,
+    JsonKeyRenamed,
+    JsonValueExists,
+    JsonValueNotExists,
 )
 from hammurabi.rules.operations import Copied, Moved, Renamed
 from hammurabi.rules.templates import TemplateRendered
@@ -51,7 +52,7 @@ from hammurabi.rules.toml import (
 try:
     from hammurabi.notifications.slack import SlackNotification
 except ImportError:
-    pass
+    logging.debug("import of slack notification is skipped")
 
 
 try:
@@ -64,18 +65,18 @@ try:
         SectionRenamed,
     )
 except ImportError:
-    pass
+    logging.debug("import of ini file based rules is skipped")
 
 
 try:
     from hammurabi.rules.yaml import (
-        YAMLKeyExists,
-        YAMLKeyNotExists,
-        YAMLKeyRenamed,
-        YAMLValueExists,
-        YAMLValueNotExists,
+        YamlKeyExists,
+        YamlKeyNotExists,
+        YamlKeyRenamed,
+        YamlValueExists,
+        YamlValueNotExists,
     )
 except ImportError:
-    pass
+    logging.debug("import of yaml file based rules is skipped")
 
 __version__ = "0.10.0"

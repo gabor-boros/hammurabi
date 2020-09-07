@@ -86,7 +86,7 @@ class Reporter(ABC):
         >>> from hammurabi.reporters.base import Reporter
         >>>
         >>>
-        >>> class JSONReporter(Reporter):
+        >>> class JsonReporter(Reporter):
         >>>     def report(self) -> str:
         >>>         return self._get_report().json()
 
@@ -119,7 +119,7 @@ class Reporter(ABC):
         return RuleItem(
             name=rule.name,
             law=LawItem(name=law.name, description=law.description),
-            **kwargs
+            **kwargs,
         )
 
     def __get_rule_items(

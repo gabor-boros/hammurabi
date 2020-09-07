@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 
 from hammurabi.law import Law
 from hammurabi.pillar import Pillar
-from hammurabi.reporters.json import JSONReporter
+from hammurabi.reporters.json import JsonReporter
 from tests.fixtures import temporary_file
 from tests.helpers import get_failing_rule, get_passing_rule
 
@@ -22,8 +22,8 @@ def test_reporter(mocked_datetime, temporary_file):
 
     expected_pr_url = "https://github.com/gabor-boros/hammurabi/pull/1"
 
-    pillar = Pillar(reporter_class=JSONReporter)
-    reporter: JSONReporter = pillar.reporter
+    pillar = Pillar(reporter_class=JsonReporter)
+    reporter: JsonReporter = pillar.reporter
     reporter.report_path = report_path
 
     passing_rule = get_passing_rule()

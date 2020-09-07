@@ -116,37 +116,37 @@ OptionRenamed
 .. autoclass:: hammurabi.rules.ini.OptionRenamed
    :noindex:
 
-JSON files
+Json files
 ----------
 
-JSONKeyExists
+JsonKeyExists
 ~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.json.JSONKeyExists
+.. autoclass:: hammurabi.rules.json.JsonKeyExists
    :noindex:
 
-JSONKeyNotExists
+JsonKeyNotExists
 ~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.json.JSONKeyNotExists
+.. autoclass:: hammurabi.rules.json.JsonKeyNotExists
    :noindex:
 
-JSONKeyRenamed
+JsonKeyRenamed
 ~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.json.JSONKeyRenamed
+.. autoclass:: hammurabi.rules.json.JsonKeyRenamed
    :noindex:
 
-JSONValueExists
+JsonValueExists
 ~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.json.JSONValueExists
+.. autoclass:: hammurabi.rules.json.JsonValueExists
    :noindex:
 
-JSONValueNotExists
+JsonValueNotExists
 ~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.json.JSONValueNotExists
+.. autoclass:: hammurabi.rules.json.JsonValueNotExists
    :noindex:
 
 Operations
@@ -200,37 +200,37 @@ LineReplaced
 .. autoclass:: hammurabi.rules.text.LineReplaced
    :noindex:
 
-YAML files
+Yaml files
 ----------
 
-YAMLKeyExists
+YamlKeyExists
 ~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.yaml.YAMLKeyExists
+.. autoclass:: hammurabi.rules.yaml.YamlKeyExists
    :noindex:
 
-YAMLKeyNotExists
+YamlKeyNotExists
 ~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.yaml.YAMLKeyNotExists
+.. autoclass:: hammurabi.rules.yaml.YamlKeyNotExists
    :noindex:
 
-YAMLKeyRenamed
+YamlKeyRenamed
 ~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.yaml.YAMLKeyRenamed
+.. autoclass:: hammurabi.rules.yaml.YamlKeyRenamed
    :noindex:
 
-YAMLValueExists
+YamlValueExists
 ~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.yaml.YAMLValueExists
+.. autoclass:: hammurabi.rules.yaml.YamlValueExists
    :noindex:
 
-YAMLValueNotExists
+YamlValueNotExists
 ~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: hammurabi.rules.yaml.YAMLValueNotExists
+.. autoclass:: hammurabi.rules.yaml.YamlValueNotExists
    :noindex:
 
 TOML files

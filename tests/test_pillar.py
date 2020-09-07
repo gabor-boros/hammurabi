@@ -7,7 +7,7 @@ from hammurabi import Pillar
 from tests.helpers import get_passing_rule
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_register(mocked_reporter):
     mock_reporter = Mock()
     mock_reporter.laws = list()
@@ -22,7 +22,7 @@ def test_register(mocked_reporter):
     assert mock_reporter.laws == pillar.laws
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_return_laws(mocked_reporter):
     mock_reporter = Mock()
     mock_reporter.laws = list()
@@ -36,7 +36,7 @@ def test_return_laws(mocked_reporter):
     assert mock_reporter.laws == [expected_law]
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_return_rules(_):
     expected_law = Mock(rules=(get_passing_rule(),))
     pillar = Pillar()
@@ -45,7 +45,7 @@ def test_return_rules(_):
     assert list(pillar.rules) == list(expected_law.rules)
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_get_law(_):
     expected_law = Mock(name="Mocked law")
     pillar = Pillar()
@@ -56,7 +56,7 @@ def test_get_law(_):
     assert result == expected_law
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_get_law_not_registered(_):
     expected_law = Mock(name="Mocked law")
     pillar = Pillar()
@@ -66,7 +66,7 @@ def test_get_law_not_registered(_):
         pillar.get_law("no law with this name")
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_get_rule(_):
     rule = get_passing_rule()
     expected_law = Mock(name="Mocked law", rules=(rule,))
@@ -78,7 +78,7 @@ def test_get_rule(_):
     assert result == rule
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_get_rule_not_registered(_):
     expected_law = Mock(name="Mocked law", rules=(get_passing_rule(),))
     pillar = Pillar()
@@ -89,7 +89,7 @@ def test_get_rule_not_registered(_):
 
 
 @patch("hammurabi.pillar.datetime")
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_enforce(mocked_reporter, mocked_datetime):
     mock_started = datetime.min
     mock_finished = datetime.max
@@ -123,7 +123,7 @@ def test_enforce(mocked_reporter, mocked_datetime):
     assert mock_reporter.additional_data.pull_request_url == expected_pr_url
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_enforce_failed(_):
     expected_law = Mock()
     expected_law.enforce.side_effect = Exception()
@@ -145,7 +145,7 @@ def test_enforce_failed(_):
     assert pillar.create_pull_request.called is False
 
 
-@patch("hammurabi.pillar.JSONReporter")
+@patch("hammurabi.pillar.JsonReporter")
 def test_enforce_no_changes(_):
     mock_notification = Mock()
 

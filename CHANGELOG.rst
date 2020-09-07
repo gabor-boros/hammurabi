@@ -39,6 +39,14 @@ Added
 ~~~~~
 
 * Add TOML file support and adjust readme
+* Log skipped imports on debug level
+
+Fixed
+~~~~~
+
+* Allow documentation generation for rules which are depending on extra packages
+* Update enforce command description
+* Fix failing pylint error W0707 in slack notification
 
 Changed
 ~~~~~~~
@@ -49,7 +57,14 @@ Changed
 * Mention in the docs that `match` will use partial match if the regex is not specific enough
 * Add László Üveges to maintainers
 * Replace Travis CI with GitHub Actions
+* Update the release process with the external documentation site
 * Update requirements minimum version
+* Rename all JSON rule to Json to keep naming convention
+* Rename all YAML rule to Yaml to keep naming convention
+* Bump gitpython to 3.1.8
+* Bump hypothesis to 5.26.1
+* Bump black to 20.8b1
+* Bump typer to 0.3.2
 
 Fixed
 ~~~~~

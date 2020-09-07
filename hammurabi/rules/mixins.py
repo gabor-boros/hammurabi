@@ -32,7 +32,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         """
         Get a key's value by a selector and traverse the path.
 
-        :param data: The loaded YAML data into dict
+        :param data: The loaded Yaml data into dict
         :type data: :class:`hammurabi.rules.mixins.Any`
 
         :param key_path: Path to the key in a selector format
@@ -66,7 +66,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         """
         Set a value by the key selector and traverse the path.
 
-        :param loaded_data: The loaded YAML data into dict
+        :param loaded_data: The loaded Yaml data into dict
         :type loaded_data: :class:`hammurabi.rules.mixins.Any`
 
         :param key_path: Path to the key in a selector format
@@ -79,7 +79,7 @@ class SelectorMixin:  # pylint: disable=too-few-public-methods
         :param delete: Indicate if the key should be deleted
         :type delete: bool
 
-        :return: The modified YAML data
+        :return: The modified Yaml data
         :rtype: :class:`hammurabi.rules.mixins.Any`
         """
 
