@@ -58,7 +58,7 @@ bandit = "^1.6"
 black = { version = "^20.8b1", allow-prereleases = true }
 coverage = "^5.2"
 flake8 = "^3.8"
-hypothesis = "^5.32.0"
+hypothesis = "^5.33.0"
 mypy = "^0.782"
 pygments = "^2.4"
 pylint = "^2.5"
