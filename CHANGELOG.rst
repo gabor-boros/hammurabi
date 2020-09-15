@@ -47,6 +47,7 @@ Fixed
 * Allow documentation generation for rules which are depending on extra packages
 * Update enforce command description
 * Fix failing pylint error W0707 in slack notification
+* Fix empty committing issue when no staged files are present
 
 Changed
 ~~~~~~~

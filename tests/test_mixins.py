@@ -142,11 +142,49 @@ def test_git_remove_no_repo(mocked_config):
 def test_git_commit(mocked_config):
     commit_message = "message"
     git_mixin = get_git_mixin_consumer()
+
+    git_mixin.git_diff = Mock()
+    git_mixin.git_diff.return_value = ["git", "diff", "--staged", "a/test", "b/test"]
+
     mocked_config.settings.dry_run = False
 
     git_mixin.git_commit(commit_message)
 
+    git_mixin.git_diff.assert_called_once_with(staged=True)
     mocked_config.repo.index.commit.assert_called_once_with(commit_message)
+
+
+@patch("hammurabi.mixins.config")
+def test_git_commit_no_staged_files(mocked_config):
+    commit_message = "message"
+    git_mixin = get_git_mixin_consumer()
+
+    git_mixin.git_diff = Mock()
+    git_mixin.git_diff.return_value = []
+
+    mocked_config.settings.dry_run = False
+
+    git_mixin.git_commit(commit_message)
+
+    git_mixin.git_diff.assert_called_once_with(staged=True)
+    assert mocked_config.repo.index.commit.called is False
+
+
+@patch("hammurabi.mixins.config")
+def test_git_commit_no_staged_files_but_dirty(mocked_config):
+    commit_message = "message"
+    git_mixin = get_git_mixin_consumer()
+
+    git_mixin.git_diff = Mock()
+    git_mixin.git_diff.return_value = []
+
+    mocked_config.settings.dry_run = False
+    mocked_config.repo.is_dirty.return_value = True
+
+    git_mixin.git_commit(commit_message)
+
+    git_mixin.git_diff.assert_called_once_with(staged=True)
+    assert mocked_config.repo.index.commit.called is False
 
 
 @patch("hammurabi.mixins.config")
