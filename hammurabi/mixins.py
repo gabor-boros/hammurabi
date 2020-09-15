@@ -39,6 +39,23 @@ class GitMixin:
         return is_dirty and not config.settings.dry_run
 
     @staticmethod
+    def git_diff(**kwargs) -> List[str]:
+        """
+        Get the diff of files.
+
+        :return: Returns the git diff command and its output
+        :rtype: bool
+
+        The following command is executed
+
+        .. code-block:: shell
+
+            git diff [options]
+        """
+
+        return config.repo.git.diff(**kwargs).split()
+
+    @staticmethod
     def checkout_branch() -> None:
         """
         Perform a simple git checkout, to not pollute the default branch and
@@ -116,7 +133,9 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        if self.__can_proceed():
+        has_staged_files = self.git_diff(staged=True)
+
+        if self.__can_proceed() and has_staged_files:
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
