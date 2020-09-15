@@ -133,9 +133,9 @@ class GitMixin:
             git commit -m "<commit message>"
         """
 
-        has_staged_files = self.git_diff(staged=True)
+        staged_files = self.git_diff(staged=True)
 
-        if self.__can_proceed() and has_staged_files:
+        if self.__can_proceed() and staged_files:
             config.repo.index.commit(message)  # pylint: disable=no-member
 
     @staticmethod
