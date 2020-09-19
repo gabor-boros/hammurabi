@@ -123,6 +123,13 @@ class DictKeyExists(SinglePathDictParsedRule, ABC):
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
 
+    .. note::
+
+        The difference between *KeyExists and *ValueExists rules is the approach and the
+        possibilities. While *KeyExists is able to create values if provided, *ValueExists
+        rules are not able to create keys if any of the missing. *KeyExists `value` parameter
+        is a shorthand for creating a key and then adding a value to that key.
+
     .. warning::
 
         Compared to :mod:`hammurabi.rules.text.LineExists`, this rule is NOT able to add a
@@ -336,6 +343,13 @@ class DictValueExists(SinglePathDictParsedRule, ABC):
         >>>
         >>> pillar = Pillar()
         >>> pillar.register(example_law)
+
+    .. note::
+
+        The difference between *KeyExists and *ValueExists rules is the approach and the
+        possibilities. While *KeyExists is able to create values if provided, *ValueExists
+        rules are not able to create keys if any of the missing. *KeyExists `value` parameter
+        is a shorthand for creating a key and then adding a value to that key.
 
     .. warning::
 
