@@ -50,8 +50,10 @@ Fixed
 
 * Allow documentation generation for rules which are depending on extra packages
 * Update enforce command description
+* Hypothesis test execution skips `:` character when running owner change test
 * Fix failing pylint error W0707 in slack notification
 * Fix empty committing issue when no staged files are present
+* Fix some documentation highlight issues
 
 Changed
 ~~~~~~~
@@ -76,13 +78,6 @@ Changed
 * Bump ujson to 3.2.0
 * Bump coverage to 5.3
 * Bump pygments to 2.7.1
-
-Fixed
-~~~~~
-
-* Allow documentation generation for rules which are depending on extra packages
-* Hypothesis test execution skips `:` character when running owner change test
-* Fix some documentation highlight issues
 
 0.10.0_ - 2020-08-14
 --------------------
