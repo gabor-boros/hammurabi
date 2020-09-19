@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.10.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.11.0...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -31,9 +31,13 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.9.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.0
 .. _0.9.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.1
 .. _0.10.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.10.0
+.. _0.11.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.11.0
 
 Unreleased_
 -----------
+
+0.11.0_ - 2020-09-19
+--------------------
 
 Added
 ~~~~~
@@ -46,8 +50,10 @@ Fixed
 
 * Allow documentation generation for rules which are depending on extra packages
 * Update enforce command description
+* Hypothesis test execution skips `:` character when running owner change test
 * Fix failing pylint error W0707 in slack notification
 * Fix empty committing issue when no staged files are present
+* Fix some documentation highlight issues
 
 Changed
 ~~~~~~~
@@ -62,17 +68,16 @@ Changed
 * Update requirements minimum version
 * Rename all JSON rule to Json to keep naming convention
 * Rename all YAML rule to Yaml to keep naming convention
+* Clarify difference between Key- and ValueExists rules
 * Bump gitpython to 3.1.8
-* Bump hypothesis to 5.26.1
+* Bump hypothesis to 5.33.0
 * Bump black to 20.8b1
 * Bump typer to 0.3.2
-
-Fixed
-~~~~~
-
-* Allow documentation generation for rules which are depending on extra packages
-* Hypothesis test execution skips `:` character when running owner change test
-* Fix some documentation highlight issues
+* Bump pylint to 2.6.0
+* Bump pytest to 6.0.2
+* Bump ujson to 3.2.0
+* Bump coverage to 5.3
+* Bump pygments to 2.7.1
 
 0.10.0_ - 2020-08-14
 --------------------

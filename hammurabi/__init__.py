@@ -79,4 +79,4 @@ try:
 except ImportError:
     logging.debug("import of yaml file based rules is skipped")
 
-__version__ = "0.10.0"
+__version__ = "0.11.0"

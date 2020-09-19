@@ -106,9 +106,9 @@ class TomlKeyExists(DictKeyExists, SingleDocumentTomlFileRule):
 
     .. note::
 
-        The difference between *KeyExists and *ValueExists rules is the approach and the
-        possibilities. While *KeyExists is able to create values if provided, *ValueExists
-        rules are not able to create keys if any of the missing. *KeyExists `value` parameter
+        The difference between KeyExists and ValueExists rules is the approach and the
+        possibilities. While KeyExists is able to create values if provided, ValueExists
+        rules are not able to create keys if any of the missing. KeyExists ``value`` parameter
         is a shorthand for creating a key and then adding a value to that key.
 
     .. warning::
@@ -232,9 +232,9 @@ class TomlValueExists(DictValueExists, SingleDocumentTomlFileRule):
 
     .. note::
 
-        The difference between *KeyExists and *ValueExists rules is the approach and the
-        possibilities. While *KeyExists is able to create values if provided, *ValueExists
-        rules are not able to create keys if any of the missing. *KeyExists `value` parameter
+        The difference between KeyExists and ValueExists rules is the approach and the
+        possibilities. While KeyExists is able to create values if provided, ValueExists
+        rules are not able to create keys if any of the missing. KeyExists ``value`` parameter
         is a shorthand for creating a key and then adding a value to that key.
 
     .. warning::
