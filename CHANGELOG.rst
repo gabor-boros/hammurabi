@@ -36,6 +36,11 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Fix MRO issue when precondition names cannot be retrieved when exception occurs
+
 0.11.0_ - 2020-09-19
 --------------------
 

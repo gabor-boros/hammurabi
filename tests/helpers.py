@@ -42,6 +42,20 @@ class ExampleGitHubMixinRule(ExampleRule, GitHubMixin):
     pass
 
 
+class ExampleMROFaultyPrecondition(Precondition):
+    """
+    This example precondition exists to ensure MRO related cases like
+    https://github.com/gabor-boros/hammurabi/issues/216 are tested.
+    """
+
+    def __init__(self, param=None) -> None:
+        stacks = self.validate(param, required=True)
+        super().__init__(None, stacks)
+
+    def task(self) -> bool:
+        return self.param
+
+
 PASSING_PRECONDITION = ExamplePrecondition(name="Passing", param=True)
 FAILING_PRECONDITION = ExamplePrecondition(name="Failing", param=False)
 
