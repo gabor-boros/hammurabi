@@ -21,11 +21,11 @@ class AbstractRule(ABC):
     :type param: Any
     """
 
-    __slots__ = ("param", "name", "made_changes")
+    __slots__ = ("__name", "param", "made_changes")
 
     def __init__(self, name: str, param: Any) -> None:
         self.param = param
-        self.name = name.strip()
+        self.__name = name.strip()
 
         # Set by GitMixin or other mixins to indicate that the rule did changes.
         # Rules can set this flag directly too. Only those rules will be indicated on
@@ -76,6 +76,26 @@ class AbstractRule(ABC):
             return val
 
         return cast_to(val)
+
+    @property
+    def name(self) -> str:
+        """
+        Return the name of the :class:`hammurabi.rules.base.Rule`.
+
+        :return: The name of the given :class:`hammurabi.rules.base.Rule`
+        :rtype: str
+
+        .. note::
+
+            Name is defined as a separate property and not an attribute to
+            make sure we return a default value in those cases when we cannot
+            set the name due to an error.
+        """
+
+        try:
+            return self.__name
+        except AttributeError:
+            return f"{self.__class__.__name__}"
 
     @property
     def description(self) -> str:

@@ -7,7 +7,12 @@ from hypothesis import strategies as st
 import pytest
 
 from hammurabi.exceptions import PreconditionFailedError
-from tests.helpers import FAILING_PRECONDITION, PASSING_PRECONDITION, ExampleRule
+from tests.helpers import (
+    FAILING_PRECONDITION,
+    PASSING_PRECONDITION,
+    ExamplePrecondition,
+    ExampleRule,
+)
 
 
 def test_repr():
@@ -19,11 +24,27 @@ def test_repr():
     assert repr(eval(repr(rule))) == expected
 
 
+def test_precondition_repr_without_name():
+    expected = (
+        'ExamplePrecondition(name="ExamplePrecondition precondition", param="True")'
+    )
+    precondition = ExamplePrecondition(name=None, param=True)
+
+    assert repr(precondition) == expected
+    # The repr should be used with eval
+    assert repr(eval(repr(precondition))) == expected
+
+
 def test_str():
     expected = "Test rule"
     rule = ExampleRule(name="Test", param="Rule")
 
     assert str(rule) == expected
+
+
+def test_precondition_str_without_name():
+    precondition = ExamplePrecondition(name=None, param=True)
+    assert str(precondition) == "ExamplePrecondition precondition"
 
 
 @patch("hammurabi.rules.abstract.full_strip")
