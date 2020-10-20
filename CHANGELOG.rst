@@ -10,7 +10,7 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 
 .. Hyperlinks for releases
 
-.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.11.0...master
+.. _Unreleased: https://github.com/gabor-boros/hammurabi/compare/v0.11.1...master
 .. _0.1.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.0
 .. _0.1.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.1
 .. _0.1.2: https://github.com/gabor-boros/hammurabi/releases/tag/v0.1.2
@@ -32,14 +32,29 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 .. _0.9.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.9.1
 .. _0.10.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.10.0
 .. _0.11.0: https://github.com/gabor-boros/hammurabi/releases/tag/v0.11.0
+.. _0.11.1: https://github.com/gabor-boros/hammurabi/releases/tag/v0.11.1
 
 Unreleased_
 -----------
+
+0.11.1_ - 2020-10-20
+--------------------
 
 Fixed
 ~~~~~
 
 * Fix MRO issue when precondition names cannot be retrieved when exception occurs
+
+Changed
+~~~~~~~
+
+* Bump hypothesis to 5.37.3
+* Bump ujson to 4.0.1
+* Bump mypy to 0.790
+* Bump flake8 to 3.8.4
+* Bump gitpython to 3.1.9
+* Bump pytest to 6.1.0
+* Bump more-itertools to 8.5.0
 
 0.11.0_ - 2020-09-19
 --------------------
