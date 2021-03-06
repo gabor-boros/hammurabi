@@ -147,7 +147,7 @@ class SectionExists(SingleConfigFileRule):
         if self.updater.has_section(self.match):
             return self.updater[self.match]
 
-        return self.updater.sections_blocks()[-1]
+        return self.updater.section_blocks()[-1]
 
     def __add_section(self) -> None:
         """

@@ -168,7 +168,7 @@ def test_section_exists_no_match(mocked_updater_class):
 
     mocked_updater = MagicMock()
     mocked_updater.sections.return_value = [expected_match]
-    mocked_updater.sections_blocks.return_value = mocked_updater.sections.return_value
+    mocked_updater.section_blocks.return_value = mocked_updater.sections.return_value
     mocked_updater.has_section.side_effect = [False, False]
 
     mocked_updater_class.return_value = mocked_updater
@@ -210,7 +210,7 @@ def test_section_exists_no_match_set(mocked_updater_class):
     mocked_updater = MagicMock()
     mocked_updater.__getitem__.return_value = expected_match
     mocked_updater.sections.return_value = [Mock(), Mock(), expected_match]
-    mocked_updater.sections_blocks.return_value = mocked_updater.sections.return_value
+    mocked_updater.section_blocks.return_value = mocked_updater.sections.return_value
     mocked_updater.has_section.side_effect = [False, False]
 
     mocked_updater_class.return_value = mocked_updater
@@ -223,7 +223,7 @@ def test_section_exists_no_match_set(mocked_updater_class):
 
     mocked_updater.sections.assert_called_once_with()
     mocked_updater.has_section.has_calls(call(expected_section), call(expected_match))
-    mocked_updater.sections_blocks.assert_called_once_with()
+    mocked_updater.section_blocks.assert_called_once_with()
     mocked_prop.assert_called_once_with()
     mock_add_after_return.space.assert_called_once_with(rule.space)
     mock_add_after_return.space.return_value.section.assert_called_once_with(

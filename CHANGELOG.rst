@@ -37,6 +37,34 @@ The format is based on `Keep a Changelog`_, and this project adheres to
 Unreleased_
 -----------
 
+Fixed
+~~~~~
+
+* Fix configupdater bump related issues
+
+Changed
+~~~~~~~
+
+* Bump bandit to ^1.7.0
+* Bump black to ^20.8b1
+* Bump configupdater to ^2.0
+* Bump coverage to ^5.5
+* Bump flake8 to ^3.8.4
+* Bump github3.py to ^2.0.0
+* Bump GitPython to ^3.1.14
+* Bump hypothesis to ^5.41.2
+* Bump Jinja2 to ^2.11.3
+* Bump mypy to ^0.790
+* Bump pydantic to ^1.8.1
+* Bump pylint to ^2.7.2
+* Bump pytest to ^6.2.2
+* Bump ruamel.yaml to ^0.16.13
+* Bump slack-webhook to ^1.0.5
+* Bump sphinx-rtd-theme to ^0.5.1
+* Bump toml to ^0.10.2
+* Bump typer to ^0.3.2
+* Bump ujson to ^4.0.2
+
 0.11.1_ - 2020-10-20
 --------------------
 
