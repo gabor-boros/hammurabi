@@ -84,7 +84,7 @@ templating = ["jinja2"]
 slack-notifications = ["slack-webhook"]
 
 [tool.black]
-target-version = ['py37']
+target-version = ['py37', 'py38']
 
 [tool.isort]
 atomic = true
