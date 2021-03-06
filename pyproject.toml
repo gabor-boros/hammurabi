@@ -57,7 +57,7 @@ ujson = { version = ">=1.35,<5.0", optional = true }
 [tool.poetry.dev-dependencies]
 bandit = "^1.6"
 black = { version = "^20.8b1", allow-prereleases = true }
-coverage = "^5.3"
+coverage = "^5.5"
 flake8 = "^3.8"
 hypothesis = "^5.41.2"
 mypy = "^0.790"
