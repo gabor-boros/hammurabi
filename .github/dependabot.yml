@@ -1,0 +1,67 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+  open-pull-requests-limit: 10
+  reviewers:
+  - gabor-boros
+  ignore:
+  - dependency-name: hypothesis
+    versions:
+    - 6.0.4
+    - 6.1.0
+    - 6.1.1
+    - 6.2.0
+    - 6.3.0
+    - 6.3.1
+    - 6.3.2
+    - 6.3.3
+    - 6.3.4
+    - 6.4.0
+    - 6.4.1
+    - 6.4.2
+    - 6.4.3
+  - dependency-name: configupdater
+    versions:
+    - "2.0"
+  - dependency-name: coverage
+    versions:
+    - "5.4"
+    - "5.5"
+  - dependency-name: pygments
+    versions:
+    - 2.7.4
+    - 2.8.0
+  - dependency-name: gitpython
+    versions:
+    - 3.1.12
+    - 3.1.13
+    - 3.1.14
+  - dependency-name: pydantic
+    versions:
+    - 1.8.1
+  - dependency-name: cryptography
+    versions:
+    - 3.3.2
+  - dependency-name: mypy
+    versions:
+    - "0.800"
+    - "0.812"
+  - dependency-name: jinja2
+    versions:
+    - 2.11.3
+  - dependency-name: more-itertools
+    versions:
+    - 8.7.0
+  - dependency-name: pytest
+    versions:
+    - 6.2.2
+  - dependency-name: ujson
+    versions:
+    - 4.0.2
+  - dependency-name: sphinx-rtd-theme
+    versions:
+    - 0.5.1
